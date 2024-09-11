@@ -12,3 +12,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  email    String   @unique
+  password String
+  joinedOn DateTime @default(now())
+  storyId  Int? // Optional foreign key
+  bio      String?
+
+  // Relations
+  bookmarks Bookmark[]
+  comments  Comment[]
+  stories   Story[]    @relation("author") // No need to specify fields or references here
+}
+
+model Story {
+  storyId      Int      @id @default(autoincrement())
+  title        String
+  isBookmarked Boolean  @default(false)
+  authorId     Int
+  summary      String?
+  createdAt    DateTime @default(now())
+  content      String
+
+  // Relations
+  author    User       @relation("author", fields: [authorId], references: [id])
+  comments  Comment[]
+  bookmarks Bookmark[]
+}
+
+model Bookmark {
+  bookmarkId Int      @id @default(autoincrement())
+  userId     Int
+  storyId    Int
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id])
+  story Story @relation(fields: [storyId], references: [storyId])
+}
+
+model Comment {
+  commentId Int      @id @default(autoincrement())
+  userId    Int
+  storyId   Int
+  createdAt DateTime @default(now())
+  content   String
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id])
+  story Story @relation(fields: [storyId], references: [storyId])
+}
