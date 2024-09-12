@@ -2,46 +2,54 @@ const prisma = require("../prisma");
 const { faker } = require("@faker-js/faker");
 
 const seed = async () => {
-  // Create 10 random users
-  for (let i = 0; i < 10; i++) {
+  // Create 5 administrators
+  for (let i = 0; i < 5; i++) {
+    await prisma.user.create({
+      data: {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        bio: faker.lorem.sentence(),
+        joinedOn: faker.date.past(),
+        role: "ADMIN", // Adding role for administrators
+      },
+    });
+  }
+
+  // Create 20 regular users
+  for (let i = 0; i < 20; i++) {
     const user = await prisma.user.create({
       data: {
-        username: faker.internet.userName(), // Random username
-        email: faker.internet.email(), // Random email
-        password: faker.internet.password(), // Random password
-        bio: faker.lorem.sentence(), // Random bio
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        bio: faker.lorem.sentence(),
+        joinedOn: faker.date.past(),
+        role: "USER", // Regular user
       },
     });
 
-    // Create a random number of stories for each user
+    // Each user creates between 1 and 5 stories
     for (let j = 0; j < faker.datatype.number({ min: 1, max: 5 }); j++) {
       const story = await prisma.story.create({
         data: {
-          title: faker.lorem.words(3), // Random title
-          content: faker.lorem.paragraphs(2), // Random story content
-          summary: faker.lorem.sentence(), // Random story summary
-          authorId: user.id, // Link story to the user
+          title: faker.lorem.words(3),
+          content: faker.lorem.paragraphs(3),
+          summary: faker.lorem.sentence(),
+          authorId: user.id,
+          createdAt: faker.date.past(),
+          isBookmarked: faker.datatype.boolean(), // Random boolean for bookmarks
         },
       });
 
-      // Create random comments for the story
-      for (let k = 0; k < faker.datatype.number({ min: 1, max: 5 }); k++) {
+      // Create random comments for each story
+      for (let k = 0; k < faker.datatype.number({ min: 0, max: 5 }); k++) {
         await prisma.comment.create({
           data: {
-            content: faker.lorem.sentence(), // Random comment content
-            userId: user.id, // Link comment to the user
-            storyId: story.storyId, // Link comment to the story
-          },
-        });
-      }
-
-      // Randomly bookmark stories
-      if (faker.datatype.boolean()) {
-        // 50% chance to bookmark the story
-        await prisma.bookmark.create({
-          data: {
+            content: faker.lorem.sentence(),
             userId: user.id,
             storyId: story.storyId,
+            createdAt: faker.date.past(),
           },
         });
       }
