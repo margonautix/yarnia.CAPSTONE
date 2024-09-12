@@ -1,9 +1,5 @@
 const prisma = require("../prisma");
-const { generateMersenne53Randomizer } = require("@faker-js/faker");
 const { faker } = require("@faker-js/faker");
-
-// Initialize the randomizer
-const randomizer = generateMersenne53Randomizer();
 
 const seed = async () => {
   // Create 10 random users
@@ -18,7 +14,7 @@ const seed = async () => {
     });
 
     // Create a random number of stories for each user
-    for (let j = 0; j < Math.floor(randomizer() * 5); j++) {
+    for (let j = 0; j < faker.datatype.number({ min: 1, max: 5 }); j++) {
       const story = await prisma.story.create({
         data: {
           title: faker.lorem.words(3), // Random title
@@ -29,7 +25,7 @@ const seed = async () => {
       });
 
       // Create random comments for the story
-      for (let k = 0; k < Math.floor(randomizer() * 5); k++) {
+      for (let k = 0; k < faker.datatype.number({ min: 1, max: 5 }); k++) {
         await prisma.comment.create({
           data: {
             content: faker.lorem.sentence(), // Random comment content
@@ -40,7 +36,7 @@ const seed = async () => {
       }
 
       // Randomly bookmark stories
-      if (Math.random() > 0.5) {
+      if (faker.datatype.boolean()) {
         // 50% chance to bookmark the story
         await prisma.bookmark.create({
           data: {
