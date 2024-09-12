@@ -55,6 +55,15 @@ const seed = async () => {
           },
         });
       }
+      for (let k = 0; k < getRandomNumber(1, 5); k++) {
+        await prisma.bookmark.create({
+          data: {
+            userId: user.id,
+            storyId: story.storyId,
+            createdAt: faker.date.past(),
+          },
+        });
+      }
     }
   }
 };
