@@ -50,7 +50,7 @@ model Bookmark {
 
   // Relations
   user  User  @relation(fields: [userId], references: [id])
-  story Story @relation(fields: [storyId], references: [storyId])
+  story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 }
 
 model Comment {
@@ -62,5 +62,5 @@ model Comment {
 
   // Relations
   user  User  @relation(fields: [userId], references: [id])
-  story Story @relation(fields: [storyId], references: [storyId])
+  story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 }
