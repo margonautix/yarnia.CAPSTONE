@@ -62,11 +62,25 @@ app.post("/api/users", async (req, res, next) => {
   }
 });
 
-// PUT update a user by authorId
 app.put("/api/users/:authorId", async (req, res, next) => {
   try {
     const { authorId } = req.params;
     const { name, email } = req.body;
+
+    // Validate input
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required." });
+    }
+
+    // Optional: If you have user authentication, check if the current user can update this author
+    const loggedInUserId = req.user.id; // Assuming req.user contains the authenticated user info
+    if (parseInt(authorId, 10) !== loggedInUserId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to update this profile." });
+    }
+
+    // Update the author in the database
     const updatedAuthor = await prisma.author.update({
       where: { id: parseInt(authorId, 10) },
       data: {
@@ -74,11 +88,16 @@ app.put("/api/users/:authorId", async (req, res, next) => {
         email,
       },
     });
-    res.json(updatedAuthor);
+
+    // Return the updated author object, excluding any sensitive fields
+    const { password, ...safeAuthorData } = updatedAuthor; // Assuming password field exists
+    res.json(safeAuthorData);
   } catch (err) {
+    // Handle Prisma record not found error (P2025)
     if (err.code === "P2025") {
       return next({ status: 404, message: "User not found." });
     }
+    // Forward any other errors
     next(err);
   }
 });
