@@ -8,6 +8,15 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 // API routes go here
 
+app.get("/api/stories", async (req, res, next) => {
+  try {
+    const stories = await prisma.story.findMany();
+    res.json(stories);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
