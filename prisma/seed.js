@@ -16,7 +16,6 @@ const seed = async () => {
         password: faker.internet.password(),
         bio: faker.lorem.sentence(),
         joinedOn: faker.date.past(),
-        role: "ADMIN", // Adding role for administrators
       },
     });
   }
@@ -30,7 +29,6 @@ const seed = async () => {
         password: faker.internet.password(),
         bio: faker.lorem.sentence(),
         joinedOn: faker.date.past(),
-        role: "USER", // Regular user
       },
     });
 
@@ -48,22 +46,18 @@ const seed = async () => {
 
       // Create random comments for each story (higher chance for more comments)
       for (let k = 0; k < getRandomNumber(1, 5); k++) {
-        if (getRandomWithProbability(0.7)) {
-          // 70% chance to comment on a story
-          await prisma.comment.create({
-            data: {
-              content: faker.lorem.sentence(),
-              userId: user.id,
-              storyId: story.storyId,
-              createdAt: faker.date.past(),
-            },
-          });
-        }
+        await prisma.comment.create({
+          data: {
+            content: faker.lorem.sentence(),
+            userId: user.id,
+            storyId: story.storyId,
+            createdAt: faker.date.past(),
+          },
+        });
       }
     }
   }
 };
-
 seed()
   .then(async () => await prisma.$disconnect())
   .catch(async (e) => {
