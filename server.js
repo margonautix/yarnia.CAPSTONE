@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 // API routes go here
 
+// GET all stories
 app.get("/api/stories", async (req, res, next) => {
   try {
     const stories = await prisma.story.findMany();
@@ -17,6 +18,7 @@ app.get("/api/stories", async (req, res, next) => {
   }
 });
 
+// GET a single story by ID
 app.get("/api/stories/:storyId", async (req, res, next) => {
   const { storyId } = req.params; // Extract storyId from the URL
   try {
@@ -43,6 +45,38 @@ app.delete("/api/stories/:storyId", async (req, res, next) => {
     });
 
     res.json({ message: "Story deleted successfully.", story });
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ message: "Story not found." });
+    }
+    next(err);
+  }
+});
+
+// PUT (update) a story by ID
+app.put("/api/stories/:storyId", async (req, res, next) => {
+  const { storyId } = req.params;
+  const { title, summary, content } = req.body;
+
+  try {
+    // Ensure all required fields are provided
+    if (!title || !content) {
+      return res
+        .status(400)
+        .json({ message: "Title and content are required." });
+    }
+
+    // Update the story in the database
+    const updatedStory = await prisma.story.update({
+      where: { storyId: parseInt(storyId) },
+      data: {
+        title,
+        summary,
+        content,
+      },
+    });
+
+    res.json({ message: "Story updated successfully.", updatedStory });
   } catch (err) {
     if (err.code === "P2025") {
       return res.status(404).json({ message: "Story not found." });
