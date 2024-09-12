@@ -53,6 +53,34 @@ app.delete("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
+// POST (create) a new story
+app.post("/api/stories", async (req, res, next) => {
+  const { title, authorId, summary, content } = req.body;
+
+  try {
+    // Ensure all required fields are provided
+    if (!title || !authorId || !content) {
+      return res
+        .status(400)
+        .json({ message: "Title, authorId, and content are required." });
+    }
+
+    // Create a new story in the database
+    const newStory = await prisma.story.create({
+      data: {
+        title,
+        authorId: parseInt(authorId), // Convert to integer if necessary
+        summary,
+        content,
+      },
+    });
+
+    res.status(201).json({ message: "Story created successfully.", newStory });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PUT (update) a story by ID
 app.put("/api/stories/:storyId", async (req, res, next) => {
   const { storyId } = req.params;
