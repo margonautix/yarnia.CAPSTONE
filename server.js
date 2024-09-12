@@ -17,6 +17,40 @@ app.get("/api/stories", async (req, res, next) => {
   }
 });
 
+app.get("/api/stories/:storyId", async (req, res, next) => {
+  const { storyId } = req.params; // Extract storyId from the URL
+  try {
+    const story = await prisma.story.findUnique({
+      where: { storyId: parseInt(storyId) },
+    });
+
+    if (!story) {
+      return res.status(404).json({ message: "Story not found." });
+    }
+
+    res.json(story);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE a single story by ID
+app.delete("/api/stories/:storyId", async (req, res, next) => {
+  const { storyId } = req.params;
+  try {
+    const story = await prisma.story.delete({
+      where: { storyId: parseInt(storyId) },
+    });
+
+    res.json({ message: "Story deleted successfully.", story });
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ message: "Story not found." });
+    }
+    next(err);
+  }
+});
+
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
