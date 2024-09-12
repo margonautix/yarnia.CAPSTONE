@@ -1,6 +1,9 @@
 const prisma = require("../prisma");
 const { faker } = require("@faker-js/faker");
 
+const getRandomNumber = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
 const seed = async () => {
   // Create 5 administrators
   for (let i = 0; i < 5; i++) {
@@ -30,7 +33,7 @@ const seed = async () => {
     });
 
     // Each user creates between 1 and 5 stories
-    for (let j = 0; j < faker.datatype.number({ min: 1, max: 5 }); j++) {
+    for (let j = 0; j < getRandomNumber(1, 5); j++) {
       const story = await prisma.story.create({
         data: {
           title: faker.lorem.words(3),
@@ -43,7 +46,7 @@ const seed = async () => {
       });
 
       // Create random comments for each story
-      for (let k = 0; k < faker.datatype.number({ min: 0, max: 5 }); k++) {
+      for (let k = 0; k < getRandomNumber(0, 5); k++) {
         await prisma.comment.create({
           data: {
             content: faker.lorem.sentence(),
