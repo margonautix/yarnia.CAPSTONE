@@ -29,13 +29,12 @@ model User {
 }
 
 model Story {
-  storyId      Int      @id @default(autoincrement())
-  title        String
-  isBookmarked Boolean  @default(false)
-  authorId     Int
-  summary      String?
-  createdAt    DateTime @default(now())
-  content      String
+  storyId   Int      @id @default(autoincrement())
+  title     String
+  authorId  Int
+  summary   String?
+  createdAt DateTime @default(now())
+  content   String
 
   // Relations
   author    User       @relation("author", fields: [authorId], references: [id])
