@@ -113,6 +113,41 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
+// POST (create) a new user
+app.post("/api/users", async (req, res, next) => {
+  const { username, email, password, bio } = req.body;
+
+  try {
+    // Ensure all required fields are provided
+    if (!username || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username, email, and password are required." });
+    }
+
+    // Create a new user in the database
+    const newUser = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password, // Ensure you hash passwords before storing them in production
+        bio,
+      },
+    });
+
+    res.status(201).json({ message: "User created successfully.", newUser });
+  } catch (err) {
+    // Handle any errors
+    if (err.code === "P2002") {
+      // P2002 is Prisma's error code for unique constraint violation
+      return res
+        .status(409)
+        .json({ message: "Username or email already in use." });
+    }
+    next(err);
+  }
+});
+
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
