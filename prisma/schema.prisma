@@ -19,19 +19,18 @@ model User {
   email    String   @unique
   password String
   joinedOn DateTime @default(now())
-  storyId  Int? // Optional foreign key
+  storyId  Int? // Optional foreign key, but not necessary
   bio      String?
 
   // Relations
   bookmarks Bookmark[]
   comments  Comment[]
-  stories   Story[]    @relation("author") // No need to specify fields or references here
+  stories   Story[] @relation("author") 
 }
 
 model Story {
   storyId      Int      @id @default(autoincrement())
   title        String
-  isBookmarked Boolean  @default(false)
   authorId     Int
   summary      String?
   createdAt    DateTime @default(now())

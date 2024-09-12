@@ -1,6 +1,8 @@
 const prisma = require("../prisma");
 const { faker } = require("@faker-js/faker");
 
+// Custom function to simulate higher probability
+
 const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -32,8 +34,8 @@ const seed = async () => {
       },
     });
 
-    // Each user creates between 1 and 5 stories
-    for (let j = 0; j < getRandomNumber(1, 5); j++) {
+    // Each user creates between 3 and 7 stories (higher chance for more stories)
+    for (let j = 0; j < getRandomNumber(3, 7); j++) {
       const story = await prisma.story.create({
         data: {
           title: faker.lorem.words(3),
@@ -41,20 +43,22 @@ const seed = async () => {
           summary: faker.lorem.sentence(),
           authorId: user.id,
           createdAt: faker.date.past(),
-          isBookmarked: faker.datatype.boolean(), // Random boolean for bookmarks
         },
       });
 
-      // Create random comments for each story
-      for (let k = 0; k < getRandomNumber(0, 5); k++) {
-        await prisma.comment.create({
-          data: {
-            content: faker.lorem.sentence(),
-            userId: user.id,
-            storyId: story.storyId,
-            createdAt: faker.date.past(),
-          },
-        });
+      // Create random comments for each story (higher chance for more comments)
+      for (let k = 0; k < getRandomNumber(1, 5); k++) {
+        if (getRandomWithProbability(0.7)) {
+          // 70% chance to comment on a story
+          await prisma.comment.create({
+            data: {
+              content: faker.lorem.sentence(),
+              userId: user.id,
+              storyId: story.storyId,
+              createdAt: faker.date.past(),
+            },
+          });
+        }
       }
     }
   }
