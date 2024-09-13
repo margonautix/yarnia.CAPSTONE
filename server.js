@@ -126,6 +126,95 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
+// GET all comments on individual story
+app.get("/api/stories/:storyId/comments", async (req, res, next) => {
+  const { storyId } = req.params; // Extract storyId from the URL
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        storyId: parseInt(storyId), // Filter comments by storyId
+      },
+    });
+    res.json(comments);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST new comment on individual story
+app.post("/api/stories/:storyId/comments", async (req, res, next) => {
+  const { storyId } = req.params;
+  const { userId, content } = req.body;
+
+  try {
+    if (!userId || !content) {
+      return res
+        .status(400)
+        .json({ message: "User ID and content are required" });
+    }
+
+    const newComment = await prisma.comment.create({
+      data: {
+        userId: parseInt(userId),
+        storyId: parseInt(storyId),
+        content,
+      },
+    });
+
+    res
+      .status(201)
+      .json({ message: "Comment added successfully.", newComment });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE a specific comment
+app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
+  const { commentId } = req.params;
+
+  try {
+    // Delete the comment
+    const deletedComment = await prisma.comment.delete({
+      where: { commentId: parseInt(commentId) },
+    });
+
+    res.status(200).json(deletedComment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error deleting comment" });
+  }
+});
+
+// GET all comments by specific user
+app.get("/api/users/:authorId/comments", async (req, res, next) => {
+  const { authorId } = req.params; // Extract authorId from the URL
+  try {
+    // Fetch comments where the authorId matches the specified user
+    const comments = await prisma.comment.findMany({
+      where: {
+        userId: parseInt(authorId), // Filter comments by authorId
+      },
+    });
+
+    res.status(200).json(comments);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET all comments in database
+app.get("/api/comments", async (req, res, next) => {
+  try {
+    // Fetch all comments from the database
+    const comments = await prisma.comment.findMany();
+
+    res.status(200).json(comments);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // === Auth Routes ===
 // Middleware to authenticate the user using JWT
 const authenticateUser = (req, res, next) => {
