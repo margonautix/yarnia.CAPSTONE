@@ -233,7 +233,7 @@ app.get("/api/users/:authorId/comments", async (req, res, next) => {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        userId: parseInt(authorId), // Filter comments by authorId
+        authorId: parseInt(authorId), // Filter comments by authorId
       },
     });
 
@@ -271,7 +271,7 @@ app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the author
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to userId)
+      where: { authorId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to authorId)
       include: {
         story: true, // Optionally include the related story information
       },
