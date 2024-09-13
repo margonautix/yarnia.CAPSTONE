@@ -1,264 +1,279 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const prisma = require("./prisma"); // Assuming Prisma client is set up
 const app = express();
-const prisma = require("./prisma");
-
 const PORT = 3000;
+const faker = require("@faker-js/faker");
+
+// JWT secret key (this should be an environment variable in production)
+const JWT_SECRET = "your_jwt_secret_key";
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
 
-// Simple error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err);
-  const status = err.status ?? 500;
-  const message = err.message ?? "Internal server error.";
-  res.status(status).json({ message });
-});
+// Helper function to generate JWT
+const generateToken = (user) => {
+  return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+    expiresIn: "1h", // Token expires in 1 hour
+  });
+};
 
-// Server start
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
-
-// GET all users (Admin route)
-app.get("/api/users", async (req, res, next) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (err) {
-    next(err);
+// Middleware to authenticate the user using JWT
+const authenticateUser = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, token missing" });
   }
-});
 
-// GET a single user by authorId
-app.get("/api/users/:authorId", async (req, res, next) => {
   try {
-    const { authorId } = req.params;
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(authorId, 10) },
-    });
-    if (!user) {
-      return next({ status: 404, message: "User not found." });
-    }
-    res.json(user);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // Attach the decoded token to the request object
+    next();
   } catch (err) {
-    next(err);
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
-});
+};
 
-// POST create a new user
-app.post("/api/users", async (req, res, next) => {
-  try {
-    const { name, email } = req.body;
-    const users = await prisma.user.create({
-      data: {
-        name,
-        email,
-      },
-    });
-    res.status(201).json(users);
-  } catch (err) {
-    next(err);
-  }
-});
+// === Auth Routes ===
 
-app.put("/api/users/:authorId", async (req, res, next) => {
-  try {
-    const { authorId } = req.params;
-    const { name, email } = req.body;
-
-    // Validate input
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and email are required." });
-    }
-
-    // Optional: If you have user authentication, check if the current user can update this author
-    const loggedInUserId = req.user.id; // Assuming req.user contains the authenticated user info
-    if (parseInt(authorId, 10) !== loggedInUserId) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to update this profile." });
-    }
-
-    // Update the author in the database
-    const updatedAuthor = await prisma.author.update({
-      where: { id: parseInt(authorId, 10) },
-      data: {
-        name,
-        email,
-      },
-    });
-
-    // Return the updated author object, excluding any sensitive fields
-    const { password, ...safeAuthorData } = updatedAuthor; // Assuming password field exists
-    res.json(safeAuthorData);
-  } catch (err) {
-    // Handle Prisma record not found error (P2025)
-    if (err.code === "P2025") {
-      return next({ status: 404, message: "User not found." });
-    }
-    // Forward any other errors
-    next(err);
-  }
-});
-
-// DELETE a user by authorId
-app.delete("/api/users/:authorId", async (req, res, next) => {
-  try {
-    const { authorId } = req.params;
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(authorId, 10) },
-    });
-
-    if (!user) {
-      return next({
-        status: 404,
-        message: `Could not find user with id ${authorId}.`,
-      });
-    }
-
-    await prisma.user.delete({
-      where: { id: parseInt(authorId, 10) },
-    });
-
-    res.sendStatus(204);
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.use(express.json());
-app.use(require("morgan")("dev"));
-
-// Simple error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err);
-  const status = err.status ?? 500;
-  const message = err.message ?? "Internal server error.";
-  res.status(status).json({ message });
-});
-
-// Server start
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
-
-// GET all users (Admin route)
-app.get("/api/users", async (req, res, next) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET a single user by authorId
-app.get("/api/users/:authorId", async (req, res, next) => {
-  try {
-    const { authorId } = req.params;
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(authorId, 10) },
-    });
-    if (!user) {
-      return next({ status: 404, message: "User not found." });
-    }
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST (create) a new user
-app.post("/api/users", async (req, res, next) => {
+// POST /api/auth/register - Register a new user
+app.post("/api/auth/register", async (req, res, next) => {
   const { username, email, password, bio } = req.body;
 
   try {
-    // Ensure all required fields are provided
+    // Validate input
     if (!username || !email || !password) {
       return res
         .status(400)
         .json({ message: "Username, email, and password are required." });
     }
 
-    // Create a new user in the database
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email already in use." });
+    }
+
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
-        password, // Ensure you hash passwords before storing them in production
+        password: hashedPassword,
         bio,
       },
     });
 
-    res.status(201).json({ message: "User created successfully.", newUser });
+    // Generate a token for the new user
+    const token = generateToken(newUser);
+
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (err) {
-    // Handle any errors
-    if (err.code === "P2002") {
-      // P2002 is Prisma's error code for unique constraint violation
-      return res
-        .status(409)
-        .json({ message: "Username or email already in use." });
-    }
     next(err);
   }
 });
 
-// PUT to update a user by authorId
-app.put("/api/users/:authorId", async (req, res, next) => {
+// POST /api/auth/login - Login a user
+app.post("/api/auth/login", async (req, res, next) => {
+  const { email, password } = req.body;
+
   try {
-    const { authorId } = req.params;
-    const { username, email, bio } = req.body;
-
-    // Validate input
-    if (!username || !email) {
-      return res
-        .status(400)
-        .json({ message: "Username and email are required." });
-    }
-
-    // Update the user in the database
-    const updatedUser = await prisma.user.update({
-      where: { id: parseInt(authorId, 10) },
-      data: {
-        username,
-        email,
-        bio,
-      },
-    });
-
-    res.json(updatedUser);
-  } catch (err) {
-    // Handle Prisma record not found error (P2025)
-    if (err.code === "P2025") {
-      return next({ status: 404, message: "User not found." });
-    }
-    // Forward any other errors
-    next(err);
-  }
-});
-
-// DELETE a user by authorId
-app.delete("/api/users/:authorId", async (req, res, next) => {
-  try {
-    const { authorId } = req.params;
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(authorId, 10) },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      return next({
-        status: 404,
-        message: `Could not find user with id ${authorId}.`,
-      });
+      return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    await prisma.user.delete({
-      where: { id: parseInt(authorId, 10) },
-    });
+    // Compare hashed passwords
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    res.sendStatus(204);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    // Generate a token for the authenticated user
+    const token = generateToken(user);
+
+    res.json({ message: "Login successful", token });
   } catch (err) {
     next(err);
   }
+});
+
+// GET /api/auth/me - Get the authenticated user
+app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// === Bookmark Routes ===
+
+// POST /api/bookmarks - Create a new bookmark (Requires authentication)
+app.post("/api/bookmarks", authenticateUser, async (req, res, next) => {
+  const { storyId } = req.body;
+
+  try {
+    const newBookmark = await prisma.bookmark.create({
+      data: {
+        userId: req.user.id,
+        storyId: parseInt(storyId, 10),
+      },
+    });
+    res
+      .status(201)
+      .json({ message: "Bookmark created successfully", newBookmark });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/bookmarks - Get all bookmarks of the authenticated user
+app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
+  try {
+    const bookmarks = await prisma.bookmark.findMany({
+      where: { userId: req.user.id },
+      include: { story: true }, // Include the related story data
+    });
+    res.json(bookmarks);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /api/bookmarks/:bookmarkId - Delete a bookmark (Requires authentication)
+app.delete(
+  "/api/bookmarks/:bookmarkId",
+  authenticateUser,
+  async (req, res, next) => {
+    const { bookmarkId } = req.params;
+
+    try {
+      const bookmark = await prisma.bookmark.findUnique({
+        where: { bookmarkId: parseInt(bookmarkId, 10) },
+      });
+
+      if (!bookmark || bookmark.userId !== req.user.id) {
+        return res
+          .status(403)
+          .json({ message: "You are not authorized to delete this bookmark." });
+      }
+
+      await prisma.bookmark.delete({
+        where: { bookmarkId: parseInt(bookmarkId, 10) },
+      });
+
+      res.sendStatus(204); // No content
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// === Comment on Bookmark Routes ===
+// POST /api/stories/:storyId/comments - Add a comment to a story (Requires authentication)
+app.post(
+  "/api/stories/:storyId/comments",
+  authenticateUser,
+  async (req, res, next) => {
+    const { storyId } = req.params;
+    const { content } = req.body;
+
+    try {
+      // Find the story by ID
+      const story = await prisma.story.findUnique({
+        where: { id: parseInt(storyId, 10) },
+      });
+
+      if (!story) {
+        return res.status(404).json({ message: "Story not found." });
+      }
+
+      // Create a new comment attached to the story
+      const newComment = await prisma.comment.create({
+        data: {
+          storyId: parseInt(storyId, 10),
+          userId: req.user.id,
+          content,
+        },
+      });
+
+      res.status(201).json({ message: "Comment added to story", newComment });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// GET /api/bookmarks/:bookmarkId/comments - Get comments on a bookmark
+app.get(
+  "/api/stories/:storyId/comments",
+  authenticateUser,
+  async (req, res, next) => {
+    const { storyId } = req.params;
+
+    try {
+      // Fetch comments related to the story
+      const comments = await prisma.comment.findMany({
+        where: { storyId: parseInt(storyId, 10) },
+        include: { user: true }, // Include user info for the comment
+      });
+
+      res.json(comments);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// DELETE /api/stories/:storyId/comments/:commentId - Delete a comment on a story (Requires authentication)
+app.delete(
+  "/api/stories/:storyId/comments/:commentId",
+  authenticateUser,
+  async (req, res, next) => {
+    const { commentId } = req.params;
+
+    try {
+      // Find the comment by its ID
+      const comment = await prisma.comment.findUnique({
+        where: { id: parseInt(commentId, 10) },
+      });
+
+      if (!comment || comment.userId !== req.user.id) {
+        return res
+          .status(403)
+          .json({ message: "You are not authorized to delete this comment." });
+      }
+
+      // Delete the comment
+      await prisma.comment.delete({
+        where: { id: parseInt(commentId, 10) },
+      });
+
+      res.sendStatus(204); // No content
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// === Error Handling Middleware ===
+app.use((err, req, res, next) => {
+  console.error(err);
+  const status = err.status || 500;
+  res.status(status).json({ message: err.message || "Internal server error" });
+});
+
+// === Server Listening ===
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
