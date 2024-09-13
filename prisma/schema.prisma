@@ -19,6 +19,8 @@ model User {
   bookmarks Bookmark[]
   comments  Comment[]
   stories   Story[] @relation("StoryAuthor") // Renamed relation for clarity
+
+  role String @default("user") // "admin" or "user"
 }
 
 model Story {

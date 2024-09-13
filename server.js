@@ -4,18 +4,21 @@ const bcrypt = require("bcryptjs");
 const prisma = require("./prisma"); // Assuming Prisma client is set up
 const app = express();
 const PORT = 3000;
-
-// JWT secret key (this should be an environment variable in production)
-const JWT_SECRET = "your_jwt_secret_key";
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
 
 // Helper function to generate JWT
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-    expiresIn: "1h", // Token expires in 1 hour
-  });
+  return jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    JWT_SECRET,
+    {
+      expiresIn: "1h", // Token expires in 1 hour
+    }
+  );
 };
 
 // Middleware to authenticate the user using JWT
@@ -32,6 +35,16 @@ const authenticateUser = (req, res, next) => {
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
   }
+};
+
+// Middleware to check if user is an admin
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Access denied, admin privileges required" });
+  }
+  next();
 };
 
 // === Auth Routes ===
@@ -57,13 +70,14 @@ app.post("/api/auth/register", async (req, res, next) => {
     // Hash password before storing
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    // Create new user (default role is "user")
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
         bio,
+        role: "user", // default role
       },
     });
 
@@ -154,12 +168,16 @@ app.post(
   }
 );
 
-// GET /api/bookmarks - Get all bookmarked stories of the authenticated user
+// GET /api/bookmarks - Get all bookmarked stories of the authenticated user (with pagination)
 app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
+  const { page = 1, limit = 10 } = req.query; // Pagination query parameters
+
   try {
     const bookmarks = await prisma.bookmark.findMany({
       where: { userId: req.user.id },
       include: { story: true }, // Include the related story data
+      take: parseInt(limit),
+      skip: (page - 1) * parseInt(limit),
     });
 
     res.json(bookmarks.map((bookmark) => bookmark.story)); // Return only the stories
@@ -200,6 +218,7 @@ app.delete(
 );
 
 // === Comment on Bookmark Routes ===
+
 // POST /api/stories/:storyId/comments - Add a comment to a story (Requires authentication)
 app.post(
   "/api/stories/:storyId/comments",
@@ -234,18 +253,21 @@ app.post(
   }
 );
 
-// GET /api/bookmarks/:bookmarkId/comments - Get comments on a bookmark
+// GET /api/stories/:storyId/comments - Get comments on a story (with pagination)
 app.get(
   "/api/stories/:storyId/comments",
   authenticateUser,
   async (req, res, next) => {
     const { storyId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
 
     try {
       // Fetch comments related to the story
       const comments = await prisma.comment.findMany({
         where: { storyId: parseInt(storyId, 10) },
         include: { user: true }, // Include user info for the comment
+        take: parseInt(limit),
+        skip: (page - 1) * parseInt(limit),
       });
 
       res.json(comments);
