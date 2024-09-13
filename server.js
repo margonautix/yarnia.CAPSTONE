@@ -255,6 +255,83 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
   }
 });
 
+// Route to get all bookmarks for a specific author
+app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
+  const { authorId } = req.params; // Extract authorId from request params
+
+  try {
+    // Check if the author exists (optional but recommended)
+    const author = await prisma.user.findUnique({
+      where: { id: parseInt(authorId) },
+    });
+
+    if (!author) {
+      return res.status(404).json({ message: "Author not found." });
+    }
+
+    // Find all bookmarks for the author
+    const bookmarks = await prisma.bookmark.findMany({
+      where: { userId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to userId)
+      include: {
+        story: true, // Optionally include the related story information
+      },
+    });
+
+    // Return bookmarks in the response
+    res.json(bookmarks);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete(
+  "/api/stories/:storyId/bookmarks/:bookmarkId",
+  async (req, res, next) => {
+    const { bookmarkId } = req.params;
+
+    try {
+      await prisma.bookmark.delete({
+        where: { bookmarkId: parseInt(bookmarkId) },
+      });
+      res.status(200).json({ message: "Bookmark deleted successfully." });
+    } catch (err) {
+      if (err.code === "P2025") {
+        return res.status(404).json({ message: "Bookmark not found." });
+      }
+      next(err);
+    }
+  }
+);
+
+// Route to get all bookmarks for a specific story
+app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+  const { storyId } = req.params; // Extract storyId from request params
+
+  try {
+    // Check if the story exists (optional but recommended)
+    const story = await prisma.story.findUnique({
+      where: { storyId: parseInt(storyId) },
+    });
+
+    if (!story) {
+      return res.status(404).json({ message: "Story not found." });
+    }
+
+    // Find all bookmarks for the story
+    const bookmarks = await prisma.bookmark.findMany({
+      where: { storyId: parseInt(storyId) }, // Filter bookmarks by storyId
+      include: {
+        user: true, // Optionally include the user who bookmarked the story
+      },
+    });
+
+    // Return bookmarks in the response
+    res.json(bookmarks);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // === Auth Routes ===
 
 // POST (create) a new user
