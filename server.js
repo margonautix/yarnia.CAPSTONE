@@ -119,32 +119,51 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
 // === Bookmark Routes ===
 
 // POST /api/bookmarks - Create a new bookmark (Requires authentication)
-app.post("/api/bookmarks", authenticateUser, async (req, res, next) => {
-  const { storyId } = req.body;
+app.post(
+  "/api/bookmarks/:storyId",
+  authenticateUser,
+  async (req, res, next) => {
+    const { storyId } = req.params;
 
-  try {
-    const newBookmark = await prisma.bookmark.create({
-      data: {
-        userId: req.user.id,
-        storyId: parseInt(storyId, 10),
-      },
-    });
-    res
-      .status(201)
-      .json({ message: "Bookmark created successfully", newBookmark });
-  } catch (err) {
-    next(err);
+    try {
+      // Check if the story already exists in bookmarks
+      const existingBookmark = await prisma.bookmark.findFirst({
+        where: {
+          userId: req.user.id,
+          storyId: parseInt(storyId, 10),
+        },
+      });
+
+      if (existingBookmark) {
+        return res.status(409).json({ message: "Story already bookmarked." });
+      }
+
+      // Create a new bookmark
+      const newBookmark = await prisma.bookmark.create({
+        data: {
+          userId: req.user.id,
+          storyId: parseInt(storyId, 10),
+        },
+      });
+
+      res
+        .status(201)
+        .json({ message: "Story bookmarked successfully", newBookmark });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-// GET /api/bookmarks - Get all bookmarks of the authenticated user
+// GET /api/bookmarks - Get all bookmarked stories of the authenticated user
 app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
   try {
     const bookmarks = await prisma.bookmark.findMany({
       where: { userId: req.user.id },
       include: { story: true }, // Include the related story data
     });
-    res.json(bookmarks);
+
+    res.json(bookmarks.map((bookmark) => bookmark.story)); // Return only the stories
   } catch (err) {
     next(err);
   }
@@ -152,27 +171,29 @@ app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
 
 // DELETE /api/bookmarks/:bookmarkId - Delete a bookmark (Requires authentication)
 app.delete(
-  "/api/bookmarks/:bookmarkId",
+  "/api/bookmarks/:storyId",
   authenticateUser,
   async (req, res, next) => {
-    const { bookmarkId } = req.params;
+    const { storyId } = req.params;
 
     try {
-      const bookmark = await prisma.bookmark.findUnique({
-        where: { bookmarkId: parseInt(bookmarkId, 10) },
+      const bookmark = await prisma.bookmark.findFirst({
+        where: {
+          userId: req.user.id,
+          storyId: parseInt(storyId, 10),
+        },
       });
 
-      if (!bookmark || bookmark.userId !== req.user.id) {
-        return res
-          .status(403)
-          .json({ message: "You are not authorized to delete this bookmark." });
+      if (!bookmark) {
+        return res.status(404).json({ message: "Bookmark not found." });
       }
 
+      // Delete the bookmark
       await prisma.bookmark.delete({
-        where: { bookmarkId: parseInt(bookmarkId, 10) },
+        where: { bookmarkId: bookmark.bookmarkId },
       });
 
-      res.sendStatus(204); // No content
+      res.status(204).json({ message: "Story unbookmarked successfully." });
     } catch (err) {
       next(err);
     }

@@ -46,6 +46,7 @@ model Bookmark {
   story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 }
 
+
 model Comment {
   commentId Int      @id @default(autoincrement())
   userId    Int
