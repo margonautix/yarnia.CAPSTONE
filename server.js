@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const prisma = require("./prisma"); // Assuming Prisma client is set up
 const app = express();
 const PORT = 3000;
-const faker = require("@faker-js/faker");
 
 // JWT secret key (this should be an environment variable in production)
 const JWT_SECRET = "your_jwt_secret_key";
@@ -286,71 +285,6 @@ app.delete(
     }
   }
 );
-
-// === Seed Faker Data Route ===
-app.post("/api/seed", async (req, res, next) => {
-  try {
-    // Clean existing data (optional)
-    await prisma.comment.deleteMany();
-    await prisma.bookmark.deleteMany();
-    await prisma.story.deleteMany();
-    await prisma.user.deleteMany();
-
-    const users = [];
-    const stories = [];
-
-    // Create 10 fake users
-    for (let i = 0; i < 10; i++) {
-      const hashedPassword = await bcrypt.hash("password123", 10); // Same password for all users
-      const newUser = await prisma.user.create({
-        data: {
-          username: faker.faker.internet.userName(),
-          email: faker.faker.internet.email(),
-          password: hashedPassword,
-          bio: faker.faker.lorem.sentences(2),
-        },
-      });
-      users.push(newUser);
-    }
-
-    // Create 20 fake stories
-    for (let i = 0; i < 20; i++) {
-      const newStory = await prisma.story.create({
-        data: {
-          title: faker.faker.lorem.sentence(),
-          content: faker.faker.lorem.paragraphs(5),
-          userId: users[Math.floor(Math.random() * users.length)].id, // Assign random user as the author
-        },
-      });
-      stories.push(newStory);
-    }
-
-    // Create 50 fake comments
-    for (let i = 0; i < 50; i++) {
-      await prisma.comment.create({
-        data: {
-          content: faker.faker.lorem.sentence(),
-          storyId: stories[Math.floor(Math.random() * stories.length)].id,
-          userId: users[Math.floor(Math.random() * users.length)].id,
-        },
-      });
-    }
-
-    // Create 30 fake bookmarks
-    for (let i = 0; i < 30; i++) {
-      await prisma.bookmark.create({
-        data: {
-          storyId: stories[Math.floor(Math.random() * stories.length)].id,
-          userId: users[Math.floor(Math.random() * users.length)].id,
-        },
-      });
-    }
-
-    res.status(201).json({ message: "Database seeded with fake data." });
-  } catch (err) {
-    next(err);
-  }
-});
 
 // === Error Handling Middleware ===
 app.use((err, req, res, next) => {
