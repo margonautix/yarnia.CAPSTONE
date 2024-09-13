@@ -183,34 +183,32 @@ app.get(
   }
 );
 
-// PATCH /api/users/:userId/role - Update a user's role (Admin only)
-app.patch(
-  "/api/users/:userId/role",
-  authenticateUser,
-  requireAdmin,
-  async (req, res, next) => {
-    const { userId } = req.params;
-    const { role } = req.body; // Expecting the role to be sent in the request body
+// Get a user not authenticated
+app.get("/api/users/:userId", async (req, res, next) => {
+  const { userId } = req.params;
 
-    try {
-      // Validate role
-      if (!["admin", "user"].includes(role)) {
-        return res.status(400).json({ message: "Invalid role specified." });
-      }
+  try {
+    // Find the user by ID
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId, 10) },
+      select: {
+        id: true,
+        username: true,
+        email: true, // You can choose whether to expose the email or not
+        bio: true,
+      },
+    });
 
-      // Update the user's role
-      const updatedUser = await prisma.user.update({
-        where: { id: parseInt(userId, 10) },
-        data: { role },
-      });
-
-      res.json({ message: "User role updated successfully", updatedUser });
-    } catch (err) {
-      next(err);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
     }
-  }
-);
 
+    // Respond with the user data
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 // DELETE /api/users/:userId - Delete a user (Admin only)
 app.delete(
   "/api/users/:userId",
