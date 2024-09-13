@@ -4,8 +4,21 @@ const prisma = require("./prisma");
 
 const PORT = 3000;
 
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+const JWT = process.env.JWT || "shhh";
+
 app.use(express.json());
 app.use(require("morgan")("dev"));
+
+// Helper function to generate JWT
+const generateToken = (user) => {
+  return jwt.sign({ id: user.id, email: user.email }, JWT, {
+    expiresIn: "1h", // Token expires in 1 hour
+  });
+};
+
 // API routes go here
 
 // GET all stories
@@ -114,36 +127,49 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
 });
 
 // POST (create) a new user
-app.post("/api/users", async (req, res, next) => {
+app.post("/api/auth/register", async (req, res, next) => {
   const { username, email, password, bio } = req.body;
 
   try {
-    // Ensure all required fields are provided
+    // Validate input
     if (!username || !email || !password) {
       return res
         .status(400)
         .json({ message: "Username, email, and password are required." });
     }
 
-    // Create a new user in the database
+    // Check if email already exists
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
+      return res.status(409).json({ message: "Email already in use." });
+    }
+
+    // Check if username already exists
+    const existingUsername = await prisma.user.findUnique({
+      where: { username },
+    });
+    if (existingUsername) {
+      return res.status(409).json({ message: "Username already in use." });
+    }
+
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
-        password, // Ensure you hash passwords before storing them in production
+        password: hashedPassword,
         bio,
       },
     });
 
-    res.status(201).json({ message: "User created successfully.", newUser });
+    // Generate a token for the new user
+    const token = generateToken(newUser);
+
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (err) {
-    // Handle any errors
-    if (err.code === "P2002") {
-      // P2002 is Prisma's error code for unique constraint violation
-      return res
-        .status(409)
-        .json({ message: "Username or email already in use." });
-    }
     next(err);
   }
 });
