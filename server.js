@@ -29,8 +29,8 @@ const authenticateUser = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Attach the decoded token to the request object
+    const decoded = jwt.verify(token, JWT_SECRET); // Verify the token using the secret key
+    req.user = decoded; // Attach decoded token data to the request object
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -67,10 +67,10 @@ app.post("/api/auth/register", async (req, res, next) => {
       return res.status(409).json({ message: "Email already in use." });
     }
 
-    // Hash password before storing
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user (default role is "user")
+    // Create the new user (default role is "user")
     const newUser = await prisma.user.create({
       data: {
         username,
@@ -81,10 +81,20 @@ app.post("/api/auth/register", async (req, res, next) => {
       },
     });
 
-    // Generate a token for the new user
+    // Generate JWT
     const token = generateToken(newUser);
 
-    res.status(201).json({ message: "User registered successfully", token });
+    // Respond with the token and user data
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      expiresIn: 3600,
+    });
   } catch (err) {
     next(err);
   }
@@ -95,23 +105,34 @@ app.post("/api/auth/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
+    // Find the user by email
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Compare hashed passwords
+    // Compare the hashed passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Generate a token for the authenticated user
+    // Generate JWT
     const token = generateToken(user);
 
-    res.json({ message: "Login successful", token });
+    // Respond with the token and user data
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+      expiresIn: 3600,
+    });
   } catch (err) {
     next(err);
   }
@@ -122,12 +143,93 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+        role: true,
+      },
     });
     res.json(user);
   } catch (err) {
     next(err);
   }
 });
+
+// === User Management Routes (Admin Only) ===
+
+// GET /api/users - Get all users (Admin only)
+app.get(
+  "/api/users",
+  authenticateUser,
+  requireAdmin,
+  async (req, res, next) => {
+    try {
+      const users = await prisma.user.findMany({
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          bio: true,
+          role: true,
+        },
+      });
+
+      res.json(users);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// PATCH /api/users/:userId/role - Update a user's role (Admin only)
+app.patch(
+  "/api/users/:userId/role",
+  authenticateUser,
+  requireAdmin,
+  async (req, res, next) => {
+    const { userId } = req.params;
+    const { role } = req.body; // Expecting the role to be sent in the request body
+
+    try {
+      // Validate role
+      if (!["admin", "user"].includes(role)) {
+        return res.status(400).json({ message: "Invalid role specified." });
+      }
+
+      // Update the user's role
+      const updatedUser = await prisma.user.update({
+        where: { id: parseInt(userId, 10) },
+        data: { role },
+      });
+
+      res.json({ message: "User role updated successfully", updatedUser });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// DELETE /api/users/:userId - Delete a user (Admin only)
+app.delete(
+  "/api/users/:userId",
+  authenticateUser,
+  requireAdmin,
+  async (req, res, next) => {
+    const { userId } = req.params;
+
+    try {
+      await prisma.user.delete({
+        where: { id: parseInt(userId, 10) },
+      });
+
+      res.status(204).json({ message: "User deleted successfully." });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 // === Bookmark Routes ===
 
@@ -139,7 +241,6 @@ app.post(
     const { storyId } = req.params;
 
     try {
-      // Check if the story already exists in bookmarks
       const existingBookmark = await prisma.bookmark.findFirst({
         where: {
           userId: req.user.id,
@@ -151,7 +252,6 @@ app.post(
         return res.status(409).json({ message: "Story already bookmarked." });
       }
 
-      // Create a new bookmark
       const newBookmark = await prisma.bookmark.create({
         data: {
           userId: req.user.id,
@@ -168,19 +268,28 @@ app.post(
   }
 );
 
-// GET /api/bookmarks - Get all bookmarked stories of the authenticated user (with pagination)
+// GET /api/bookmarks - Get all bookmarked stories (with pagination)
 app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
-  const { page = 1, limit = 10 } = req.query; // Pagination query parameters
+  const { page = 1, limit = 10 } = req.query;
 
   try {
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    if (isNaN(pageNum) || isNaN(limitNum) || pageNum <= 0 || limitNum <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid pagination parameters." });
+    }
+
     const bookmarks = await prisma.bookmark.findMany({
       where: { userId: req.user.id },
-      include: { story: true }, // Include the related story data
-      take: parseInt(limit),
-      skip: (page - 1) * parseInt(limit),
+      include: { story: true },
+      take: limitNum,
+      skip: (pageNum - 1) * limitNum,
     });
 
-    res.json(bookmarks.map((bookmark) => bookmark.story)); // Return only the stories
+    res.json(bookmarks.map((bookmark) => bookmark.story));
   } catch (err) {
     next(err);
   }
@@ -188,16 +297,16 @@ app.get("/api/bookmarks", authenticateUser, async (req, res, next) => {
 
 // DELETE /api/bookmarks/:bookmarkId - Delete a bookmark (Requires authentication)
 app.delete(
-  "/api/bookmarks/:storyId",
+  "/api/bookmarks/:bookmarkId",
   authenticateUser,
   async (req, res, next) => {
-    const { storyId } = req.params;
+    const { bookmarkId } = req.params;
 
     try {
       const bookmark = await prisma.bookmark.findFirst({
         where: {
+          id: parseInt(bookmarkId, 10),
           userId: req.user.id,
-          storyId: parseInt(storyId, 10),
         },
       });
 
@@ -205,19 +314,18 @@ app.delete(
         return res.status(404).json({ message: "Bookmark not found." });
       }
 
-      // Delete the bookmark
       await prisma.bookmark.delete({
-        where: { bookmarkId: bookmark.bookmarkId },
+        where: { id: bookmark.id },
       });
 
-      res.status(204).json({ message: "Story unbookmarked successfully." });
+      res.status(204).json({ message: "Bookmark deleted successfully." });
     } catch (err) {
       next(err);
     }
   }
 );
 
-// === Comment on Bookmark Routes ===
+// === Comment Routes ===
 
 // POST /api/stories/:storyId/comments - Add a comment to a story (Requires authentication)
 app.post(
@@ -228,7 +336,6 @@ app.post(
     const { content } = req.body;
 
     try {
-      // Find the story by ID
       const story = await prisma.story.findUnique({
         where: { id: parseInt(storyId, 10) },
       });
@@ -237,7 +344,6 @@ app.post(
         return res.status(404).json({ message: "Story not found." });
       }
 
-      // Create a new comment attached to the story
       const newComment = await prisma.comment.create({
         data: {
           storyId: parseInt(storyId, 10),
@@ -262,12 +368,20 @@ app.get(
     const { page = 1, limit = 10 } = req.query;
 
     try {
-      // Fetch comments related to the story
+      const pageNum = parseInt(page, 10);
+      const limitNum = parseInt(limit, 10);
+
+      if (isNaN(pageNum) || isNaN(limitNum) || pageNum <= 0 || limitNum <= 0) {
+        return res
+          .status(400)
+          .json({ message: "Invalid pagination parameters." });
+      }
+
       const comments = await prisma.comment.findMany({
         where: { storyId: parseInt(storyId, 10) },
         include: { user: true }, // Include user info for the comment
-        take: parseInt(limit),
-        skip: (page - 1) * parseInt(limit),
+        take: limitNum,
+        skip: (pageNum - 1) * limitNum,
       });
 
       res.json(comments);
@@ -277,7 +391,7 @@ app.get(
   }
 );
 
-// DELETE /api/stories/:storyId/comments/:commentId - Delete a comment on a story (Requires authentication)
+// DELETE /api/stories/:storyId/comments/:commentId - Delete a comment (Requires authentication)
 app.delete(
   "/api/stories/:storyId/comments/:commentId",
   authenticateUser,
@@ -285,23 +399,24 @@ app.delete(
     const { commentId } = req.params;
 
     try {
-      // Find the comment by its ID
       const comment = await prisma.comment.findUnique({
         where: { id: parseInt(commentId, 10) },
       });
 
-      if (!comment || comment.userId !== req.user.id) {
+      if (
+        !comment ||
+        (comment.userId !== req.user.id && req.user.role !== "admin")
+      ) {
         return res
           .status(403)
           .json({ message: "You are not authorized to delete this comment." });
       }
 
-      // Delete the comment
       await prisma.comment.delete({
         where: { id: parseInt(commentId, 10) },
       });
 
-      res.sendStatus(204); // No content
+      res.sendStatus(204);
     } catch (err) {
       next(err);
     }
