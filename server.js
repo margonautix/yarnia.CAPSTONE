@@ -14,9 +14,49 @@ app.use(require("morgan")("dev"));
 
 // Helper function to generate JWT
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, email: user.email }, JWT, {
-    expiresIn: "1h", // Token expires in 1 hour
-  });
+  return jwt.sign(
+    { id: user.id, email: user.email, isAdmin: user.isAdmin }, // Include isAdmin in the token
+    JWT,
+    { expiresIn: "1h" }
+  );
+};
+
+// Middleware to authenticate the user using JWT
+const authenticateUser = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, token missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT);
+    req.user = decoded; // Attach the decoded token to the request object
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
+// Middleware to check if the user is an admin
+const authenticateAdmin = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract token from header
+
+  if (!token) {
+    return res.status(401).json({ message: "Authorization header missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT); // Verify token
+
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    req.user = decoded; // Attach decoded token to req object
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 };
 
 // API routes go here
@@ -204,7 +244,7 @@ app.get("/api/users/:authorId/comments", async (req, res, next) => {
 });
 
 // GET all comments in database
-app.get("/api/comments", async (req, res, next) => {
+app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
   try {
     // Fetch all comments from the database
     const comments = await prisma.comment.findMany();
@@ -216,25 +256,10 @@ app.get("/api/comments", async (req, res, next) => {
 });
 
 // === Auth Routes ===
-// Middleware to authenticate the user using JWT
-const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized, token missing" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT);
-    req.user = decoded; // Attach the decoded token to the request object
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-};
 
 // POST (create) a new user
 app.post("/api/auth/register", async (req, res, next) => {
-  const { username, email, password, bio } = req.body;
+  const { username, email, password, bio, isAdmin = false } = req.body;
 
   try {
     // Validate input
@@ -244,18 +269,10 @@ app.post("/api/auth/register", async (req, res, next) => {
         .json({ message: "Username, email, and password are required." });
     }
 
-    // Check if email already exists
-    const existingEmail = await prisma.user.findUnique({ where: { email } });
-    if (existingEmail) {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
       return res.status(409).json({ message: "Email already in use." });
-    }
-
-    // Check if username already exists
-    const existingUsername = await prisma.user.findUnique({
-      where: { username },
-    });
-    if (existingUsername) {
-      return res.status(409).json({ message: "Username already in use." });
     }
 
     // Hash password before storing
@@ -268,6 +285,7 @@ app.post("/api/auth/register", async (req, res, next) => {
         email,
         password: hashedPassword,
         bio,
+        isAdmin, // Save the isAdmin field
       },
     });
 
@@ -279,6 +297,72 @@ app.post("/api/auth/register", async (req, res, next) => {
     next(err);
   }
 });
+
+// Route to get all users (only accessible to admin users)
+app.get("/api/users", authenticateAdmin, async (req, res, next) => {
+  try {
+    // Fetch all users from the database
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+        isAdmin: true,
+        joinedOn: true,
+      },
+    });
+
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/api/users/:authorId", async (req, res, next) => {
+  const { authorId } = req.params;
+
+  try {
+    // Find the user by ID
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(authorId, 10) },
+      select: {
+        id: true,
+        username: true,
+        email: true, // You can choose whether to expose the email or not
+        bio: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Respond with the user data
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete(
+  "/api/users/:authorId",
+  authenticateUser,
+  authenticateAdmin,
+  async (req, res, next) => {
+    const { authorId } = req.params;
+
+    try {
+      await prisma.user.delete({
+        where: { id: parseInt(authorId, 10) },
+      });
+
+      res.status(204).json({ message: "User deleted successfully." });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 // POST /api/auth/login - Login a user
 app.post("/api/auth/login", async (req, res, next) => {
