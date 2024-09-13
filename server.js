@@ -209,6 +209,7 @@ app.get("/api/users/:userId", async (req, res, next) => {
     next(err);
   }
 });
+
 // DELETE /api/users/:userId - Delete a user (Admin only)
 app.delete(
   "/api/users/:userId",
