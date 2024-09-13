@@ -148,6 +148,88 @@ app.post("/api/users", async (req, res, next) => {
   }
 });
 
+// Get new bookmarks in database
+
+app.get("/api/user/bookmarks", async (req, res, next) => {  
+  const { bookmarkId } = req.params; 
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: { bookmarkId: parseInt(bookmarkId) },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "bookmark not found." });
+    }
+    res.json(bookmark);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/stories/:storyId/bookmarks
+
+app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+  const { bookmarkId, userId, storyId, createdAt } = req.body;
+
+  try {
+    if (!userId || !storyId || !createdAt || !bookmarkId) {
+      return res.status(400).json({ message: "userId, storyId, createdAt, and bookmarkId are required" });
+    }
+
+    const bookmark = await prisma.bookmark.create({
+      data: {
+        userId: parseInt(userId),
+        storyId: parseInt(storyId),
+        createdAt: new Date(createdAt),
+      },
+    });
+
+    res.status(201).json({ message: "Bookmark created successfully", bookmark });
+  } catch (err) {
+    if (err.code === 'P2002') {
+      return res.status(409).json({ message: "Bookmark already exists." });
+    }
+
+    next(err);
+  }
+});
+
+// DELETE /api/stories/:storyId/bookmarks
+
+app.delete("/api/stories/:storyId/bookmarks/:bookmarkId", async (req, res, next) => {
+  const { storyId, bookmarkId } = req.params;
+
+  try {
+    await prisma.bookmark.delete({
+      where: { id: parseInt(bookmarkId) },
+    });
+    res.status(200).json({ message: "Bookmark deleted successfully." });
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ message: "Bookmark not found." });
+    }
+    next(err);
+  }
+});
+
+// GET /api/user/:authorId/bookmarks
+
+app.get("/api/user/:authorId/bookmarks", async(req, res, next) => {
+  const { bookmarkId} = req.params;
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: { bookmarkId: parseInt(bookmarkId) },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "Story not found." });
+    }
+    res.json(bookmark);
+  }catch (err) {
+    next(err);
+  }
+});
+
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
