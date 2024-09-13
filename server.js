@@ -126,6 +126,23 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
+// === Auth Routes ===
+// Middleware to authenticate the user using JWT
+const authenticateUser = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, token missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT);
+    req.user = decoded; // Attach the decoded token to the request object
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
 // POST (create) a new user
 app.post("/api/auth/register", async (req, res, next) => {
   const { username, email, password, bio } = req.body;
@@ -169,6 +186,45 @@ app.post("/api/auth/register", async (req, res, next) => {
     const token = generateToken(newUser);
 
     res.status(201).json({ message: "User registered successfully", token });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/login - Login a user
+app.post("/api/auth/login", async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    // Compare hashed passwords
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials." });
+    }
+
+    // Generate a token for the authenticated user
+    const token = generateToken(user);
+
+    res.json({ message: "Login successful", token });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/auth/me - Get the authenticated user
+app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+    res.json(user);
   } catch (err) {
     next(err);
   }
