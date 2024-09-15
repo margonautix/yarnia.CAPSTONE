@@ -59,8 +59,7 @@ const authenticateAdmin = (req, res, next) => {
   }
 };
 
-// API routes go here
-
+// STORIES
 // GET all stories
 app.get("/api/stories", async (req, res, next) => {
   try {
@@ -166,6 +165,7 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
+// COMMENTS
 // GET all comments on individual story
 app.get("/api/stories/:storyId/comments", async (req, res, next) => {
   const { storyId } = req.params; // Extract storyId from the URL
@@ -209,7 +209,7 @@ app.post("/api/stories/:storyId/comments", async (req, res, next) => {
   }
 });
 
-// DELETE a specific comment
+// DELETE a specific comment on individual story
 app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
   const { commentId } = req.params;
 
@@ -319,6 +319,7 @@ app.get("/api/users", authenticateAdmin, async (req, res, next) => {
   }
 });
 
+// GET a single user
 app.get("/api/users/:authorId", async (req, res, next) => {
   const { authorId } = req.params;
 
@@ -345,6 +346,7 @@ app.get("/api/users/:authorId", async (req, res, next) => {
   }
 });
 
+// DELETE a single user
 app.delete(
   "/api/users/:authorId",
   authenticateUser,
@@ -403,6 +405,8 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
   }
 });
 
+// BOOKMARKS
+// GET all bookmarks on a story
 app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
   const { userId, storyId, createdAt } = req.body;
 
@@ -433,6 +437,7 @@ app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
   }
 });
 
+// GET a single user's bookmarks
 app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
   const { bookmarkId } = req.params;
   try {
@@ -460,3 +465,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+// POST a bookmark
+
+// DELETE a bookmark
