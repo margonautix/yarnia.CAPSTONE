@@ -362,6 +362,52 @@ app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
   }
 });
 
+app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+  const { userId, storyId, createdAt } = req.body;
+
+  try {
+    if (!userId || !storyId) {
+      return res.status(400).json({
+        message: "userId and storyId are required",
+      });
+    }
+
+    const bookmark = await prisma.bookmark.create({
+      data: {
+        userId: parseInt(userId),
+        storyId: parseInt(storyId),
+        createdAt: createdAt ? new Date(createdAt) : new Date(), // Use current date if createdAt is not provided
+      },
+    });
+
+    res
+      .status(201)
+      .json({ message: "Bookmark created successfully", bookmark });
+  } catch (err) {
+    if (err.code === "P2002") {
+      return res.status(409).json({ message: "Bookmark already exists." });
+    }
+
+    next(err);
+  }
+});
+
+app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
+  const { bookmarkId } = req.params;
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: { bookmarkId: parseInt(bookmarkId) },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "Story not found." });
+    }
+    res.json(bookmark);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // === Auth Routes ===
 
 // POST (create) a new user
@@ -505,52 +551,6 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
       where: { id: req.user.id },
     });
     res.json(user);
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
-  const { userId, storyId, createdAt } = req.body;
-
-  try {
-    if (!userId || !storyId) {
-      return res.status(400).json({
-        message: "userId and storyId are required",
-      });
-    }
-
-    const bookmark = await prisma.bookmark.create({
-      data: {
-        userId: parseInt(userId),
-        storyId: parseInt(storyId),
-        createdAt: createdAt ? new Date(createdAt) : new Date(), // Use current date if createdAt is not provided
-      },
-    });
-
-    res
-      .status(201)
-      .json({ message: "Bookmark created successfully", bookmark });
-  } catch (err) {
-    if (err.code === "P2002") {
-      return res.status(409).json({ message: "Bookmark already exists." });
-    }
-
-    next(err);
-  }
-});
-
-app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
-  const { bookmarkId } = req.params;
-  try {
-    const bookmark = await prisma.bookmark.findUnique({
-      where: { bookmarkId: parseInt(bookmarkId) },
-    });
-
-    if (!bookmark) {
-      return res.status(404).json({ message: "Story not found." });
-    }
-    res.json(bookmark);
   } catch (err) {
     next(err);
   }
