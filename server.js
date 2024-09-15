@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const prisma = require("./prisma");
 
+const cors = require("cors");
+
 const PORT = 3000;
 
 const jwt = require("jsonwebtoken");
@@ -11,6 +13,7 @@ const JWT = process.env.JWT || "shhh";
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
+app.use(cors());
 
 // Helper function to generate JWT
 const generateToken = (user) => {
