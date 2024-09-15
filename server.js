@@ -233,7 +233,7 @@ app.get("/api/users/:authorId/comments", async (req, res, next) => {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        userId: parseInt(authorId), // Filter comments by authorId
+        authorId: parseInt(authorId), // Filter comments by authorId
       },
     });
 
@@ -255,7 +255,7 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
   }
 });
 
-// Route to get all bookmarks for a specific author
+// Route to get all bookmarks for a specific user
 app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
   const { authorId } = req.params; // Extract authorId from request params
 
@@ -271,7 +271,7 @@ app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the author
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to userId)
+      where: { authorId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to authorId)
       include: {
         story: true, // Optionally include the related story information
       },
@@ -284,6 +284,33 @@ app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
   }
 });
 
+// Route to post a new bookmark to a story
+app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+  const { authorId } = req.body;
+  const { storyId } = req.params;
+
+  try {
+    // Validate input
+    if (!authorId) {
+      return res.status(400).json({ message: "authorId is required." });
+    }
+
+    // Create a new bookmark
+    const bookmark = await prisma.bookmark.create({
+      data: {
+        userId: parseInt(authorId), // Assuming authorId maps to the user who created the bookmark
+        storyId: parseInt(storyId), // Use the storyId from the URL
+      },
+    });
+
+    // Return the created bookmark
+    res.status(201).json(bookmark);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//Route to delete a bookmark from a story
 app.delete(
   "/api/stories/:storyId/bookmarks/:bookmarkId",
   async (req, res, next) => {
