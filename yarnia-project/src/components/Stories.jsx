@@ -8,8 +8,16 @@ const Stories = ({ searchParams, setSearchParams }) => {
 
   useEffect(() => {
     async function getAllStories() {
-      const response = await fetchAllStories();
-      setStories(response.stories);
+      try {
+        const response = await fetchAllStories();
+        if (response && Array.isArray(response)) {
+          setStories(response); // Assuming the API returns an array directly
+        } else {
+          console.error("No stories found or response is undefined.");
+        }
+      } catch (error) {
+        console.error("Error fetching stories:", error);
+      }
     }
     getAllStories();
   }, []);
