@@ -3,6 +3,8 @@ const app = express();
 const prisma = require("./prisma");
 const cors = require("cors");
 
+const cors = require("cors");
+
 const PORT = 3000;
 
 const jwt = require("jsonwebtoken");
