@@ -4,18 +4,17 @@ import Login from "./components/Login"; // Example component for a login page
 import Stories from "./components/Stories"; // Stories component
 import SingleStory from "./components/SingleStory"; // SingleStory component
 import "./app.css";
-import { AuthProvider } from "./Context/AuthContext";
+import Register from "./components/Register";
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Stories />} />
-        <Route path="/stories/:id" element={<SingleStory />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </AuthProvider>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Stories />} />
+      <Route path="/stories/:id" element={<SingleStory />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 }
 
