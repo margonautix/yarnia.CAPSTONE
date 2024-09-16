@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode"; // Make sure this is installed via npm
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -17,36 +19,47 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
       const data = await response.json();
-      login(data.token);
+
+      if (data.token) {
+        const decodedToken = jwtDecode(data.token);
+
+        // Store token and user details in localStorage
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            token: data.token,
+            email: decodedToken.email,
+            username: decodedToken.username,
+            isAdmin: decodedToken.isAdmin,
+          })
+        );
+
+        navigate("/profile"); // Redirect to profile page
+      } else {
+        alert("Login failed");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Login error:", error);
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <form onSubmit={handleLogin}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <button type="submit">Login</button>
+    </form>
   );
 };
 

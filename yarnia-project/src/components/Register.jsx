@@ -1,67 +1,72 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import jwtDecode from "jwt-decode"; // Make sure this is installed via npm
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
-  const { signup } = useAuth(); // Assuming your AuthContext has a signup function
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
-      await signup(email, password, username); // Sign up the user using the signup function
-      navigate("/profile"); // Navigate to profile page after successful registration
-    } catch (err) {
-      setError("Failed to create an account. Please try again.");
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, username }),
+      });
+
+      const data = await response.json();
+
+      if (data.token) {
+        const decodedToken = jwtDecode(data.token);
+
+        // Store token and user details in localStorage
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            token: data.token,
+            email: decodedToken.email,
+            username: decodedToken.username,
+            isAdmin: decodedToken.isAdmin,
+          })
+        );
+
+        navigate("/profile"); // Redirect to profile page
+      } else {
+        alert("Registration failed");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
     }
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn">
-          Register
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleRegister}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+      />
+      <button type="submit">Register</button>
+    </form>
   );
 };
 

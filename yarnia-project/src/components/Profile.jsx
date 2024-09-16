@@ -1,26 +1,29 @@
-import React, { useEffect } from "react";
-import { useAuth } from "../Context/AuthContext";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to login page if not authenticated
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]); // Run the effect when `user` or `navigate` changes
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) return null; // Prevent rendering until the redirection
+    if (!user) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    } else {
+      setProfile(user);
+    }
+  }, [navigate]);
+
+  if (!profile) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
-      <h1>Profile</h1>
-      <p>Username: {user.username}</p>
-      <p>Email: {user.email}</p>
-      <button onClick={logout}>Logout</button>
+      <h1>Welcome, {profile.username}</h1>
+      <p>Email: {profile.email}</p>
     </div>
   );
 };
