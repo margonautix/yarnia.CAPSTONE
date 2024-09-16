@@ -42,6 +42,9 @@ const Stories = ({ searchParams }) => {
 
   return (
     <div>
+      {storiesToDisplay.map((story) => {
+        return <h2 key={story.id}>{story.title}</h2>;
+      })}
       {storiesToDisplay.map((story) => (
         <div key={story.storyId || story.id} className="story-card">
           <h2>{story.title}</h2>
@@ -78,7 +81,6 @@ const Stories = ({ searchParams }) => {
           <p>{singleStory.content}</p>
         </div>
       )}
-
       {/* Display error if single story fetch fails */}
       {error && <p>{error}</p>}
     </div>
