@@ -22,7 +22,7 @@ const Login = () => {
       }
 
       const data = await response.json();
-      login(data.token); // Pass the JWT token to login function
+      login(data.token);
     } catch (error) {
       console.error(error);
     }
