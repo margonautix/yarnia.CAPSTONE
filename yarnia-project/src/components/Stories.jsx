@@ -1,48 +1,45 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-import { fetchAllStories, fetchSingleStory } from "../api/index"; // Import both API functions
+import { fetchAllStories } from "../api"; // Only fetching all stories here
 
 const Stories = ({ searchParams }) => {
   const [stories, setStories] = useState([]);
-  const [singleStory, setSingleStory] = useState(null); // State to hold a single story's details
-  const [error, setError] = useState(null); // Optional: error handling for single story fetch
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Use navigate from react-router-dom
 
   useEffect(() => {
     async function getAllStories() {
       try {
-        const response = await fetchAllStories(); // Use API function from index.js
-        if (response && Array.isArray(response)) {
-          setStories(response); // Set the fetched stories
-        } else {
-          console.error("No stories found or response is undefined.");
-        }
+        const response = await fetchAllStories();
+        setStories(response);
       } catch (error) {
         console.error("Error fetching stories:", error);
+        setError("Failed to load stories.");
       }
     }
     getAllStories();
   }, []);
 
-  const handleSeeSingleStory = async (storyId) => {
-    try {
-      const story = await fetchSingleStory(storyId); // Fetch the single story by ID
-      setSingleStory(story); // Set the fetched story in state
-      setError(null); // Clear any previous errors
-    } catch (error) {
-      console.error("Error fetching single story:", error);
-      setError("Failed to load the story.");
-    }
-  };
-
-  // Filter stories based on search params
   const storiesToDisplay = searchParams
     ? stories.filter((story) =>
         story.title.toLowerCase().includes(searchParams.toLowerCase())
       )
     : stories;
 
+  const handleSeeSingleStory = (storyId) => {
+    // Make sure storyId is valid before navigating
+    if (storyId) {
+      navigate(`/stories/${storyId}`);
+    } else {
+      console.error("Story ID is undefined");
+    }
+  };
+
   return (
-    <div>
+    <div className="stories-container">
+      {error && <p>{error}</p>}
+
       {storiesToDisplay.map((story) => (
         <div key={story.id} className="story-card">
           <h2>{story.title}</h2>
@@ -68,20 +65,6 @@ const Stories = ({ searchParams }) => {
           </button>
         </div>
       ))}
-
-      {/* Display the single story details if available */}
-      {singleStory && (
-        <div className="single-story">
-          <h2>{singleStory.title}</h2>
-          <p>
-            <strong>Author:</strong> {singleStory.author?.username || "Unknown"}
-          </p>
-          <p>{singleStory.content}</p>
-        </div>
-      )}
-
-      {/* Display error if single story fetch fails */}
-      {error && <p>{error}</p>}
     </div>
   );
 };

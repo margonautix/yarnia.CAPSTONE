@@ -40,3 +40,143 @@
 .read-the-docs {
   color: #888;
 }
+/* Navbar container styling */
+.navbar {
+  background-color: #333; /* Dark background color */
+  overflow: hidden;
+  padding: 10px 20px; /* Padding for space around links */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Navbar unordered list styling */
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Makes list items display in a row */
+  gap: 20px; /* Space between list items */
+}
+
+/* Navbar list items */
+.navbar li {
+  display: inline;
+}
+
+/* Navbar links */
+.navbar a {
+  color: white; /* White text for contrast */
+  text-align: center;
+  padding: 10px 15px;
+  text-decoration: none; /* Removes underline from links */
+  font-size: 18px;
+}
+
+/* Hover effect for links */
+.navbar a:hover {
+  background-color: #575757; /* Slightly lighter background on hover */
+  color: white;
+  border-radius: 4px; /* Rounds the edges */
+}
+
+/* Button styling in navbar */
+.navbar button {
+  background-color: #007bff; /* Blue button color */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 4px; /* Rounds the button */
+}
+
+/* Button hover effect */
+.navbar button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive Design: Stacks the nav links on smaller screens */
+@media (max-width: 600px) {
+  .navbar ul {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar li {
+    margin-bottom: 10px;
+  }
+}
+
+/* Main container for all stories */
+.stories-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Individual story card */
+.story-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect for story card */
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Story title */
+.story-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Summary and content preview styling */
+.story-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Styling for strong text elements */
+.story-card strong {
+  color: #333;
+  font-weight: bold;
+}
+
+/* Button to see single story */
+.story-card button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.story-card button:hover {
+  background-color: #45a049;
+}
+
+/* For small screens: display cards as a column */
+@media (max-width: 768px) {
+  .stories-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}

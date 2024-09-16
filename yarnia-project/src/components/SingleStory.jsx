@@ -1,31 +1,44 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { fetchSingleStory } from "../api";
 
-const SingleStory = ({ token }) => {
+const SingleStory = () => {
+  const { id } = useParams(); // Get story ID from URL parameters
   const [story, setStory] = useState(null);
-  const { storyId } = useParams();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchStory() {
-      const response = await fetchSingleStory(storyId);
-      setStory(response.story);
-    }
-    fetchStory();
-  }, [storyId]);
+    const getStory = async () => {
+      try {
+        const data = await fetchSingleStory(id);
+        setStory(data);
+      } catch (err) {
+        setError("Failed to load story.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getStory();
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading story...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
-    <>
-      <div className="">
-        <main className="" key="{}">
-          <h2>{story.title}</h2>
-          <h3>{story.authorId}</h3>
-          <h3>{story.summary}</h3>
-          <button onClick={() => navigate(`/`)}>Return to Story Shelf</button>
-        </main>
-      </div>
-    </>
+    <div className="single-story">
+      <h1>{story.title}</h1>
+      <p>
+        <strong>Author:</strong> {story.author?.username || "Unknown"}
+      </p>
+      <p>{story.content}</p>
+    </div>
   );
 };
 
