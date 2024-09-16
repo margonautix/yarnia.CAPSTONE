@@ -5,22 +5,21 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        // No need to manually fetch the token from localStorage,
-        // as it will be sent automatically with the request due to the HTTP-only cookie.
-        const response = await fetch("http://localhost:3000/api/auth/me", {
-          method: "GET",
-          credentials: "include", // Important to send the cookie with the request
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData); // Set the user data
-        } else {
-          console.error("Failed to fetch user data");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      const token = localStorage.getItem('token');  // Retrieve the token from localStorage
+    
+      const response = await fetch('http://localhost:3000/api/auth/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,  // Pass the token in the Authorization header
+        },
+        credentials: 'include',  // Ensure credentials are included in the request
+      });
+    
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);  // Set the user data in your state
+      } else {
+        console.error('Failed to fetch user data');
       }
     };
 
