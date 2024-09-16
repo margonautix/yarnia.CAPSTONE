@@ -1,47 +1,45 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchSingleStory } from "../api";
+import { fetchSingleStory } from "../api"; // Assuming this fetches a single story from the API
 
 const SingleStory = () => {
-  const { storyId } = useParams(); // Get the storyId from the URL parameters
+  const { id } = useParams(); // Extract the ID from the URL
   const [story, setStory] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function getStory() {
+    const getStory = async () => {
       try {
-        const fetchedStory = await fetchSingleStory(storyId);
-        setStory(fetchedStory);
+        const data = await fetchSingleStory(id);
+        setStory(data);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching the story:", error);
-        setError("Failed to load the story.");
-      } finally {
+        console.error("Error fetching story:", error);
         setLoading(false);
       }
-    }
+    };
+    getStory();
+  }, [id]);
 
-    if (storyId) {
-      getStory();
-    }
-  }, [storyId]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (loading) return <p>Loading story...</p>;
-  if (error) return <p>{error}</p>;
+  if (!story) {
+    return <div>Story not found</div>;
+  }
 
   return (
-    <div className="single-story">
-      {story ? (
-        <>
-          <h1>{story.title}</h1>
-          <p>{story.content}</p>
-          <p>
-            <strong>Author:</strong> {story.author?.username || "Unknown"}
-          </p>
-        </>
-      ) : (
-        <p>No story found</p>
-      )}
+    <div>
+      <h1>{story.title}</h1>
+      <p>{story.content}</p>
+      <p>
+        <strong>Author:</strong> {story.author.username}
+      </p>
+      <p>
+        <strong>Published:</strong>{" "}
+        {new Date(story.createdAt).toLocaleDateString()}
+      </p>
     </div>
   );
 };
