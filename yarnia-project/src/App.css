@@ -287,3 +287,10 @@ input[type="password"]:focus {
 .modal-content button:hover {
   background-color: #0056b3;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  gap: 20px;
+}
