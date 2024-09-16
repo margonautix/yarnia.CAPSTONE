@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { fetchAllStories } from "../api"; // Only fetching all stories here
+import { fetchAllStories } from "../api";
 
 const Stories = ({ searchParams }) => {
   const [stories, setStories] = useState([]);
@@ -30,7 +30,7 @@ const Stories = ({ searchParams }) => {
   const handleSeeSingleStory = (storyId) => {
     // Make sure storyId is valid before navigating
     if (storyId) {
-      navigate(`/stories/${storyId}`);
+      navigate(fetchSingleStory);
     } else {
       console.error("Story ID is undefined");
     }
@@ -43,12 +43,6 @@ const Stories = ({ searchParams }) => {
       {storiesToDisplay.map((story) => (
         <div key={story.id} className="story-card">
           <h2>{story.title}</h2>
-          <p>
-            <strong>Summary:</strong> {story.summary || "No summary available."}
-          </p>
-          <p>
-            <strong>Content Preview:</strong> {story.content?.slice(0, 50)}...
-          </p>
           {story.author ? (
             <p>
               <strong>Author:</strong> {story.author.username}
@@ -58,6 +52,12 @@ const Stories = ({ searchParams }) => {
               <strong>Author:</strong> Unknown
             </p>
           )}
+          <p>
+            <strong>Summary:</strong> {story.summary || "No summary available."}
+          </p>
+          <p>
+            <strong>Content Preview:</strong> {story.content?.slice(0, 50)}...
+          </p>
 
           {/* "See Single Story" Button */}
           <button onClick={() => handleSeeSingleStory(story.id)}>
