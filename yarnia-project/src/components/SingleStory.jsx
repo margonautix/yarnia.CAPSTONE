@@ -1,45 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchSingleStory } from "../api"; // Assuming this fetches a single story from the API
+import React, { useContext, useState } from "react";
+import { AuthProvider } from "../Context/AuthContext";
 
-const SingleStory = () => {
-  const { id } = useParams(); // Extract the ID from the URL
-  const [story, setStory] = useState(null);
-  const [loading, setLoading] = useState(true);
+const SingleStory = ({ story }) => {
+  const { user } = useContext(AuthProvider);
+  const [comment, setComment] = useState("");
 
-  useEffect(() => {
-    const getStory = async () => {
-      try {
-        const data = await fetchSingleStory(id);
-        setStory(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching story:", error);
-        setLoading(false);
-      }
-    };
-    getStory();
-  }, [id]);
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!story) {
-    return <div>Story not found</div>;
-  }
+    if (user) {
+      const response = await fetch(`/api/stories/${story.id}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ userId: user.id, content: comment }),
+      });
+      const data = await response.json();
+      console.log("Comment added:", data);
+    } else {
+      alert("Please log in to comment");
+    }
+  };
 
   return (
     <div>
       <h1>{story.title}</h1>
       <p>{story.content}</p>
-      <p>
-        <strong>Author:</strong> {story.author.username}
-      </p>
-      <p>
-        <strong>Published:</strong>{" "}
-        {new Date(story.createdAt).toLocaleDateString()}
-      </p>
+      {user ? (
+        <form onSubmit={handleCommentSubmit}>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button type="submit">Post Comment</button>
+        </form>
+      ) : (
+        <p>You need to be logged in to comment</p>
+      )}
     </div>
   );
 };
