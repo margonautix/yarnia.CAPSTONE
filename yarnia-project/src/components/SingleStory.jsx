@@ -1,33 +1,49 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { fetchSingleStory } from "../API";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchSingleStory } from "../api";
 
+const SingleStory = () => {
+  const { storyId } = useParams(); // Get the storyId from the URL parameters
+  const [story, setStory] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-const SingleStory = ({token}) => {
-    const [story, setStory] = useState(null);
-    const { storyId } = useParams();
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        async function fetchStory() {
-            const response = await fetchSingleStory(storyId);
-            setStory(response.story);
-        }
-        fetchStory();
-    }, [storyId])
+  useEffect(() => {
+    async function getStory() {
+      try {
+        const fetchedStory = await fetchSingleStory(storyId);
+        setStory(fetchedStory);
+      } catch (error) {
+        console.error("Error fetching the story:", error);
+        setError("Failed to load the story.");
+      } finally {
+        setLoading(false);
+      }
+    }
 
-    return(
+    if (storyId) {
+      getStory();
+    }
+  }, [storyId]);
+
+  if (loading) return <p>Loading story...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div className="single-story">
+      {story ? (
         <>
-            <div className = "">
-                <main className="" key="{}">
-                    <h2>{story.title}</h2>
-                    <h3>{story.authorId}</h3>
-                    <h3>{story.summary}</h3>
-                    <button onClick={() => navigate(`/`)}>Return to Story Shelf</button>
-                </main>
-            </div>
+          <h1>{story.title}</h1>
+          <p>{story.content}</p>
+          <p>
+            <strong>Author:</strong> {story.author?.username || "Unknown"}
+          </p>
         </>
-    )
-}
+      ) : (
+        <p>No story found</p>
+      )}
+    </div>
+  );
+};
 
-export default SingleStory; 
+export default SingleStory;

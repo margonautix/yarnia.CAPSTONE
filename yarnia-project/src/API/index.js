@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:3000"; // Base URL for your API
 
-// Fetch all stories
 export async function fetchAllStories() {
   try {
     const response = await fetch(`${API_URL}/api/stories`); // Full URL for the API request
@@ -15,7 +14,6 @@ export async function fetchAllStories() {
   }
 }
 
-// Fetch a single story by its ID
 export async function fetchSingleStory(storyId) {
   try {
     const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Full URL with the story ID
@@ -32,16 +30,20 @@ export async function fetchSingleStory(storyId) {
   }
 }
 
-// Fetch all comments
 export async function fetchAllComments() {
   try {
     const response = await fetch(`${API_URL}/api/comments`); // Full URL for the API request
+
+    // Check if the response is not successful (status is not in the range of 200-299)
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
+
+    // Parse the response as JSON
     const data = await response.json();
     return data; // Assuming the data is an array of comments
   } catch (error) {
+    // Log error to the console and rethrow it for further handling
     console.error("Error fetching all comments:", error);
     throw error;
   }
