@@ -180,3 +180,14 @@
     align-items: center;
   }
 }
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00da0b;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
