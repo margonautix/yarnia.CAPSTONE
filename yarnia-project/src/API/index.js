@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:3000"; // Base URL for your API
 
-// Fetch all stories
 export async function fetchAllStories() {
   try {
     const response = await fetch(`${API_URL}/api/stories`); // Full URL for the API request
@@ -15,7 +14,6 @@ export async function fetchAllStories() {
   }
 }
 
-// Fetch a single story by its ID
 export async function fetchSingleStory(storyId) {
   try {
     const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Full URL with the story ID

@@ -26,7 +26,7 @@ function App() {
           }
         />
         {/* Route for viewing a single story */}
-        <Route path="stories/:id" element={<SingleStory />} />
+        <Route path="/stories/:storyId" element={<SingleStory />} />
 
         {/* Admin-only route for viewing all comments */}
         <Route path="/comments" element={<CommentsPage />} />
