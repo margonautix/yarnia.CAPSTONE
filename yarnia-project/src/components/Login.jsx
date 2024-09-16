@@ -1,65 +1,58 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode"; // Make sure this is installed via npm
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+import { loginUser } from "../API"; // Assuming you have an API function to log in the user
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
-  const handleLogin = async (e) => {
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await loginUser(email, password);
+      if (response && response.token) {
+        localStorage.setItem("token", response.token); // Store token
 
-      const data = await response.json();
-
-      if (data.token) {
-        const decodedToken = jwtDecode(data.token);
-
-        // Store token and user details in localStorage
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            token: data.token,
-            email: decodedToken.email,
-            username: decodedToken.username,
-            isAdmin: decodedToken.isAdmin,
-          })
-        );
-
-        navigate("/profile"); // Redirect to profile page
+        navigate("/profile"); // Redirect to the Profile page
       } else {
-        alert("Login failed");
+        setError("Invalid login credentials");
       }
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (err) {
+      console.error("Login failed: ", err);
+      setError("Something went wrong, please try again.");
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div>
+      <h2>Login</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <label>
+          Email:
+          <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
 };
 

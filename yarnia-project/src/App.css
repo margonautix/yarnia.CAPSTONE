@@ -196,13 +196,23 @@ input[type="password"] {
   border-radius: 4px;
   box-sizing: border-box;
   color: black;
+  background-color: #45a0498d;
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus {
-  border-color: #007bff;
+  border-color: #000000;
   outline: none;
+  background-color: #45a049;
+}
+
+input[type="text"]:active,
+input[type="email"]:active,
+input[type="password"]:active {
+  border-color: #a3a8ad;
+  outline: none;
+  background-color: #45a049;
 }
 
 .btn {

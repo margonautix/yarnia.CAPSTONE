@@ -1,8 +1,8 @@
-const API_URL = "http://localhost:3000"; // Base URL for your API
+const API_URL = "http://localhost:3000/api"; // Base URL for your API
 
 export async function fetchAllStories() {
   try {
-    const response = await fetch(`${API_URL}/api/stories`); // Full URL for the API request
+    const response = await fetch(`${API_URL}/stories`); // Full URL for the API request
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
@@ -16,7 +16,7 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Assuming this endpoint gets a single story
+    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming this endpoint gets a single story
     if (!response.ok) {
       throw new Error(
         `Failed to fetch story with ID ${storyId}: ${response.statusText}`
@@ -32,7 +32,7 @@ export async function fetchSingleStory(storyId) {
 
 export async function fetchAllComments() {
   try {
-    const response = await fetch(`${API_URL}/api/comments`); // Full URL for the API request
+    const response = await fetch(`${API_URL}/comments`); // Full URL for the API request
 
     // Check if the response is not successful (status is not in the range of 200-299)
     if (!response.ok) {
@@ -46,5 +46,49 @@ export async function fetchAllComments() {
     // Log error to the console and rethrow it for further handling
     console.error("Error fetching all comments:", error);
     throw error;
+  }
+}
+
+export async function createNewUser(username, email, password) {
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
+    const json = await response.json();
+
+    if (response.ok) {
+      // Assuming the token is included in the response
+      console.log("Registration successful, token:", json.token);
+
+      // Optionally, store the token in localStorage or state
+      localStorage.setItem("token", json.token);
+
+      return json;
+    } else {
+      console.error("Registration failed:", json.message);
+    }
+  } catch (err) {
+    console.error("Oops, something went wrong!", err);
+  }
+}
+
+export async function loginUser(email, password) {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.error("Login failed:", err);
   }
 }

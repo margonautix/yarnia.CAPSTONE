@@ -1,29 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [profile, setProfile] = useState(null);
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const fetchUserData = async () => {
+      try {
+        // No need to manually fetch the token from localStorage,
+        // as it will be sent automatically with the request due to the HTTP-only cookie.
+        const response = await fetch("http://localhost:3000/api/auth/me", {
+          method: "GET",
+          credentials: "include", // Important to send the cookie with the request
+        });
 
-    if (!user) {
-      // Redirect to login if not authenticated
-      navigate("/login");
-    } else {
-      setProfile(user);
-    }
-  }, [navigate]);
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData); // Set the user data
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-  if (!profile) {
-    return <p>Loading...</p>;
+    fetchUserData();
+  }, []); // Runs once when the component mounts
+
+  if (!user) {
+    return <div>Loading user data...</div>;
   }
 
   return (
     <div>
-      <h1>Welcome, {profile.username}</h1>
-      <p>Email: {profile.email}</p>
+      <h1>Welcome, {user.username}!</h1>
+      <p>Email: {user.email}</p>
+      <p>Bio: {user.bio}</p>
+      {/* Display any other user information you want */}
     </div>
   );
 };

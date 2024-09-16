@@ -14,7 +14,12 @@ const JWT = process.env.JWT || "shhh";
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173/", // Allow requests only from this origin
+    credentials: true, // Allow credentials such as cookies and authorization headers
+  })
+);
 
 // Helper function to generate JWT
 const generateToken = (user) => {
