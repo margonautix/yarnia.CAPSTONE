@@ -21,6 +21,7 @@ function App() {
               />
             }
           />
+          <Route path="books/:id" element={<SingleBook/>} />
         </Routes>
       </div>
     </>
