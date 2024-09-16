@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom"; // Removed useNavigate, using Link for navigation
 import React from "react";
 import { fetchAllStories } from "../api";
 
@@ -8,7 +8,6 @@ const Stories = () => {
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get("search") || "";
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function getAllStories() {
@@ -27,15 +26,6 @@ const Stories = () => {
   const filteredStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleSeeSingleStory = (storyId) => {
-    if (storyId) {
-      console.log(`Navigating to story with ID: ${storyId}`); // Debug to verify storyId
-      navigate(`/story/${storyId}`);
-    } else {
-      console.error("Story ID is undefined");
-    }
-  };
 
   const handleSearch = (event) => {
     const value = event.target.value;
@@ -75,10 +65,10 @@ const Stories = () => {
               <strong>Content Preview:</strong> {story.content?.slice(0, 50)}...
             </p>
 
-            {/* "See Single Story" Button */}
-            <button onClick={() => handleSeeSingleStory(story.id)}>
-              See Single Story
-            </button>
+            {/* "See Single Story" Button - now using Link */}
+            <Link to={`/story/${story.id}`}>
+              <button>See Single Story</button>
+            </Link>
           </div>
         ))}
       </div>

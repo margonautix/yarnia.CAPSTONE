@@ -20,6 +20,9 @@ const NavBar = () => {
         <li>
           <Link to="/bookmarks">Bookmarks</Link>
         </li>
+        <li>
+          <Link to="/login">Log-In</Link>
+        </li>
         {/* Admin-only button */}
         <li>
           <button onClick={handleViewComments}>View All Comments</button>

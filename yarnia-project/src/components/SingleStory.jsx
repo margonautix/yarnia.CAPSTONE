@@ -1,46 +1,43 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchSingleStory } from "../api";
+import React, { useContext, useState } from "react";
+import { AuthProvider } from "../Context/AuthContext";
 
-const SingleStory = () => {
-  const { storyId } = useParams(); // Get the storyId from the URL parameters
-  const [story, setStory] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+const SingleStory = ({ story }) => {
+  const { user } = useContext(AuthProvider);
+  const [comment, setComment] = useState("");
 
-  useEffect(() => {
-    async function getStory() {
-      try {
-        const fetchedStory = await fetchSingleStory(storyId);
-        setStory(fetchedStory);
-      } catch (error) {
-        console.error("Error fetching the story:", error);
-        setError("Failed to load the story.");
-      } finally {
-        setLoading(false);
-      }
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+
+    if (user) {
+      const response = await fetch(`/api/stories/${story.id}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ userId: user.id, content: comment }),
+      });
+      const data = await response.json();
+      console.log("Comment added:", data);
+    } else {
+      alert("Please log in to comment");
     }
-
-    if (storyId) {
-      getStory();
-    }
-  }, [storyId]);
-
-  if (loading) return <p>Loading story...</p>;
-  if (error) return <p>{error}</p>;
+  };
 
   return (
-    <div className="single-story">
-      {story ? (
-        <>
-          <h1>{story.title}</h1>
-          <p>{story.content}</p>
-          <p>
-            <strong>Author:</strong> {story.author?.username || "Unknown"}
-          </p>
-        </>
+    <div>
+      <h1>{story.title}</h1>
+      <p>{story.content}</p>
+      {user ? (
+        <form onSubmit={handleCommentSubmit}>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button type="submit">Post Comment</button>
+        </form>
       ) : (
-        <p>No story found</p>
+        <p>You need to be logged in to comment</p>
       )}
     </div>
   );
