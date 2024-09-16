@@ -34,6 +34,7 @@ const Stories = ({ searchParams }) => {
     }
   };
 
+  // Filter stories based on search params
   const storiesToDisplay = searchParams
     ? stories.filter((story) =>
         story.title.toLowerCase().includes(searchParams.toLowerCase())
@@ -42,11 +43,8 @@ const Stories = ({ searchParams }) => {
 
   return (
     <div>
-      {storiesToDisplay.map((story) => {
-        return <h2 key={story.id}>{story.title}</h2>;
-      })}
       {storiesToDisplay.map((story) => (
-        <div key={story.storyId || story.id} className="story-card">
+        <div key={story.id} className="story-card">
           <h2>{story.title}</h2>
           <p>
             <strong>Summary:</strong> {story.summary || "No summary available."}
@@ -65,7 +63,7 @@ const Stories = ({ searchParams }) => {
           )}
 
           {/* "See Single Story" Button */}
-          <button onClick={() => handleSeeSingleStory(story.storyId)}>
+          <button onClick={() => handleSeeSingleStory(story.id)}>
             See Single Story
           </button>
         </div>
@@ -81,6 +79,7 @@ const Stories = ({ searchParams }) => {
           <p>{singleStory.content}</p>
         </div>
       )}
+
       {/* Display error if single story fetch fails */}
       {error && <p>{error}</p>}
     </div>

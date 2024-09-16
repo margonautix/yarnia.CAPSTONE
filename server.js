@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const prisma = require("./prisma");
@@ -559,8 +559,8 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
 
 // Get new bookmarks in database
 
-app.get("/api/user/bookmarks", async (req, res, next) => {  
-  const { bookmarkId } = req.params; 
+app.get("/api/user/bookmarks", async (req, res, next) => {
+  const { bookmarkId } = req.params;
   try {
     const bookmark = await prisma.bookmark.findUnique({
       where: { bookmarkId: parseInt(bookmarkId) },
@@ -582,7 +582,11 @@ app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
   try {
     if (!userId || !storyId || !createdAt || !bookmarkId) {
-      return res.status(400).json({ message: "userId, storyId, createdAt, and bookmarkId are required" });
+      return res
+        .status(400)
+        .json({
+          message: "userId, storyId, createdAt, and bookmarkId are required",
+        });
     }
 
     const bookmark = await prisma.bookmark.create({
@@ -593,9 +597,11 @@ app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
       },
     });
 
-    res.status(201).json({ message: "Bookmark created successfully", bookmark });
+    res
+      .status(201)
+      .json({ message: "Bookmark created successfully", bookmark });
   } catch (err) {
-    if (err.code === 'P2002') {
+    if (err.code === "P2002") {
       return res.status(409).json({ message: "Bookmark already exists." });
     }
 
@@ -605,26 +611,29 @@ app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
 // DELETE /api/stories/:storyId/bookmarks
 
-app.delete("/api/stories/:storyId/bookmarks/:bookmarkId", async (req, res, next) => {
-  const { storyId, bookmarkId } = req.params;
+app.delete(
+  "/api/stories/:storyId/bookmarks/:bookmarkId",
+  async (req, res, next) => {
+    const { storyId, bookmarkId } = req.params;
 
-  try {
-    await prisma.bookmark.delete({
-      where: { id: parseInt(bookmarkId) },
-    });
-    res.status(200).json({ message: "Bookmark deleted successfully." });
-  } catch (err) {
-    if (err.code === "P2025") {
-      return res.status(404).json({ message: "Bookmark not found." });
+    try {
+      await prisma.bookmark.delete({
+        where: { id: parseInt(bookmarkId) },
+      });
+      res.status(200).json({ message: "Bookmark deleted successfully." });
+    } catch (err) {
+      if (err.code === "P2025") {
+        return res.status(404).json({ message: "Bookmark not found." });
+      }
+      next(err);
     }
-    next(err);
   }
-});
+);
 
 // GET /api/user/:authorId/bookmarks
 
-app.get("/api/user/:authorId/bookmarks", async(req, res, next) => {
-  const { bookmarkId} = req.params;
+app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
+  const { bookmarkId } = req.params;
   try {
     const bookmark = await prisma.bookmark.findUnique({
       where: { bookmarkId: parseInt(bookmarkId) },
@@ -634,7 +643,7 @@ app.get("/api/user/:authorId/bookmarks", async(req, res, next) => {
       return res.status(404).json({ message: "Story not found." });
     }
     res.json(bookmark);
-  }catch (err) {
+  } catch (err) {
     next(err);
   }
 });

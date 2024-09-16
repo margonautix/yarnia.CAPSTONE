@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Stories from "./Components/Stories";
+import Stories from "./Components/Stories"; // Correct case for the folder name
+import SingleStory from "./components/SingleStory"; // Single import for SingleStory
 import "./App.css";
-import Stories from "./Components/Stories";
-import SingleStory from "./components/SingleStory";
 
 function App() {
   const [searchParams, setSearchParams] = useState("");
@@ -12,6 +11,7 @@ function App() {
     <>
       <div>
         <Routes>
+          {/* Passing searchParams to the Stories component */}
           <Route
             path="/"
             element={
@@ -21,7 +21,8 @@ function App() {
               />
             }
           />
-          <Route path="books/:id" element={<SingleStory />} />
+          {/* Route for viewing a single story */}
+          <Route path="stories/:id" element={<SingleStory />} />
         </Routes>
       </div>
     </>

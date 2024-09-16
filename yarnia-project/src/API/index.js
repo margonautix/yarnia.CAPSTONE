@@ -1,7 +1,9 @@
 const API_URL = "http://localhost:3000"; // Base URL for your API
+
+// Fetch all stories
 export async function fetchAllStories() {
   try {
-    const response = await fetch(`${API_URL}/api/stories`); // Use the full URL for the API request
+    const response = await fetch(`${API_URL}/api/stories`); // Full URL for the API request
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
@@ -16,7 +18,7 @@ export async function fetchAllStories() {
 // Fetch a single story by its ID
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Use the full URL with the story ID
+    const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Full URL with the story ID
     if (!response.ok) {
       throw new Error(
         `Failed to fetch story with ID ${storyId}: ${response.statusText}`
@@ -30,13 +32,17 @@ export async function fetchSingleStory(storyId) {
   }
 }
 
-export async function fetchSingleStory(storyId) {
+// Fetch all comments
+export async function fetchAllComments() {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`);
-    const json = await response.json();
-    return json;
+    const response = await fetch(`${API_URL}/api/comments`); // Full URL for the API request
+    if (!response.ok) {
+      throw new Error(`Failed to fetch comments: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data; // Assuming the data is an array of comments
   } catch (error) {
-    console.error("Uh oh, trouble fetching story!", err);
+    console.error("Error fetching all comments:", error);
+    throw error;
   }
 }
-
