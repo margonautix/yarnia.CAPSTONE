@@ -31,7 +31,7 @@ const Stories = ({ searchParams, setSearchParams }) => {
   return (
     <div>
       {storiesToDisplay.map((story) => {
-        return <h2>{story.title}</h2>;
+        return <h2 key={story.id}>{story.title}</h2>;
       })}
     </div>
   );

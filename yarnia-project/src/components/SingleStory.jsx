@@ -29,3 +29,5 @@ const SingleStory = ({token}) => {
         </>
     )
 }
+
+export default SingleStory; 

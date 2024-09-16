@@ -4,6 +4,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import Stories from "./components/Stories";
+import SingleStory from "./components/SingleStory";
 
 function App() {
   const [searchParams, setSearchParams] = useState("");
@@ -21,7 +22,7 @@ function App() {
               />
             }
           />
-          <Route path="books/:id" element={<SingleBook/>} />
+          <Route path="books/:id" element={<SingleStory/>} />
         </Routes>
       </div>
     </>
