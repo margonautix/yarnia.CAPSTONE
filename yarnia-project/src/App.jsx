@@ -1,24 +1,21 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Login from "./components/Login"; // Import the login component
-import { AuthProvider } from "./Context/AuthContext"; // Authentication context provider
-import Stories from "./components/Stories";
-import SingleStory from "./components/SingleStory";
-import Navbar from "./components/Navbar"; // Import the Navbar component
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Profile from "./components/Profile"; // Example component for a profile page
+import Login from "./components/Login"; // Example component for a login page
+import Stories from "./components/Stories"; // Stories component
+import SingleStory from "./components/SingleStory"; // SingleStory component
 import "./app.css";
+import Register from "./components/Register";
 
-const App = () => {
+function App() {
   return (
-    <AuthProvider>
-      {/* Add Navbar here */}
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Stories />} />
-        <Route path="/story/:id" element={<SingleStory />} />
-      </Routes>
-    </AuthProvider>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Stories />} />
+      <Route path="/stories/:id" element={<SingleStory />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
-};
+}
 
 export default App;

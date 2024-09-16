@@ -66,7 +66,7 @@ const Stories = () => {
             </p>
 
             {/* "See Single Story" Button - now using Link */}
-            <Link to={`/story/${story.id}`}>
+            <Link to={`/stories/${story.id}`}>
               <button>See Single Story</button>
             </Link>
           </div>
