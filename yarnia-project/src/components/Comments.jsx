@@ -1,48 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { fetchAllComments } from "../api/index";
+import React, { useState } from "react";
 
-const CommentsPage = () => {
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Comments = ({ storyId }) => {
+  const [comment, setComment] = useState("");
+  const user = JSON.parse(localStorage.getItem("user")); // Get user info from localStorage
 
-  useEffect(() => {
-    const getComments = async () => {
-      try {
-        const data = await fetchAllComments();
-        setComments(data);
-      } catch (err) {
-        setError("Failed to load comments");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleComment = async () => {
+    if (!user) {
+      alert("You must be logged in to comment.");
+      return;
+    }
 
-    getComments();
-  }, []);
+    const response = await fetch(`/api/stories/${storyId}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`, // Use token from localStorage
+      },
+      body: JSON.stringify({ text: comment }),
+    });
 
-  if (loading) {
-    return <p>Loading comments...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+    if (response.ok) {
+      alert("Comment added!");
+      setComment(""); // Clear the comment field
+    }
+  };
 
   return (
     <div>
-      <h2>All Comments</h2>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>
-            <p>
-              <strong>{comment.author}</strong>: {comment.content}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <textarea value={comment} onChange={(e) => setComment(e.target.value)} />
+      <button onClick={handleComment}>Post Comment</button>
     </div>
   );
 };
 
-export default CommentsPage;
+export default Comments;

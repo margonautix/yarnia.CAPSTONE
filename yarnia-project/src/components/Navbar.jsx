@@ -1,13 +1,19 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
 
 const NavBar = () => {
-  const { user } = useAuth(); // Assuming user contains user details, including admin status
   const navigate = useNavigate();
+
+  // Get user info from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleViewComments = () => {
     navigate("/comments");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
@@ -16,34 +22,35 @@ const NavBar = () => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        {/* Bookmarks link should only be visible to logged-in users */}
+
         {user && (
           <li>
             <Link to="/bookmarks">Bookmarks</Link>
           </li>
         )}
+
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
-            {/* Admin-only button */}
             {user.isAdmin && (
               <li>
                 <button onClick={handleViewComments}>View All Comments</button>
               </li>
             )}
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
           </>
         ) : (
           <>
-            {/* For unregistered or logged-out users */}
             <li>
               <Link to="/login">Login</Link>
             </li>
             <li>
               <Link to="/register">Register</Link>
             </li>
-            {/* Optional guest message */}
             <li>
               <p>Welcome, Guest! Please login to interact with stories.</p>
             </li>
