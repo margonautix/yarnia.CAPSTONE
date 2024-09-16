@@ -1,46 +1,62 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchSingleStory } from "../api";
+import { useEffect, useState } from "react";
+import { fetchSingleStory } from "../api"; // Adjust this path to wherever your fetch function lives
 
 const SingleStory = () => {
-  const { storyId } = useParams(); // Get the storyId from the URL parameters
+  const { id } = useParams(); // Story ID from URL
   const [story, setStory] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function getStory() {
+    const getStory = async () => {
       try {
-        const fetchedStory = await fetchSingleStory(storyId);
-        setStory(fetchedStory);
+        const data = await fetchSingleStory(id);
+        setStory(data); // Assuming data includes story, comments, etc.
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching the story:", error);
-        setError("Failed to load the story.");
-      } finally {
+        console.error("Failed to fetch story:", error);
         setLoading(false);
       }
-    }
-
-    if (storyId) {
+    };
+    if (id) {
       getStory();
     }
-  }, [storyId]);
+  }, [id]);
 
-  if (loading) return <p>Loading story...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!story) {
+    return <p>Story not found.</p>;
+  }
 
   return (
-    <div className="single-story">
-      {story ? (
-        <>
-          <h1>{story.title}</h1>
-          <p>{story.content}</p>
-          <p>
-            <strong>Author:</strong> {story.author?.username || "Unknown"}
-          </p>
-        </>
+    <div>
+      <h1>{story.title}</h1>
+      <p>{story.content}</p>
+      <p>
+        <strong>Summary:</strong> {story.summary}
+      </p>
+
+      {/* Display comments if they exist */}
+      {story.comments && story.comments.length > 0 ? (
+        <div>
+          <h3>Comments:</h3>
+          <ul>
+            {story.comments.map((comment) => (
+              <li key={comment.id}>
+                <p>{comment.content}</p>
+                <small>
+                  By user {comment.userId} on{" "}
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </small>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : (
-        <p>No story found</p>
+        <p>No comments yet.</p>
       )}
     </div>
   );

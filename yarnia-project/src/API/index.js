@@ -16,14 +16,14 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Full URL with the story ID
+    const response = await fetch(`${API_URL}/api/stories/${storyId}`); // Assuming this endpoint gets a single story
     if (!response.ok) {
       throw new Error(
         `Failed to fetch story with ID ${storyId}: ${response.statusText}`
       );
     }
     const data = await response.json();
-    return data; // Assuming the data is a single story object
+    return data; // Make sure the data includes the story, comments, and author if necessary
   } catch (error) {
     console.error(`Error fetching story with ID ${storyId}:`, error);
     throw error;

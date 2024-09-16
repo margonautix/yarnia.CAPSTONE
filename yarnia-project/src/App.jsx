@@ -1,37 +1,20 @@
-import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import Stories from "./Components/Stories"; // Ensure correct case
-import SingleStory from "./components/SingleStory";
-import CommentsPage from "./components/Comments"; // Import the CommentsPage component
-import NavBar from "./components/Navbar"; // Import the NavBar component
-import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Profile from "./components/Profile"; // Example component for a profile page
+import Login from "./components/Login"; // Example component for a login page
+import Stories from "./components/Stories"; // Stories component
+import SingleStory from "./components/SingleStory"; // SingleStory component
+import "./app.css";
+import Register from "./components/Register";
 
 function App() {
-  const [searchParams, setSearchParams] = useState("");
-
   return (
-    <div className="App">
-      {/* Navbar always visible */}
-      <NavBar />
-
-      <Routes>
-        {/* Passing searchParams to the Stories component */}
-        <Route
-          path="/"
-          element={
-            <Stories
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-            />
-          }
-        />
-        {/* Route for viewing a single story */}
-        <Route path="/stories/:storyId" element={<SingleStory />} />
-
-        {/* Admin-only route for viewing all comments */}
-        <Route path="/comments" element={<CommentsPage />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Stories />} />
+      <Route path="/stories/:id" element={<SingleStory />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 }
 
