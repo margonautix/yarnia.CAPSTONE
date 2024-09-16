@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Stories from "./Components/Stories";
 import "./App.css";
-import Stories from "./components/Stories";
+import Stories from "./Components/Stories";
 import SingleStory from "./components/SingleStory";
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
               />
             }
           />
-          <Route path="books/:id" element={<SingleStory/>} />
+          <Route path="books/:id" element={<SingleStory />} />
         </Routes>
       </div>
     </>
