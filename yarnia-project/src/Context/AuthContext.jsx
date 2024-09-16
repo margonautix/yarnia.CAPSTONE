@@ -1,32 +1,38 @@
 import React, { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Create the context
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const response = await fetch("/api/auth/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const userData = await response.json();
-          setUser(userData);
-        } catch (error) {
-          console.error("Error fetching user data", error);
-        }
-      }
-    };
-    fetchUser();
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedUser = jwtDecode(token);
+      setUser(decodedUser);
+    }
   }, []);
 
+  const login = (token) => {
+    const decodedUser = jwtDecode(token);
+    setUser(decodedUser);
+    localStorage.setItem("token", token);
+    navigate("/profile");
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => React.useContext(AuthContext);

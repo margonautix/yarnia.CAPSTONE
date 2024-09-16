@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 
 const NavBar = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleViewComments = () => {
@@ -20,9 +22,15 @@ const NavBar = () => {
         <li>
           <Link to="/bookmarks">Bookmarks</Link>
         </li>
-        <li>
-          <Link to="/login">Log-In</Link>
-        </li>
+        {user ? (
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/profile">Profile</Link>
+          </li>
+        )}
         {/* Admin-only button */}
         <li>
           <button onClick={handleViewComments}>View All Comments</button>
