@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Routes, Route } from "react-router-dom";
+import Stories from "./Components/Stories";
 import "./App.css";
 import Stories from "./components/Stories";
 import SingleStory from "./components/SingleStory";
