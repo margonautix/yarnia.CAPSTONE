@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-import { fetchAllStories, fetchSingleStory } from "../api"; // Import both API functions
+import { fetchAllStories } from "../api"; // Only fetching all stories here
 
 const Stories = ({ searchParams }) => {
   const [stories, setStories] = useState([]);
-  const [singleStory, setSingleStory] = useState(null); // State to hold a single story's details
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Use navigate from react-router-dom
 
   useEffect(() => {
     async function getAllStories() {
@@ -14,20 +15,11 @@ const Stories = ({ searchParams }) => {
         setStories(response);
       } catch (error) {
         console.error("Error fetching stories:", error);
+        setError("Failed to load stories.");
       }
     }
     getAllStories();
   }, []);
-
-  const handleSeeSingleStory = async (storyId) => {
-    try {
-      const story = await fetchSingleStory(storyId);
-      setSingleStory(story);
-      setError(null);
-    } catch (error) {
-      setError("Failed to load the story.");
-    }
-  };
 
   const storiesToDisplay = searchParams
     ? stories.filter((story) =>
@@ -35,8 +27,19 @@ const Stories = ({ searchParams }) => {
       )
     : stories;
 
+  const handleSeeSingleStory = (storyId) => {
+    // Make sure storyId is valid before navigating
+    if (storyId) {
+      navigate(`/stories/${storyId}`);
+    } else {
+      console.error("Story ID is undefined");
+    }
+  };
+
   return (
-    <div>
+    <div className="stories-container">
+      {error && <p>{error}</p>}
+
       {storiesToDisplay.map((story) => (
         <div key={story.id} className="story-card">
           <h2>{story.title}</h2>
@@ -55,22 +58,13 @@ const Stories = ({ searchParams }) => {
               <strong>Author:</strong> Unknown
             </p>
           )}
+
+          {/* "See Single Story" Button */}
           <button onClick={() => handleSeeSingleStory(story.id)}>
             See Single Story
           </button>
         </div>
       ))}
-
-      {singleStory && (
-        <div className="single-story">
-          <h2>{singleStory.title}</h2>
-          <p>
-            <strong>Author:</strong> {singleStory.author?.username || "Unknown"}
-          </p>
-          <p>{singleStory.content}</p>
-        </div>
-      )}
-      {error && <p>{error}</p>}
     </div>
   );
 };

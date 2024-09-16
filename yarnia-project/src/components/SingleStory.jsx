@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchSingleStory } from "../api";
 
 const SingleStory = () => {
-  const { id } = useParams(); // Get the story ID from the URL
+  const { id } = useParams(); // Get story ID from URL parameters
   const [story, setStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const SingleStory = () => {
         const data = await fetchSingleStory(id);
         setStory(data);
       } catch (err) {
-        setError("Failed to load story");
+        setError("Failed to load story.");
       } finally {
         setLoading(false);
       }
@@ -32,8 +32,8 @@ const SingleStory = () => {
   }
 
   return (
-    <div>
-      <h2>{story.title}</h2>
+    <div className="single-story">
+      <h1>{story.title}</h1>
       <p>
         <strong>Author:</strong> {story.author?.username || "Unknown"}
       </p>

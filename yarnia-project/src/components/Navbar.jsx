@@ -5,7 +5,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const handleViewComments = () => {
-    navigate("/comments"); // Only navigate if the user is an admin
+    navigate("/comments");
   };
 
   return (
@@ -13,9 +13,6 @@ const NavBar = () => {
       <ul>
         <li>
           <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/stories">Stories</Link>
         </li>
         <li>
           <Link to="/profile">Profile</Link>
