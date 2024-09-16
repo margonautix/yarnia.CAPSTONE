@@ -1,33 +1,45 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { fetchSingleStory } from "../API";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchSingleStory } from "../api";
 
+const SingleStory = () => {
+  const { id } = useParams(); // Get the story ID from the URL
+  const [story, setStory] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const SingleStory = ({token}) => {
-    const [story, setStory] = useState(null);
-    const { storyId } = useParams();
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        async function fetchStory() {
-            const response = await fetchSingleStory(storyId);
-            setStory(response.story);
-        }
-        fetchStory();
-    }, [storyId])
+  useEffect(() => {
+    const getStory = async () => {
+      try {
+        const data = await fetchSingleStory(id);
+        setStory(data);
+      } catch (err) {
+        setError("Failed to load story");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return(
-        <>
-            <div className = "">
-                <main className="" key="{}">
-                    <h2>{story.title}</h2>
-                    <h3>{story.authorId}</h3>
-                    <h3>{story.summary}</h3>
-                    <button onClick={() => navigate(`/`)}>Return to Story Shelf</button>
-                </main>
-            </div>
-        </>
-    )
-}
+    getStory();
+  }, [id]);
 
-export default SingleStory; 
+  if (loading) {
+    return <p>Loading story...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  return (
+    <div>
+      <h2>{story.title}</h2>
+      <p>
+        <strong>Author:</strong> {story.author?.username || "Unknown"}
+      </p>
+      <p>{story.content}</p>
+    </div>
+  );
+};
+
+export default SingleStory;

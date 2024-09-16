@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { fetchAllStories, fetchSingleStory } from "../api/index"; // Import both API functions
+import { fetchAllStories, fetchSingleStory } from "../api"; // Import both API functions
 
 const Stories = ({ searchParams }) => {
   const [stories, setStories] = useState([]);
   const [singleStory, setSingleStory] = useState(null); // State to hold a single story's details
-  const [error, setError] = useState(null); // Optional: error handling for single story fetch
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function getAllStories() {
       try {
-        const response = await fetchAllStories(); // Use API function from index.js
-        if (response && Array.isArray(response)) {
-          setStories(response); // Set the fetched stories
-        } else {
-          console.error("No stories found or response is undefined.");
-        }
+        const response = await fetchAllStories();
+        setStories(response);
       } catch (error) {
         console.error("Error fetching stories:", error);
       }
@@ -25,16 +21,14 @@ const Stories = ({ searchParams }) => {
 
   const handleSeeSingleStory = async (storyId) => {
     try {
-      const story = await fetchSingleStory(storyId); // Fetch the single story by ID
-      setSingleStory(story); // Set the fetched story in state
-      setError(null); // Clear any previous errors
+      const story = await fetchSingleStory(storyId);
+      setSingleStory(story);
+      setError(null);
     } catch (error) {
-      console.error("Error fetching single story:", error);
       setError("Failed to load the story.");
     }
   };
 
-  // Filter stories based on search params
   const storiesToDisplay = searchParams
     ? stories.filter((story) =>
         story.title.toLowerCase().includes(searchParams.toLowerCase())
@@ -61,15 +55,12 @@ const Stories = ({ searchParams }) => {
               <strong>Author:</strong> Unknown
             </p>
           )}
-
-          {/* "See Single Story" Button */}
           <button onClick={() => handleSeeSingleStory(story.id)}>
             See Single Story
           </button>
         </div>
       ))}
 
-      {/* Display the single story details if available */}
       {singleStory && (
         <div className="single-story">
           <h2>{singleStory.title}</h2>
@@ -79,8 +70,6 @@ const Stories = ({ searchParams }) => {
           <p>{singleStory.content}</p>
         </div>
       )}
-
-      {/* Display error if single story fetch fails */}
       {error && <p>{error}</p>}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchAllComments } from "./api"; // Assuming this is where your fetchAllComments function lives
+import { fetchAllComments } from "../api/index";
 
 const CommentsPage = () => {
   const [comments, setComments] = useState([]);
