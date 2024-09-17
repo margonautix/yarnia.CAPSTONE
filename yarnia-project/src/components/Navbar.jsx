@@ -52,9 +52,6 @@ const NavBar = () => {
                 <button onClick={handleViewComments}>View All Comments</button>
               </li>
             )}
-            <li>
-              <button onClick={handleLogout}>Logout</button>
-            </li>
           </>
         ) : (
           <>
