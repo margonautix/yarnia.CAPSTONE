@@ -31,12 +31,6 @@ const Profile = () => {
     fetchUserData(); // Fetch user data once when the component mounts
   }, []);
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token
-    navigate("/login"); // Redirect to login page
-  };
-
   // Handle save action for editing profile
   const handleSave = async () => {
     try {
@@ -95,8 +89,6 @@ const Profile = () => {
       ) : (
         <button onClick={() => setIsEditing(true)}>Edit Profile</button>
       )}
-
-      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

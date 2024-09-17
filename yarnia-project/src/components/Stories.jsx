@@ -61,9 +61,6 @@ const Stories = () => {
             <strong>Published On:</strong>{" "}
             {new Date(story.createdAt).toLocaleDateString()}
           </p>
-          <p>
-            <strong>Summary:</strong> {story.summary || "No summary available"}
-          </p>
           <button onClick={() => handleReadMore(story.storyId)}>
             Read More
           </button>
@@ -74,7 +71,9 @@ const Stories = () => {
       {showModal && selectedStory && (
         <div className="modal-backdrop">
           <div className="modal-content">
-            <button onClick={closeModal}>X</button>
+            <button id="X" onClick={closeModal}>
+              X
+            </button>
             <h2>{selectedStory.title}</h2>
             <p>
               <strong>Author:</strong>{" "}

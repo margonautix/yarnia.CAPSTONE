@@ -7,67 +7,98 @@
 }
 
 /* Navbar Styling */
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Styling for the Navbar */
 .navbar {
-  text-shadow: 2px 2px 1px black;
-  background-color: #333;
-  padding: 10px 20px;
+  background-color: #333; /* Dark background for the navbar */
+  padding: 10px 20px; /* Padding inside the navbar */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Space between items on the left and right */
   align-items: center;
-  position: fixed;
+  position: fixed; /* Fix the navbar at the top */
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Full-width navbar */
+  z-index: 1000; /* Ensure it stays on top of other content */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  font-family: Arial, sans-serif;
 }
 
 .navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
+  list-style: none; /* Remove bullet points */
+  display: flex; /* Display the list items horizontally */
+  gap: 20px; /* Space between the list items */
   margin: 0;
   padding: 0;
 }
 
 .navbar li {
-  display: inline;
+  display: inline; /* Inline list items */
 }
 
 .navbar a,
 .navbar button {
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  font-size: 18px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  color: white; /* White text color */
+  padding: 10px 15px; /* Add padding to links and buttons */
+  text-decoration: none; /* Remove underline from links */
+  font-size: 18px; /* Set font size */
+  border-radius: 4px; /* Rounded corners for links and buttons */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .navbar a:hover,
 .navbar button:hover {
-  background-color: #575757;
+  background-color: #575757; /* Darken the background on hover */
 }
 
 .navbar button {
-  background-color: #007bff;
-  border: none;
-  cursor: pointer;
+  background-color: #007bff; /* Blue background for the button */
+  border: none; /* Remove border from the button */
+  cursor: pointer; /* Change cursor to pointer on hover */
 }
 
 .navbar button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darken the button background on hover */
 }
 
 /* Responsive Navbar */
 @media (max-width: 600px) {
   .navbar ul {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column; /* Stack the items vertically on smaller screens */
+    align-items: flex-start; /* Align the items to the left */
   }
 
   .navbar li {
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Space out the items vertically */
+  }
+}
+
+/* Additional Styles */
+.navbar a:hover,
+.navbar button:hover {
+  background-color: #575757; /* Darken the background on hover */
+  transition: background-color 0.3s ease;
+}
+
+.navbar button:focus {
+  outline: none; /* Remove outline when button is focused */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column; /* Stack the items vertically on smaller screens */
+    align-items: center; /* Center items on smaller screens */
+  }
+
+  .navbar li {
+    margin-bottom: 10px; /* Space out the items vertically */
   }
 }
 
@@ -152,7 +183,6 @@
 h2 {
   text-align: center;
   color: #ffffff;
-  text-shadow: 2px 2px 1px black;
   font-size: 1.8rem;
   margin-bottom: 20px;
 }
@@ -168,7 +198,6 @@ label {
   font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
-  text-shadow: 2px 2px 1px black;
 }
 
 input[type="text"],
@@ -250,6 +279,7 @@ input[type="password"]:focus {
 }
 
 .modal-content {
+  position: relative; /* Add relative positioning to the modal content */
   background-color: #fff;
   color: black;
   padding: 20px;
@@ -266,7 +296,7 @@ input[type="password"]:focus {
 .modal-content button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #0d9900;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -274,7 +304,24 @@ input[type="password"]:focus {
 }
 
 .modal-content button:hover {
-  background-color: #0056b3;
+  background-color: #067800;
+}
+
+/* Align #X in the Top Right Corner of the Modal */
+#X {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px; /* You can adjust the size if needed */
+  background: none;
+  border: none;
+  color: #333; /* Set color to make the X visible */
+  margin-top: 0px;
+}
+
+#X:hover {
+  color: #00254d;
 }
 
 /* Form Styling Inside Modal */
