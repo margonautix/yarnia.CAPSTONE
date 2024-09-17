@@ -3,10 +3,29 @@ import { Link, useNavigate } from "react-router-dom";
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
+  // State to track the logged-in user
+  const [user, setUser] = useState(null);
+
+  // Check for user data in localStorage when the component mounts
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("user"); // Clear invalid user data if parsing fails
+      }
+    }
+  }, []); // Empty dependency array means this runs once when the component mounts
+
+  // Handle logout functionality
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null); // Reset user state
+    localStorage.removeItem("token"); // Also remove token if you're storing it
+    setUser(null); // Clear the user state
     navigate("/login");
   };
 
@@ -24,11 +43,13 @@ const NavBar = ({ user, setUser }) => {
           <Link to="/bookmarks">Bookmarks</Link>
         </li>
 
+        {/* Show the "Profile" tab only if the user is logged in */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
+            {/* Conditionally show "View All Comments" for admin users */}
             {user.isAdmin && (
               <li>
                 <button onClick={handleViewComments}>View All Comments</button>
@@ -45,9 +66,6 @@ const NavBar = ({ user, setUser }) => {
             </li>
             <li>
               <Link to="/register">Register</Link>
-            </li>
-            <li>
-              <p>Welcome, Guest! Please login to interact with stories.</p>
             </li>
           </>
         )}
