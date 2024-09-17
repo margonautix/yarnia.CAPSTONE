@@ -29,10 +29,6 @@ const NavBar = () => {
     navigate("/login");
   };
 
-  const handleViewComments = () => {
-    navigate("/comments");
-  };
-
   return (
     <nav className="navbar">
       <ul>
@@ -40,25 +36,12 @@ const NavBar = () => {
           <Link to="/">Home</Link>
         </li>
 
-        {/* Show Bookmarks link if user is logged in */}
-        {user && (
-          <li>
-            <Link to="/bookmarks">Bookmarks</Link>
-          </li>
-        )}
-
-        {/* Show the "Profile" tab only if the user is logged in */}
+        {/* Conditionally render based on whether the user is logged in */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
-            {/* Conditionally show "View All Comments" for admin users */}
-            {user.isAdmin && (
-              <li>
-                <button onClick={handleViewComments}>View All Comments</button>
-              </li>
-            )}
             <li>
               <button onClick={handleLogout}>Logout</button>
             </li>

@@ -8,7 +8,6 @@
 
 /* Navbar Styling */
 .navbar {
-  text-shadow: 2px 2px 1px black;
   background-color: #333;
   padding: 10px 20px;
   display: flex;
@@ -152,7 +151,6 @@
 h2 {
   text-align: center;
   color: #ffffff;
-  text-shadow: 2px 2px 1px black;
   font-size: 1.8rem;
   margin-bottom: 20px;
 }
@@ -168,7 +166,6 @@ label {
   font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
-  text-shadow: 2px 2px 1px black;
 }
 
 input[type="text"],
@@ -250,6 +247,7 @@ input[type="password"]:focus {
 }
 
 .modal-content {
+  position: relative; /* Add relative positioning to the modal content */
   background-color: #fff;
   color: black;
   padding: 20px;
@@ -266,7 +264,7 @@ input[type="password"]:focus {
 .modal-content button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #0d9900;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -274,7 +272,24 @@ input[type="password"]:focus {
 }
 
 .modal-content button:hover {
-  background-color: #0056b3;
+  background-color: #067800;
+}
+
+/* Align #X in the Top Right Corner of the Modal */
+#X {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px; /* You can adjust the size if needed */
+  background: none;
+  border: none;
+  color: #333; /* Set color to make the X visible */
+  margin-top: 0px;
+}
+
+#X:hover {
+  color: #00254d;
 }
 
 /* Form Styling Inside Modal */
