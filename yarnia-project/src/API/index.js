@@ -1,8 +1,9 @@
 const API_URL = "http://localhost:3000/api"; // Base URL for your API
 
+// Fetch all stories from the API
 export async function fetchAllStories() {
   try {
-    const response = await fetch(`${API_URL}/stories`); // Full URL for the API request
+    const response = await fetch(`${API_URL}/stories`);
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
@@ -16,39 +17,34 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming this endpoint gets a single story
+    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming the API endpoint is `/stories/:id`
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch story with ID ${storyId}: ${response.statusText}`
-      );
+      throw new Error(`Error fetching story: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data; // Make sure the data includes the story, comments, and author if necessary
+    const data = await response.json(); // Parse the response data
+    return data; // Return the data (should include the story object)
   } catch (error) {
-    console.error(`Error fetching story with ID ${storyId}:`, error);
+    console.error("Error fetching the story:", error);
     throw error;
   }
 }
 
+// Fetch all comments from the API
 export async function fetchAllComments() {
   try {
-    const response = await fetch(`${API_URL}/comments`); // Full URL for the API request
-
-    // Check if the response is not successful (status is not in the range of 200-299)
+    const response = await fetch(`${API_URL}/comments`);
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
-
-    // Parse the response as JSON
     const data = await response.json();
     return data; // Assuming the data is an array of comments
   } catch (error) {
-    // Log error to the console and rethrow it for further handling
     console.error("Error fetching all comments:", error);
     throw error;
   }
 }
 
+// Register a new user
 export async function createNewUser(username, email, password) {
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -60,24 +56,23 @@ export async function createNewUser(username, email, password) {
         password,
       }),
     });
+
     const json = await response.json();
-
     if (response.ok) {
-      // Assuming the token is included in the response
       console.log("Registration successful, token:", json.token);
-
-      // Optionally, store the token in localStorage or state
-      localStorage.setItem("token", json.token);
-
+      localStorage.setItem("token", json.token); // Store the token
       return json;
     } else {
       console.error("Registration failed:", json.message);
+      return { error: json.message }; // Return the error message for handling
     }
   } catch (err) {
-    console.error("Oops, something went wrong!", err);
+    console.error("Oops, something went wrong during registration!", err);
+    throw err; // Rethrow the error for further handling
   }
 }
 
+// Log in an existing user
 export async function loginUser(email, password) {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
@@ -87,9 +82,68 @@ export async function loginUser(email, password) {
     });
 
     const json = await response.json();
-    return json;
+    if (response.ok) {
+      localStorage.setItem("token", json.token); // Store the token
+      return json;
+    } else {
+      console.error("Login failed:", json.message);
+      return { error: json.message }; // Return the error message for UI feedback
+    }
   } catch (err) {
     console.error("Login failed:", err);
+    throw err;
   }
 }
 
+// Fetch comments for a specific story by its ID
+export async function fetchCommentsForStory(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/stories/${storyId}/comments`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch comments for story ID ${storyId}: ${response.statusText}`
+      );
+    }
+    const data = await response.json(); // Assuming the data is an array of comments
+    return data;
+  } catch (error) {
+    console.error(`Error fetching comments for story ID ${storyId}:`, error);
+    throw error;
+  }
+}
+
+export async function fetchWithAuth(url, options = {}) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  return await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+    },
+  });
+}
+
+const handleSave = async () => {
+  try {
+    const response = await fetchWithAuth("http://localhost:3000/api/users/me", {
+      method: "PUT",
+      body: JSON.stringify({ username, bio }), // Include the username and bio in the body
+    });
+
+    if (response.ok) {
+      const updatedUser = await response.json();
+      setUser(updatedUser); // Update the user state with the new data
+      setIsEditing(false); // Exit edit mode after saving
+    } else {
+      console.error("Failed to update profile");
+    }
+  } catch (error) {
+    console.error("Error while updating profile:", error);
+  }
+};

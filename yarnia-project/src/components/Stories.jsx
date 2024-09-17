@@ -41,7 +41,7 @@ const Stories = () => {
 
   const handleViewBook = () => {
     // Navigate to the dynamic route for the selected story
-    navigate(`/story/${selectedStory.storyId}`);
+    navigate("/stories/:storyId");
   };
 
   if (loading) {
@@ -93,7 +93,7 @@ const Stories = () => {
             <p>
               <strong>Content:</strong> {selectedStory.content}
             </p>
-            <button onClick={handleViewBook}>View Book</button>
+            <button onClick={handleViewBook}>View Story</button>
           </div>
         </div>
       )}
