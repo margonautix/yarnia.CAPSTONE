@@ -11,16 +11,14 @@ const NavBar = () => {
     navigate("/comments");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
   return (
     <nav className="navbar">
       <ul>
         <li>
           <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/bookmarks">Bookmarks</Link>
         </li>
 
         {user && (
