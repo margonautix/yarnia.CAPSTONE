@@ -9,17 +9,23 @@ const NavBar = () => {
 
   // Check for user data in localStorage when the component mounts
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(storedUser);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("user"); // Clear invalid user data if parsing fails
+      }
     }
-  }, []);  // Empty dependency array means this runs once when the component mounts
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   // Handle logout functionality
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token");  // Also remove token if you're storing it
-    setUser(null);  // Clear the user state
+    localStorage.removeItem("token"); // Also remove token if you're storing it
+    setUser(null); // Clear the user state
     navigate("/login");
   };
 
@@ -41,17 +47,21 @@ const NavBar = () => {
           </li>
         )}
 
-        {/* Show different options depending on whether the user is logged in */}
+        {/* Show the "Profile" tab only if the user is logged in */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
+            {/* Conditionally show "View All Comments" for admin users */}
             {user.isAdmin && (
               <li>
                 <button onClick={handleViewComments}>View All Comments</button>
               </li>
             )}
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
           </>
         ) : (
           <>
@@ -60,9 +70,6 @@ const NavBar = () => {
             </li>
             <li>
               <Link to="/register">Register</Link>
-            </li>
-            <li>
-              <p>Welcome, Guest! Please login to interact with stories.</p>
             </li>
           </>
         )}
