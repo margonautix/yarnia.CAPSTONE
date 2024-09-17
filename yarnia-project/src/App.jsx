@@ -2,10 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
-import Stories from "./components/Stories"
+import Stories from "./Components/Stories";
 import NavBar from "./components/Navbar";
 import Register from "./components/Register";
 import SingleStory from "./components/SingleStory";
+import Logout from "./components/Logout";
 import "./App.css";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
         <Route path="/stories/:storyId" element={<SingleStory />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </div>
   );
