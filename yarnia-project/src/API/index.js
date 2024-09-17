@@ -82,13 +82,7 @@ export async function loginUser(email, password) {
     });
 
     const json = await response.json();
-    if (response.ok) {
-      localStorage.setItem("token", json.token); // Store the token
-      return json;
-    } else {
-      console.error("Login failed:", json.message);
-      return { error: json.message }; // Return the error message for UI feedback
-    }
+    return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
     throw err;
