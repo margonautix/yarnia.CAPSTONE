@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 app.use(
   cors({
-    origin: "http://localhost:5173/", // Allow requests only from this origin
-    credentials: true, // Allow credentials such as cookies and authorization headers
+    origin: 'http://localhost:5173',  // Only allow your frontend origin
+    credentials: true,  // Allow credentials such as Authorization headers or cookies
   })
 );
 
