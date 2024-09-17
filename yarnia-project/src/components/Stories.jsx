@@ -27,13 +27,15 @@ const Stories = () => {
 
   const handleReadMore = async (storyId) => {
     try {
-      const fullStory = await fetchSingleStory(storyId); // Make another API call if needed
-      setSelectedStory(fullStory); // Set the full story as the selected story
-      setShowModal(true); // Show the modal
+      console.log(`Fetching story with ID: ${storyId}`); // Log the storyId
+      const fullStory = await fetchSingleStory(storyId);
+      setSelectedStory(fullStory);
+      setShowModal(true);
     } catch (error) {
       console.error("Failed to load full story:", error);
     }
   };
+  
 
   const closeModal = () => {
     setShowModal(false); // Hide the modal
@@ -84,9 +86,6 @@ const Stories = () => {
             </p>
             <p>
               <strong>Summary:</strong> {selectedStory.summary}
-            </p>
-            <p>
-              <strong>Content:</strong> {selectedStory.content}
             </p>
             <button
               onClick={() => navigate(`/stories/${selectedStory.storyId}`)}

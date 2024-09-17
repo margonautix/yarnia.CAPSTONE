@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchSingleStory } from "../API"; // Assuming this API call is defined
 
 export default function SingleStory() {
-  const navigate = useNavigate();
-  const { id } = useParams(); // Get the story ID from the URL
+  // const navigate = useNavigate();
+  const { storyId } = useParams(); // Get the storyId from the URL (change from 'id' to 'storyId')
   const [story, setStory] = useState(null);
   const [error, setError] = useState(null); // To track errors
 
@@ -26,12 +26,12 @@ export default function SingleStory() {
       }
     }
 
-    if (id) {
-      fetchStory(id); // Fetch the story only if the id is present
+    if (storyId) {
+      fetchStory(storyId); // Fetch the story only if the storyId is present
     } else {
       setError("No story ID provided.");
     }
-  }, [id]); // Re-fetch the story when the id changes
+  }, [storyId]); // Re-fetch the story when the storyId changes
 
   if (error) return <div>{error}</div>; // Show error message if any
 

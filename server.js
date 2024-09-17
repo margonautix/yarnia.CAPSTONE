@@ -80,12 +80,13 @@ app.get("/api/stories", async (req, res, next) => {
   }
 });
 
-// GET a single story by ID
 app.get("/api/stories/:storyId", async (req, res, next) => {
-  const { storyId } = req.params; // Extract storyId from the URL
+  const { storyId } = req.params;
+  console.log(`Received storyId: ${storyId}`); // Log the storyId
+
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) },
+      where: { storyId: parseInt(storyId) }, // Convert to integer only if needed
     });
 
     if (!story) {
@@ -97,6 +98,7 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
     next(err);
   }
 });
+
 
 // DELETE a single story by ID
 app.delete("/api/stories/:storyId", async (req, res, next) => {
