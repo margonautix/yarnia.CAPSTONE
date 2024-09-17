@@ -15,9 +15,8 @@ export default function SingleStory() {
         const response = await fetchSingleStory(storyId); // Fetch story using the id
         console.log("API response:", response); // Log the full response
 
-        // If the response doesn't have a 'story' field, we use the response directly.
         if (response) {
-          setStory(response.story || response); // Set story if it exists, otherwise set response
+          setStory(response); // Set story if it exists
         } else {
           setError("Story not found.");
         }
@@ -29,6 +28,8 @@ export default function SingleStory() {
 
     if (id) {
       fetchStory(id); // Fetch the story only if the id is present
+    } else {
+      setError("No story ID provided.");
     }
   }, [id]); // Re-fetch the story when the id changes
 
@@ -45,20 +46,6 @@ export default function SingleStory() {
           <h4>Author: {story.author || "Unknown Author"}</h4>
           <h4>Description: {story.summary || "No Description"}</h4>
           <p>Content: {story.content || "No Content"}</p>
-          {/* Uncomment the following button to enable "Add Story" functionality */}
-          {/* <button
-            onClick={async () => {
-              try {
-                await addStory(story.id); // Call the function to add the story
-                navigate("/"); // Redirect to home page or any other page
-              } catch (error) {
-                console.error("Failed to add the story:", error);
-              }
-            }}
-            className="AddStory"
-          >
-            Add Story
-          </button> */}
         </ul>
       </main>
     </div>

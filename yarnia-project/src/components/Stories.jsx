@@ -39,11 +39,6 @@ const Stories = () => {
     setShowModal(false); // Hide the modal
   };
 
-  const handleViewBook = () => {
-    // Navigate to the dynamic route for the selected story
-    navigate("/stories/:storyId");
-  };
-
   if (loading) {
     return <p>Loading stories...</p>;
   }
@@ -93,7 +88,11 @@ const Stories = () => {
             <p>
               <strong>Content:</strong> {selectedStory.content}
             </p>
-            <button onClick={handleViewBook}>View Story</button>
+            <button
+              onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
+            >
+              View Story
+            </button>{" "}
           </div>
         </div>
       )}
