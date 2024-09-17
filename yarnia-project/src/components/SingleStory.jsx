@@ -11,7 +11,7 @@ export default function SingleStory() {
         async function fetchStory() {
             const response = await fetchSingleStory(id);
             console.log(response);
-            setStory(response.book);
+            setStory(response.story);
         }
         fetchStory();
     }, []);
