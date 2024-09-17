@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-
-  // State to track the logged-in user
-  const [user, setUser] = useState(null);
 
   // Check for user data in localStorage when the component mounts
   useEffect(() => {
