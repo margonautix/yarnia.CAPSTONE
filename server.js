@@ -565,6 +565,7 @@ app.post("/api/auth/login", async (req, res, next) => {
 });
 
 
+
 // GET /api/auth/me - Get the authenticated user
 app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
   try {

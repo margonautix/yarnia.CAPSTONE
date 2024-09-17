@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -17,6 +17,8 @@ const Login = () => {
       if (response && response.token) {
         localStorage.setItem("token", response.token);
         localStorage.setItem("user", JSON.stringify(response.user)); // Save user information
+
+        setUser(response.user); // Update the user in NavBar
 
         navigate("/profile");
       } else {

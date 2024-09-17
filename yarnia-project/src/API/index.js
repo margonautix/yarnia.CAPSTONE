@@ -85,9 +85,9 @@ export async function loginUser(email, password) {
     return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
-    throw err;
   }
 }
+
 
 // Fetch comments for a specific story by its ID
 export async function fetchCommentsForStory(storyId) {
@@ -123,21 +123,21 @@ export async function fetchWithAuth(url, options = {}) {
   });
 }
 
-const handleSave = async () => {
-  try {
-    const response = await fetchWithAuth("http://localhost:3000/api/users/me", {
-      method: "PUT",
-      body: JSON.stringify({ username, bio }), // Include the username and bio in the body
-    });
+// const handleSave = async () => {
+//   try {
+//     const response = await fetchWithAuth("http://localhost:3000/api/users/me", {
+//       method: "PUT",
+//       body: JSON.stringify({ username, bio }), // Include the username and bio in the body
+//     });
 
-    if (response.ok) {
-      const updatedUser = await response.json();
-      setUser(updatedUser); // Update the user state with the new data
-      setIsEditing(false); // Exit edit mode after saving
-    } else {
-      console.error("Failed to update profile");
-    }
-  } catch (error) {
-    console.error("Error while updating profile:", error);
-  }
-};
+//     if (response.ok) {
+//       const updatedUser = await response.json();
+//       setUser(updatedUser); // Update the user state with the new data
+//       setIsEditing(false); // Exit edit mode after saving
+//     } else {
+//       console.error("Failed to update profile");
+//     }
+//   } catch (error) {
+//     console.error("Error while updating profile:", error);
+//   }
+// };
