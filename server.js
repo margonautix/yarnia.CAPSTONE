@@ -535,21 +535,20 @@ app.post("/api/auth/login", async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Compare hashed passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Generate a token for the authenticated user
     const token = generateToken(user);
 
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, user }); // Send both token and user
   } catch (err) {
     next(err);
   }
 });
+
 
 // GET /api/auth/me - Get the authenticated user
 app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
