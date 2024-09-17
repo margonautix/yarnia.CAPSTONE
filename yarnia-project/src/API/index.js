@@ -88,7 +88,6 @@ export async function loginUser(email, password) {
   }
 }
 
-
 // Fetch comments for a specific story by its ID
 export async function fetchCommentsForStory(storyId) {
   try {
@@ -122,3 +121,23 @@ export async function fetchWithAuth(url, options = {}) {
     },
   });
 }
+
+export const updateStoryContent = async (storyId, content) => {
+  try {
+    const response = await fetch(`/api/stories/${storyId}`, {
+      method: "PUT", // Or PATCH, depending on your API design
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update the story content");
+    }
+
+    return await response.json(); // Return the updated story if needed
+  } catch (error) {
+    console.error("Error updating story content:", error);
+  }
+};
