@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import navigate from react-router-dom
 import { fetchAllStories, fetchSingleStory } from "../API"; // Assuming you have this fetch function
 
 const Stories = () => {
@@ -6,6 +7,8 @@ const Stories = () => {
   const [loading, setLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null); // For storing the currently selected story
   const [showModal, setShowModal] = useState(false); // For modal visibility
+
+  const navigate = useNavigate(); // Initialize the navigate function
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -36,6 +39,11 @@ const Stories = () => {
     setShowModal(false); // Hide the modal
   };
 
+  const handleViewBook = () => {
+    // Navigate to the dynamic route for the selected story
+    navigate(`/story/${selectedStory.storyId}`);
+  };
+
   if (loading) {
     return <p>Loading stories...</p>;
   }
@@ -61,8 +69,7 @@ const Stories = () => {
           </p>
           <button onClick={() => handleReadMore(story.storyId)}>
             Read More
-          </button>{" "}
-          {/* Pass storyId */}
+          </button>
         </div>
       ))}
 
@@ -70,6 +77,7 @@ const Stories = () => {
       {showModal && selectedStory && (
         <div className="modal-backdrop">
           <div className="modal-content">
+            <button onClick={closeModal}>X</button>
             <h2>{selectedStory.title}</h2>
             <p>
               <strong>Author:</strong>{" "}
@@ -85,7 +93,7 @@ const Stories = () => {
             <p>
               <strong>Content:</strong> {selectedStory.content}
             </p>
-            <button onClick={closeModal}>Close</button>
+            <button onClick={handleViewBook}>View Book</button>
           </div>
         </div>
       )}
