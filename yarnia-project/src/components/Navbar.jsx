@@ -10,21 +10,21 @@ const NavBar = ({ user, setUser }) => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        setUser(parsedUser); // Set user state if the stored data is valid
       } catch (error) {
         console.error("Error parsing user data:", error);
         localStorage.removeItem("user"); // Clear invalid user data if parsing fails
       }
     }
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, [setUser]); // Include setUser as a dependency
 
   // Handle logout functionality
-  const handleLogout = () => {
+  const handleLogout = (event) => {
+    event.preventDefault(); // Prevent default link behavior
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); // Also remove token if you're storing it
     setUser(null); // Clear the user state
-    navigate("/login");
+    navigate("/login"); // Redirect to login page after logging out
   };
 
   return (
@@ -37,14 +37,17 @@ const NavBar = ({ user, setUser }) => {
           <Link to="/bookmarks">Bookmarks</Link>
         </li>
 
-        {/* Show the "Profile" tab only if the user is logged in */}
+        {/* Conditionally render links based on user login status */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
+            {/* Keep Logout as a link but add onClick to handle logout */}
             <li>
-              <button onClick={handleLogout}>Logout</button>
+              <Link to="/logout" onClick={handleLogout}>
+                Logout
+              </Link>
             </li>
           </>
         ) : (
