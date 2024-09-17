@@ -85,9 +85,9 @@ export async function loginUser(email, password) {
     return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
-    throw err;
   }
 }
+
 
 // Fetch comments for a specific story by its ID
 export async function fetchCommentsForStory(storyId) {

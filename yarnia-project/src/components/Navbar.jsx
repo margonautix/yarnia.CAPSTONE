@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-const NavBar = () => {
+const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-
-  // State to track the logged-in user
-  const [user, setUser] = useState(null);
 
   // Check for user data in localStorage when the component mounts
   useEffect(() => {
@@ -23,6 +20,7 @@ const NavBar = () => {
 
   // Handle logout functionality
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("token"); // Also remove token if you're storing it
     setUser(null); // Clear the user state
@@ -35,8 +33,11 @@ const NavBar = () => {
         <li>
           <Link to="/">Home</Link>
         </li>
+        <li>
+          <Link to="/bookmarks">Bookmarks</Link>
+        </li>
 
-        {/* Conditionally render based on whether the user is logged in */}
+        {/* Show the "Profile" tab only if the user is logged in */}
         {user ? (
           <>
             <li>
