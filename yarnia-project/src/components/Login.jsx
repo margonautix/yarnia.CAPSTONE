@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
-import { loginUser } from "../API"; // Assuming you have an API function to log in the user
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../API";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,9 +15,10 @@ const Login = () => {
     try {
       const response = await loginUser(email, password);
       if (response && response.token) {
-        localStorage.setItem("token", response.token); // Store token
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user)); // Save user information
 
-        navigate("/profile"); // Redirect to the Profile page
+        navigate("/profile");
       } else {
         setError("Invalid login credentials");
       }

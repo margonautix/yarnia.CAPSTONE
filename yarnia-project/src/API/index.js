@@ -87,9 +87,10 @@ export async function loginUser(email, password) {
     });
 
     const json = await response.json();
-    return json;
+    return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
   }
 }
+
 
