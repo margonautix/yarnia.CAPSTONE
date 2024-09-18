@@ -33,19 +33,22 @@ const NavBar = ({ user, setUser }) => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
-          <Link to="/bookmarks">Bookmarks</Link>
-        </li>
-
+  
+        {/* Conditionally render the Bookmarks link based on user login status */}
+        {user && (
+          <li>
+            <Link to="/bookmarks">Bookmarks</Link>
+          </li>
+        )}
+  
         {/* Conditionally render links based on user login status */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
-            {/* Keep Logout as a link but add onClick to handle logout */}
             <li>
-              <Link to="/logout" onClick={handleLogout}>
+              <Link to="/logout" onClick={handleLogout} style={{ marginLeft: 'auto' }}>
                 Logout
               </Link>
             </li>
@@ -63,6 +66,6 @@ const NavBar = ({ user, setUser }) => {
       </ul>
     </nav>
   );
-};
+}
 
 export default NavBar;

@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchSingleStory } from "../API"; // Assuming this API call is defined
+import { useParams } from "react-router-dom";
+import { fetchSingleStory } from "../API"; 
 
 export default function SingleStory() {
-  // const navigate = useNavigate();
-  const { storyId } = useParams(); // Get the storyId from the URL (change from 'id' to 'storyId')
+  const { storyId } = useParams(); 
   const [story, setStory] = useState(null);
   const [error, setError] = useState(null); // To track errors
 
@@ -37,7 +36,6 @@ export default function SingleStory() {
 
   if (!story) return <div>Loading...</div>; // Show loading state while fetching
 
-  // Now we display the fetched story
   return (
     <div className="story-container">
       <main>
