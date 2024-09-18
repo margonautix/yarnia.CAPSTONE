@@ -105,12 +105,19 @@ export async function fetchCommentsForStory(storyId) {
   }
 }
 
+// Modified fetchWithAuth to correctly handle the request body
 export async function fetchWithAuth(url, options = {}) {
   const token = localStorage.getItem("token");
 
   if (!token) {
     throw new Error("User is not authenticated");
   }
+
+  // Ensure the body is properly stringified if it exists
+  const body =
+    options.body && typeof options.body === "object"
+      ? JSON.stringify(options.body)
+      : options.body;
 
   return await fetch(url, {
     ...options,
@@ -119,17 +126,20 @@ export async function fetchWithAuth(url, options = {}) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`, // Add the token to the Authorization header
     },
+    body, // Ensure the request body is passed correctly
   });
 }
 
+// Update story content function
 export const updateStoryContent = async (storyId, content) => {
   try {
-    const response = await fetch(`/api/stories/${storyId}`, {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "PUT", // Or PATCH, depending on your API design
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content }), // Ensure body is correctly passed
     });
 
     if (!response.ok) {
@@ -141,3 +151,44 @@ export const updateStoryContent = async (storyId, content) => {
     console.error("Error updating story content:", error);
   }
 };
+
+
+// Girl who knows (bookmark stuff)
+
+export async function fetchBookmarkedStories() {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`);
+    //  check the response for validity in the fetch statement
+    if (!response.ok) {
+      throw new Error(`Error fetching story: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user bookmarks", error);
+    throw error;
+  }
+}
+
+export async function removeBookmark(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to remove bookmark.");
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Failed to remove the bookmark.")
+  }
+}
+
+// girl who knows
