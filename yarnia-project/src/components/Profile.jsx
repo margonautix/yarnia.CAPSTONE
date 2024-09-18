@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
@@ -88,7 +88,7 @@ const Profile = () => {
         setSaveError("Failed to update profile");
       }
     } catch (error) {
-      setSaveError("Error while updating profile.");
+      setSaveError("Error while updating profile.", error);
     }
   };
 
@@ -187,7 +187,7 @@ const Profile = () => {
           ))}
         </ul>
       ) : (
-        <p>You haven't written any stories yet.</p>
+        <p>You have not written any stories yet.</p>
       )}
     </div>
   );
