@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 app.use(
   cors({
-    origin: 'http://localhost:5173',  // Only allow your frontend origin
-    credentials: true,  // Allow credentials such as Authorization headers or cookies
+    origin: "http://localhost:5173", // Only allow your frontend origin
+    credentials: true, // Allow credentials such as Authorization headers or cookies
   })
 );
 
@@ -32,14 +32,14 @@ const generateToken = (user) => {
 
 // Middleware to authenticate the user using JWT
 const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+  const token = req.headers.authorization?.split(" ")[1]; // Extract the token
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, token missing" });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT);
-    req.user = decoded; // Attach the decoded token to the request object
+    const decoded = jwt.verify(token, JWT); // Verify the token
+    req.user = decoded; // Attach the decoded user data (id, etc.) to the request
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -80,12 +80,13 @@ app.get("/api/stories", async (req, res, next) => {
   }
 });
 
-// GET a single story by ID
 app.get("/api/stories/:storyId", async (req, res, next) => {
-  const { storyId } = req.params; // Extract storyId from the URL
+  const { storyId } = req.params;
+  console.log(`Received storyId: ${storyId}`); // Log the storyId
+
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) },
+      where: { storyId: parseInt(storyId) }, // Convert to integer only if needed
     });
 
     if (!story) {
@@ -249,6 +250,21 @@ app.get("/api/users/:authorId/comments", async (req, res, next) => {
     res.status(200).json(comments);
   } catch (err) {
     next(err);
+  }
+});
+
+app.put("/api/users/me", authenticateUser, async (req, res, next) => {
+  const { username, bio } = req.body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id }, // Use the authenticated user's ID
+      data: { username, bio }, // Update the username and bio fields
+    });
+
+    res.json(updatedUser); // Return the updated user data
+  } catch (error) {
+    next(error); // Pass any errors to your error-handling middleware
   }
 });
 
@@ -535,17 +551,15 @@ app.post("/api/auth/login", async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Compare hashed passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Generate a token for the authenticated user
     const token = generateToken(user);
 
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, user }); // Send both token and user
   } catch (err) {
     next(err);
   }

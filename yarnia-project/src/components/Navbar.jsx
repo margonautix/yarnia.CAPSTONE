@@ -1,19 +1,30 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-const NavBar = () => {
+const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // Get user info from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Check for user data in localStorage when the component mounts
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser); // Set user state if the stored data is valid
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("user"); // Clear invalid user data if parsing fails
+      }
+    }
+  }, [setUser]); // Include setUser as a dependency
 
-  const handleViewComments = () => {
-    navigate("/comments");
-  };
-
-  const handleLogout = () => {
+  // Handle logout functionality
+  const handleLogout = (event) => {
+    event.preventDefault(); // Prevent default link behavior
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/login");
+    setUser(null); // Clear the user state
+    navigate("/login"); // Redirect to login page after logging out
   };
 
   return (
@@ -22,25 +33,24 @@ const NavBar = () => {
         <li>
           <Link to="/">Home</Link>
         </li>
+        <li>
+          <Link to="/bookmarks">Bookmarks</Link>
+        </li>
 
-        {user && (
-          <li>
-            <Link to="/bookmarks">Bookmarks</Link>
-          </li>
-        )}
-
+        {/* Conditionally render links based on user login status */}
         {user ? (
           <>
             <li>
               <Link to="/profile">Profile</Link>
             </li>
-            {user.isAdmin && (
-              <li>
-                <button onClick={handleViewComments}>View All Comments</button>
-              </li>
-            )}
             <li>
-              <button onClick={handleLogout}>Logout</button>
+              <Link to="/add-story">Add Story</Link> {/* Add Story Link */}
+            </li>
+            {/* Keep Logout as a link but add onClick to handle logout */}
+            <li>
+              <Link to="/logout" onClick={handleLogout}>
+                Logout
+              </Link>
             </li>
           </>
         ) : (
@@ -50,9 +60,6 @@ const NavBar = () => {
             </li>
             <li>
               <Link to="/register">Register</Link>
-            </li>
-            <li>
-              <p>Welcome, Guest! Please login to interact with stories.</p>
             </li>
           </>
         )}

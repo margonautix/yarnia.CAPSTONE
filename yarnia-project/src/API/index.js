@@ -1,8 +1,9 @@
 const API_URL = "http://localhost:3000/api"; // Base URL for your API
 
+// Fetch all stories from the API
 export async function fetchAllStories() {
   try {
-    const response = await fetch(`${API_URL}/stories`); // Full URL for the API request
+    const response = await fetch(`${API_URL}/stories`);
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
@@ -16,39 +17,34 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming this endpoint gets a single story
+    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming the API endpoint is `/stories/:id`
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch story with ID ${storyId}: ${response.statusText}`
-      );
+      throw new Error(`Error fetching story: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data; // Make sure the data includes the story, comments, and author if necessary
+    const data = await response.json(); // Parse the response data
+    return data; // Return the data (should include the story object)
   } catch (error) {
-    console.error(`Error fetching story with ID ${storyId}:`, error);
+    console.error("Error fetching the story:", error);
     throw error;
   }
 }
 
+// Fetch all comments from the API
 export async function fetchAllComments() {
   try {
-    const response = await fetch(`${API_URL}/comments`); // Full URL for the API request
-
-    // Check if the response is not successful (status is not in the range of 200-299)
+    const response = await fetch(`${API_URL}/comments`);
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
-
-    // Parse the response as JSON
     const data = await response.json();
     return data; // Assuming the data is an array of comments
   } catch (error) {
-    // Log error to the console and rethrow it for further handling
     console.error("Error fetching all comments:", error);
     throw error;
   }
 }
 
+// Register a new user
 export async function createNewUser(username, email, password) {
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -60,24 +56,23 @@ export async function createNewUser(username, email, password) {
         password,
       }),
     });
+
     const json = await response.json();
-
     if (response.ok) {
-      // Assuming the token is included in the response
       console.log("Registration successful, token:", json.token);
-
-      // Optionally, store the token in localStorage or state
-      localStorage.setItem("token", json.token);
-
+      localStorage.setItem("token", json.token); // Store the token
       return json;
     } else {
       console.error("Registration failed:", json.message);
+      return { error: json.message }; // Return the error message for handling
     }
   } catch (err) {
-    console.error("Oops, something went wrong!", err);
+    console.error("Oops, something went wrong during registration!", err);
+    throw err; // Rethrow the error for further handling
   }
 }
 
+// Log in an existing user
 export async function loginUser(email, password) {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
@@ -87,7 +82,7 @@ export async function loginUser(email, password) {
     });
 
     const json = await response.json();
-    return json;
+    return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
   }
@@ -106,3 +101,97 @@ export async function fetchCommentsForStory(storyId) {
   }
 }
 
+// Fetch comments for a specific story by its ID
+export async function fetchCommentsForStory(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/stories/${storyId}/comments`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch comments for story ID ${storyId}: ${response.statusText}`
+      );
+    }
+    const data = await response.json(); // Assuming the data is an array of comments
+    return data;
+  } catch (error) {
+    console.error(`Error fetching comments for story ID ${storyId}:`, error);
+    throw error;
+  }
+}
+
+export async function fetchWithAuth(url, options = {}) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  return await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+    },
+  });
+}
+
+export const updateStoryContent = async (storyId, content) => {
+  try {
+    const response = await fetch(`${API_URL}/api/stories/${storyId}`, {
+      method: "PUT", // Or PATCH, depending on your API design
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update the story content");
+    }
+
+    return await response.json(); // Return the updated story if needed
+  } catch (error) {
+    console.error("Error updating story content:", error);
+  }
+};
+
+
+// Girl who knows (bookmark stuff)
+
+export async function fetchBookmarkedStories() {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`);
+    //  check the response for validity in the fetch statement
+    if (!response.ok) {
+      throw new Error(`Error fetching story: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user bookmarks", error);
+    throw error;
+  }
+}
+
+export async function removeBookmark(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to remove bookmark.");
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Failed to remove the bookmark.")
+  }
+}
+
+// girl who knows
