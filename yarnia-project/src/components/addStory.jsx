@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Assuming this function sends authenticated requests
 
@@ -22,7 +22,7 @@ const AddStory = () => {
     try {
       // Make a POST request to create a new story
       const response = await fetchWithAuth(
-        "http://localhost:3000/api/stories", // Assuming this is your API endpoint
+        "http://localhost:3000/api/stories", // Your API endpoint
         {
           method: "POST", // POST for creating a new story
           headers: {
@@ -37,8 +37,10 @@ const AddStory = () => {
       );
 
       if (response.ok) {
-        // Redirect the user to the profile or stories page after successful story creation
-        navigate("/profile");
+        const newStory = await response.json(); // Get the created story from the response
+
+        // Redirect the user to the new story's page using the storyId
+        navigate(`/stories/${newStory.storyId}`);
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Failed to create story.");
