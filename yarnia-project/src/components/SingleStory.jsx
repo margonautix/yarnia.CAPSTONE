@@ -14,9 +14,12 @@ const SingleStory = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
+        const response = await fetchWithAuth(
+          "http://localhost:3000/api/auth/me"
+        );
         if (response.ok) {
           const userData = await response.json();
+          console.log("Fetched user data:", userData); // Log user data for debugging
           setUser(userData); // Set the authenticated user
         } else {
           setError("Failed to authenticate user.");
@@ -35,6 +38,7 @@ const SingleStory = () => {
       try {
         const storyData = await fetchSingleStory(id); // Assume it returns JSON
         if (storyData) {
+          console.log("Fetched story data:", storyData); // Log story data for debugging
           setStory(storyData); // Set the fetched story
           setContent(storyData.content); // Set content for editing
         } else {
@@ -70,7 +74,20 @@ const SingleStory = () => {
 
   // Check if the authenticated user is the author or an admin
   const canEdit = () => {
-    return user && (user.username === story?.author || user.role === "admin");
+    if (!user || !story) return false; // Ensure user and story are loaded
+
+    // Check if user is the author or an admin
+    const isAuthor = user.username === story.author?.username; // Assuming story.author is an object with a username
+    const isAdmin = user.role === "admin";
+
+    console.log("Checking edit permissions:", {
+      user,
+      story,
+      isAuthor,
+      isAdmin,
+    }); // Log permission check
+
+    return isAuthor || isAdmin;
   };
 
   if (error) return <div>{error}</div>; // Display errors
@@ -79,12 +96,12 @@ const SingleStory = () => {
   return (
     <div className="story-container">
       <h2>{story.title}</h2>
-      <p>{story.content}</p>
+      <h4>Author: {story.author?.username || "Unknown Author"}</h4>{" "}
+      <p>{story.summary}</p>
       <main>
         <ul className="story-single">
-          <h2>{story.title || "No Title"}</h2>
-          <h4>Author: {story.author || "Unknown Author"}</h4>
-          <h4>Description: {story.summary || "No Description"}</h4>
+          {" "}
+          {/* Adjusted to access author username correctly */}
           <p>
             {isEditing ? (
               <textarea
@@ -96,8 +113,6 @@ const SingleStory = () => {
               story.content || "No Content"
             )}
           </p>
-
-          {/* Only show edit button if user is the author or admin */}
           {canEdit() &&
             (isEditing ? (
               <button onClick={handleSave}>Save</button>
