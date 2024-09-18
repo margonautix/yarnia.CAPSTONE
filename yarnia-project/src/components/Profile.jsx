@@ -58,14 +58,21 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <div className="profile-container">
       <h1>
         Welcome,{" "}
         {isEditing ? (
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">
+              Username:
+            </label>
+            <input
+              id="username"
+              className="form-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
         ) : (
           user.username
         )}
@@ -75,19 +82,41 @@ const Profile = () => {
       <p>
         Bio:{" "}
         {isEditing ? (
-          <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
+          <div className="form-group">
+            <label htmlFor="bio" className="form-label">
+              Bio:
+            </label>
+            <textarea
+              id="bio"
+              className="form-textarea"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
+          </div>
         ) : (
           user.bio
         )}
       </p>
 
       {isEditing ? (
-        <>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={() => setIsEditing(false)}>Cancel</button>
-        </>
+        <div className="button-group">
+          <button className="button save-button" onClick={handleSave}>
+            Save
+          </button>
+          <button
+            className="button cancel-button"
+            onClick={() => setIsEditing(false)}
+          >
+            Cancel
+          </button>
+        </div>
       ) : (
-        <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+        <button
+          className="button edit-button"
+          onClick={() => setIsEditing(true)}
+        >
+          Edit Profile
+        </button>
       )}
     </div>
   );

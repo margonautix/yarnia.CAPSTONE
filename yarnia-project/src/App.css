@@ -426,3 +426,117 @@ textarea {
     font-size: 1.2rem;
   }
 }
+
+/* Profile container with a dark background and subtle shadows */
+.profile-container {
+  width: 900px; /* Wider container for better user experience */
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #585858; /* Dark gray background */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  color: #e5e5e5; /* Light text color for contrast */
+}
+
+/* Headings */
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #00ff88; /* Green accent for heading */
+  text-shadow: 2px 2px 2px black;
+}
+
+/* Paragraph styling for text content */
+p {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #cccccc; /* Softer contrast for text */
+}
+
+/* Form group for inputs and textareas */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Form label with green accent */
+.form-label {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  display: block;
+  font-weight: bold;
+  color: #00ff88; /* Green accent for labels */
+}
+
+/* Input fields with dark background and light text */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 15px 20px;
+  margin-top: 5px;
+  background-color: #333333; /* Dark input background */
+  color: #e5e5e5; /* Light text for inputs */
+  border: 1px solid #555555; /* Subtle border */
+  border-radius: 8px;
+  font-size: 1.2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease;
+}
+
+/* Focus state with green border for inputs and textareas */
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #00ff88;
+  outline: none;
+}
+
+/* Textarea styling */
+.form-textarea {
+  height: 160px;
+  resize: vertical;
+}
+
+/* Button group for better layout */
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Button styling with green accents */
+.button {
+  background-color: #00ff88; /* Green button background */
+  color: #1e1e1e; /* Dark text for contrast on green */
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for buttons */
+.button:hover {
+  background-color: #00cc6a; /* Darker green on hover */
+}
+
+/* Disabled button state */
+.button:disabled {
+  background-color: #555555;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+/* Cancel button with a red accent */
+.cancel-button {
+  background-color: #ff4b4b; /* Red for cancel button */
+}
+
+.cancel-button:hover {
+  background-color: #cc3838; /* Darker red on hover */
+}
+
+/* Email text color */
+p.email {
+  color: #cccccc;
+}
