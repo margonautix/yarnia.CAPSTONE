@@ -65,3 +65,40 @@ export async function addNewStory(title, authorId, summary, content) {
     console.error(err)    
   }
 }
+
+export async function fetchWithAuth(url, options = {}) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  return await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+    },
+  });
+}
+
+export const updateStoryContent = async (storyId, content) => {
+  try {
+    const response = await fetch(`/api/stories/${storyId}`, {
+      method: "PUT", // Or PATCH, depending on your API design
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update the story content");
+    }
+
+    return await response.json(); // Return the updated story if needed
+  } catch (error) {
+    console.error("Error updating story content:", error);
+  }
+};

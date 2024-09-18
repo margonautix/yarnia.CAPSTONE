@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchSingleStory, updateStoryContent } from "../API";
+import { fetchSingleStory, updateStoryContent, fetchWithAuth } from "../API"; // Assuming fetchWithAuth is an API utility
 
 export default function SingleStory() {
   const [isEditing, setIsEditing] = useState(false);
@@ -8,6 +8,28 @@ export default function SingleStory() {
   const [story, setStory] = useState(null); // Holds the entire story
   const [content, setContent] = useState(""); // Holds the content being edited
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null); // Holds the authenticated user
+
+  // Fetch authenticated user when the component mounts
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await fetchWithAuth(
+          "http://localhost:3000/api/auth/me"
+        );
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData); // Set the authenticated user
+        } else {
+          setError("Failed to authenticate user.");
+        }
+      } catch (error) {
+        setError("Failed to fetch authenticated user.");
+      }
+    }
+
+    fetchUser();
+  }, []);
 
   // Fetch the story when the component mounts
   useEffect(() => {
@@ -48,6 +70,11 @@ export default function SingleStory() {
     }
   };
 
+  // Check if the authenticated user is the author or an admin
+  const canEdit = () => {
+    return user && (user.username === story?.author || user.role === "admin");
+  };
+
   if (error) return <div>{error}</div>;
   if (!story) return <div>Loading...</div>;
 
@@ -69,11 +96,14 @@ export default function SingleStory() {
               story.content || "No Content"
             )}
           </p>
-          {isEditing ? (
-            <button onClick={handleSave}>Save</button>
-          ) : (
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-          )}
+
+          {/* Only show edit button if user is the author or admin */}
+          {canEdit() &&
+            (isEditing ? (
+              <button onClick={handleSave}>Save</button>
+            ) : (
+              <button onClick={() => setIsEditing(true)}>Edit</button>
+            ))}
         </ul>
       </main>
     </div>
