@@ -8,6 +8,7 @@ import NavBar from "./components/Navbar";
 import Register from "./components/Register";
 import SingleStory from "./components/SingleStory";
 import Logout from "./components/Logout";
+import AddStory from "./components/addStory";
 import "./App.css";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/stories/:storyId" element={<SingleStory />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/add-story" element={<AddStory />} />
       </Routes>
     </div>
   );
