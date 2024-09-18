@@ -17,12 +17,12 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming the API endpoint is `/stories/:id`
+    const response = await fetch(`${API_URL}/stories/${storyId}`);
     if (!response.ok) {
-      throw new Error(`Error fetching story: ${response.statusText}`);
+      throw new Error("Error fetching story");
     }
-    const data = await response.json(); // Parse the response data
-    return data; // Return the data (should include the story object)
+    const storyData = await response.json();
+    return storyData;
   } catch (error) {
     console.error("Error fetching the story:", error);
     throw error;
