@@ -105,12 +105,19 @@ export async function fetchCommentsForStory(storyId) {
   }
 }
 
+// Modified fetchWithAuth to correctly handle the request body
 export async function fetchWithAuth(url, options = {}) {
   const token = localStorage.getItem("token");
 
   if (!token) {
     throw new Error("User is not authenticated");
   }
+
+  // Ensure the body is properly stringified if it exists
+  const body =
+    options.body && typeof options.body === "object"
+      ? JSON.stringify(options.body)
+      : options.body;
 
   return await fetch(url, {
     ...options,
@@ -119,17 +126,20 @@ export async function fetchWithAuth(url, options = {}) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`, // Add the token to the Authorization header
     },
+    body, // Ensure the request body is passed correctly
   });
 }
 
+// Update story content function
 export const updateStoryContent = async (storyId, content) => {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`, {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "PUT", // Or PATCH, depending on your API design
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content }), // Ensure body is correctly passed
     });
 
     if (!response.ok) {

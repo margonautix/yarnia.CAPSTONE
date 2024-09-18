@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSingleStory, updateStoryContent, fetchWithAuth } from "../API"; // Assuming fetchWithAuth is an API utility
 
-export default function SingleStory() {
-  const [isEditing, setIsEditing] = useState(false);
-  const { storyId } = useParams();
-  const [story, setStory] = useState(null); // Holds the entire story
-  const [content, setContent] = useState(""); // Holds the content being edited
+
+const SingleStory = () => {
+  const { storyId } = useParams(); // Make sure this is correctly receiving the parameter
+  const [story, setStory] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null); // Holds the authenticated user
 
@@ -31,24 +30,23 @@ export default function SingleStory() {
     fetchUser();
   }, []);
 
-  // Fetch the story when the component mounts
   useEffect(() => {
-    async function fetchStory(storyId) {
+    const fetchStory = async (id) => {
       try {
-        const response = await fetchSingleStory(storyId);
-        if (response) {
-          setStory(response); // Set the story
-          setContent(response.content); // Set the content for editing
+        const response = await fetchSingleStory(id);
+        if (response.ok) {
+          const storyData = await response.json();
+          setStory(storyData);
         } else {
           setError("Story not found.");
         }
       } catch (error) {
-        setError("Failed to fetch the story.");
+        setError("Error fetching the story.");
       }
-    }
+    };
 
     if (storyId) {
-      fetchStory(storyId);
+      fetchStory(storyId); // Only call if storyId is defined
     } else {
       setError("No story ID provided.");
     }
@@ -74,12 +72,12 @@ export default function SingleStory() {
   const canEdit = () => {
     return user && (user.username === story?.author || user.role === "admin");
   };
-
-  if (error) return <div>{error}</div>;
   if (!story) return <div>Loading...</div>;
 
   return (
     <div className="story-container">
+      <h2>{story.title}</h2>
+      <p>{story.content}</p>
       <main>
         <ul className="story-single">
           <h2>{story.title || "No Title"}</h2>
@@ -108,4 +106,6 @@ export default function SingleStory() {
       </main>
     </div>
   );
-}
+};
+
+export default SingleStory;
