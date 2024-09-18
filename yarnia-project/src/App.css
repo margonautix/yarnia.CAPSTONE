@@ -218,20 +218,17 @@ input[type="password"]:focus {
 }
 
 .btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #007bff;
+  background-color: #1f9900;
   color: white;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
   border: none;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #166d00;
 }
 
 .error {
@@ -357,11 +354,31 @@ input[type="password"]:focus {
   margin-bottom: 10px;
 }
 
-.story-single img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.story-single p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.story-single p input,
+.story-single p textarea {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  width: 100%; /* Full width */
+  height: 300px; /* Increased height */
+  padding: 10px; /* Padding for better readability */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; /* Ensures padding is included in width/height */
+  resize: vertical; /* Allows the user to manually resize the height if needed */
+  white-space: pre-wrap; /* Ensure text wraps properly */
+  overflow-wrap: break-word; /* Ensure long words break properly */
+}
+
+textarea {
+  min-height: 150px;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 /* Add Story Button */
@@ -403,4 +420,118 @@ input[type="password"]:focus {
     width: 100%;
     font-size: 1.2rem;
   }
+}
+
+/* Profile container with a dark background and subtle shadows */
+.profile-container {
+  width: 900px; /* Wider container for better user experience */
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #585858; /* Dark gray background */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  color: #e5e5e5; /* Light text color for contrast */
+}
+
+/* Headings */
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #00ff88; /* Green accent for heading */
+  text-shadow: 2px 2px 2px black;
+}
+
+/* Paragraph styling for text content */
+p {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #cccccc; /* Softer contrast for text */
+}
+
+/* Form group for inputs and textareas */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Form label with green accent */
+.form-label {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  display: block;
+  font-weight: bold;
+  color: #00ff88; /* Green accent for labels */
+}
+
+/* Input fields with dark background and light text */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 15px 20px;
+  margin-top: 5px;
+  background-color: #333333; /* Dark input background */
+  color: #e5e5e5; /* Light text for inputs */
+  border: 1px solid #555555; /* Subtle border */
+  border-radius: 8px;
+  font-size: 1.2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease;
+}
+
+/* Focus state with green border for inputs and textareas */
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #00ff88;
+  outline: none;
+}
+
+/* Textarea styling */
+.form-textarea {
+  height: 160px;
+  resize: vertical;
+}
+
+/* Button group for better layout */
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Button styling with green accents */
+.button {
+  background-color: #00ff88; /* Green button background */
+  color: #1e1e1e; /* Dark text for contrast on green */
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for buttons */
+.button:hover {
+  background-color: #00cc6a; /* Darker green on hover */
+}
+
+/* Disabled button state */
+.button:disabled {
+  background-color: #555555;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+/* Cancel button with a red accent */
+.cancel-button {
+  background-color: #ff4b4b; /* Red for cancel button */
+}
+
+.cancel-button:hover {
+  background-color: #cc3838; /* Darker red on hover */
+}
+
+/* Email text color */
+p.email {
+  color: #cccccc;
 }

@@ -48,6 +48,10 @@ const NavBar = ({ user, setUser }) => {
               <Link to="/profile">Profile</Link>
             </li>
             <li>
+              <Link to="/add-story">Add Story</Link> {/* Add Story Link */}
+            </li>
+            {/* Keep Logout as a link but add onClick to handle logout */}
+            <li>
               <Link to="/logout" onClick={handleLogout} style={{ marginLeft: 'auto' }}>
                 Logout
               </Link>

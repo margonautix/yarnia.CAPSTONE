@@ -88,7 +88,6 @@ export async function loginUser(email, password) {
   }
 }
 
-
 // Fetch comments for a specific story by its ID
 export async function fetchCommentsForStory(storyId) {
   try {
@@ -122,3 +121,64 @@ export async function fetchWithAuth(url, options = {}) {
     },
   });
 }
+
+export const updateStoryContent = async (storyId, content) => {
+  try {
+    const response = await fetch(`${API_URL}/api/stories/${storyId}`, {
+      method: "PUT", // Or PATCH, depending on your API design
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update the story content");
+    }
+
+    return await response.json(); // Return the updated story if needed
+  } catch (error) {
+    console.error("Error updating story content:", error);
+  }
+};
+
+
+// Girl who knows (bookmark stuff)
+
+export async function fetchBookmarkedStories() {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`);
+    //  check the response for validity in the fetch statement
+    if (!response.ok) {
+      throw new Error(`Error fetching story: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user bookmarks", error);
+    throw error;
+  }
+}
+
+export async function removeBookmark(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to remove bookmark.");
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Failed to remove the bookmark.")
+  }
+}
+
+// girl who knows
