@@ -117,30 +117,27 @@ app.delete("/api/stories/:storyId", async (req, res, next) => {
 });
 
 // POST (create) a new story
-app.post("/api/stories", async (req, res, next) => {
-  const { title, authorId, summary, content } = req.body;
+app.post("/api/stories", authenticateUser, async (req, res) => {
+  const { title, summary, content } = req.body;
+
+  if (!title || !content) {
+    return res.status(400).json({ message: "Title and content are required." });
+  }
 
   try {
-    // Ensure all required fields are provided
-    if (!title || !authorId || !content) {
-      return res
-        .status(400)
-        .json({ message: "Title, authorId, and content are required." });
-    }
-
-    // Create a new story in the database
     const newStory = await prisma.story.create({
       data: {
         title,
-        authorId: parseInt(authorId), // Convert to integer if necessary
         summary,
         content,
+        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
       },
     });
 
-    res.status(201).json({ message: "Story created successfully.", newStory });
-  } catch (err) {
-    next(err);
+    res.status(201).json(newStory);
+  } catch (error) {
+    console.error("Error creating story:", error);
+    res.status(500).json({ message: "Failed to create story." });
   }
 });
 
@@ -676,4 +673,25 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+});
+
+app.get("/api/author/:authorId/stories", authenticateUser, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const stories = await prisma.story.findMany({
+      where: { authorId: parseInt(userId, 10) },
+    });
+
+    if (stories.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No stories found for this user." });
+    }
+
+    res.status(200).json(stories);
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    res.status(500).json({ message: "Failed to fetch stories." });
+  }
 });
