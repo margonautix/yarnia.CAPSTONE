@@ -1,66 +1,84 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useState } from "react";
+import { createNewUser } from "../API"; // Assuming the API file is set up like this
 
 const Register = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
-  const { signup } = useAuth(); // Assuming your AuthContext has a signup function
-  const navigate = useNavigate();
+  const [error, setError] = useState(""); // To display error messages
+  const [success, setSuccess] = useState(""); // To display success message
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Clear any previous errors
+    setSuccess(""); // Clear any previous success messages
 
     try {
-      await signup(email, password, username); // Sign up the user using the signup function
-      navigate("/profile"); // Navigate to profile page after successful registration
-    } catch (err) {
-      setError("Failed to create an account. Please try again.");
+      // Call the API function to create a new user
+      const result = await createNewUser(username, email, password);
+
+      if (result.status === 201) {
+        setSuccess("User registered successfully!");
+      }
+    } catch (error) {
+      // Handle errors such as duplicate emails or other registration failures
+      if (error.response && error.response.status === 409) {
+        setError("User already exists with this email or username");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     }
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn">
-          Register
-        </button>
-      </form>
+    <div>
+      <h2>Register New Account</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      <div>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Username:
+            <input
+              placeholder="Username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Email:
+            <input
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Password:
+            <input
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <br />
+          <br />
+          <button className="login-button" type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

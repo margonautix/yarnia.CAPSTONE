@@ -1,77 +1,99 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom"; // Removed useNavigate, using Link for navigation
-import React from "react";
-import { fetchAllStories } from "../api";
+import { useNavigate } from "react-router-dom"; // Import navigate from react-router-dom
+import { fetchAllStories, fetchSingleStory } from "../API"; // Assuming you have this fetch function
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
-  const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchTerm = searchParams.get("search") || "";
+  const [loading, setLoading] = useState(true);
+  const [selectedStory, setSelectedStory] = useState(null); // For storing the currently selected story
+  const [showModal, setShowModal] = useState(false); // For modal visibility
+
+  const navigate = useNavigate(); // Initialize the navigate function
 
   useEffect(() => {
-    async function getAllStories() {
+    const fetchStories = async () => {
       try {
-        const response = await fetchAllStories();
-        console.log(response); // Debug to check story data structure
-        setStories(response);
+        const data = await fetchAllStories();
+        setStories(data);
       } catch (error) {
-        console.error("Error fetching stories:", error);
-        setError("Failed to load stories.");
+        console.error("Failed to fetch stories", error);
+      } finally {
+        setLoading(false);
       }
-    }
-    getAllStories();
+    };
+
+    fetchStories();
   }, []);
 
-  const filteredStories = stories.filter((story) =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleReadMore = async (storyId) => {
+    try {
+      console.log(`Fetching story with ID: ${storyId}`); // Log the storyId
+      const fullStory = await fetchSingleStory(storyId);
+      setSelectedStory(fullStory);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Failed to load full story:", error);
+    }
+  };
+  
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearchParams({ search: value });
+  const closeModal = () => {
+    setShowModal(false); // Hide the modal
   };
 
+  if (loading) {
+    return <p>Loading stories...</p>;
+  }
+
+  if (stories.length === 0) {
+    return <p>No stories available.</p>;
+  }
+
   return (
-    <div>
-      {/* Search bar */}
-      <input
-        type="text"
-        placeholder="Search stories..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+    <div className="stories-list">
+      {stories.map((story) => (
+        <div key={story.storyId} className="story-card">
+          <h2>{story.title}</h2>
+          <p>
+            <strong>Author:</strong> {story.author?.username || "Unknown"}
+          </p>
+          <p>
+            <strong>Published On:</strong>{" "}
+            {new Date(story.createdAt).toLocaleDateString()}
+          </p>
+          <button onClick={() => handleReadMore(story.storyId)}>
+            Read More
+          </button>
+        </div>
+      ))}
 
-      <div className="stories-container">
-        {error && <p>{error}</p>}
-
-        {filteredStories.map((story) => (
-          <div key={story.id} className="story-card">
-            <h2>{story.title}</h2>
-            {story.author ? (
-              <p>
-                <strong>Author:</strong> {story.author.username}
-              </p>
-            ) : (
-              <p>
-                <strong>Author:</strong> Unknown
-              </p>
-            )}
+      {/* Modal inside Stories */}
+      {showModal && selectedStory && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <button id="X" onClick={closeModal}>
+              X
+            </button>
+            <h2>{selectedStory.title}</h2>
             <p>
-              <strong>Summary:</strong>{" "}
-              {story.summary || "No summary available."}
+              <strong>Author:</strong>{" "}
+              {selectedStory.author?.username || "Unknown"}
             </p>
             <p>
-              <strong>Content Preview:</strong> {story.content?.slice(0, 50)}...
+              <strong>Published On:</strong>{" "}
+              {new Date(selectedStory.createdAt).toLocaleDateString()}
             </p>
-
-            {/* "See Single Story" Button - now using Link */}
-            <Link to={`/stories/${story.id}`}>
-              <button>See Single Story</button>
-            </Link>
+            <p>
+              <strong>Summary:</strong> {selectedStory.summary}
+            </p>
+            <button
+              onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
+            >
+              View Story
+            </button>{" "}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
