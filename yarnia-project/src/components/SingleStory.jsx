@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSingleStory, updateStoryContent, fetchWithAuth } from "../API"; // Assuming fetchWithAuth is an API utility
 
-
 const SingleStory = () => {
-  const { storyId } = useParams(); // Make sure this is correctly receiving the parameter
+  const { storyId } = useParams(); // Get storyId from URL params
   const [story, setStory] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null); // Holds the authenticated user
+  const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
+  const [content, setContent] = useState(""); // Content for editing
 
   // Fetch authenticated user when the component mounts
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetchWithAuth(
-          "http://localhost:3000/api/auth/me"
-        );
+        const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
         if (response.ok) {
           const userData = await response.json();
           setUser(userData); // Set the authenticated user
@@ -30,13 +29,14 @@ const SingleStory = () => {
     fetchUser();
   }, []);
 
+  // Fetch story by ID
   useEffect(() => {
     const fetchStory = async (id) => {
       try {
-        const response = await fetchSingleStory(id);
-        if (response.ok) {
-          const storyData = await response.json();
-          setStory(storyData);
+        const storyData = await fetchSingleStory(id); // Assume it returns JSON
+        if (storyData) {
+          setStory(storyData); // Set the fetched story
+          setContent(storyData.content); // Set content for editing
         } else {
           setError("Story not found.");
         }
@@ -46,7 +46,7 @@ const SingleStory = () => {
     };
 
     if (storyId) {
-      fetchStory(storyId); // Only call if storyId is defined
+      fetchStory(storyId); // Fetch the story if ID is available
     } else {
       setError("No story ID provided.");
     }
@@ -60,7 +60,7 @@ const SingleStory = () => {
         await updateStoryContent(storyId, content);
 
         // Update the local state with the new content
-        setStory({ ...story, content }); // This will update the UI
+        setStory({ ...story, content }); // Update the UI
         setIsEditing(false); // Exit editing mode
       } catch (error) {
         setError("Failed to update the story content.");
@@ -72,7 +72,9 @@ const SingleStory = () => {
   const canEdit = () => {
     return user && (user.username === story?.author || user.role === "admin");
   };
-  if (!story) return <div>Loading...</div>;
+
+  if (error) return <div>{error}</div>; // Display errors
+  if (!story) return <div>Loading...</div>; // Display loading
 
   return (
     <div className="story-container">
@@ -88,7 +90,7 @@ const SingleStory = () => {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)} // Update content as you type
-                rows="10" // Set initial height for the textarea
+                rows="10"
               />
             ) : (
               story.content || "No Content"
