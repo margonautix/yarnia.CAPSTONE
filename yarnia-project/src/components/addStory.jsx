@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Assuming this function sends authenticated requests
@@ -26,11 +25,14 @@ const AddStory = () => {
         "http://localhost:3000/api/stories", // Assuming this is your API endpoint
         {
           method: "POST", // POST for creating a new story
-          body: {
+          headers: {
+            "Content-Type": "application/json", // Ensure the request is sent as JSON
+          },
+          body: JSON.stringify({
             title, // Title should not be empty
             summary, // Optional
             content, // Content should not be empty
-          },
+          }), // Convert the body to JSON format
         }
       );
 
@@ -91,10 +93,6 @@ const AddStory = () => {
       </form>
     </div>
   );
-import React from "react";
-
-const AddStory = () => {
-  return <div></div>;
 };
 
 export default AddStory;
