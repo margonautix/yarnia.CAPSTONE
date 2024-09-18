@@ -25,7 +25,7 @@ const SingleStory = () => {
           setError("Failed to authenticate user.");
         }
       } catch (error) {
-        setError("Failed to fetch authenticated user.");
+        setError("Failed to fetch authenticated user.", error);
       }
     }
 
@@ -45,7 +45,7 @@ const SingleStory = () => {
           setError("Story not found.");
         }
       } catch (error) {
-        setError("Error fetching the story.");
+        setError("Error fetching the story.", error);
       }
     };
 
@@ -67,7 +67,7 @@ const SingleStory = () => {
         setStory({ ...story, content }); // Update the UI
         setIsEditing(false); // Exit editing mode
       } catch (error) {
-        setError("Failed to update the story content.");
+        setError("Failed to update the story content.", error);
       }
     }
   };
