@@ -675,15 +675,15 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-app.get("/api/author/:authorId/stories", authenticateUser, async (req, res) => {
+app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
   const { userId } = req.params;
 
   try {
     const stories = await prisma.story.findMany({
-      where: { authorId: parseInt(userId, 10) },
+      where: { authorId: parseInt(userId, 10) }, // Ensure the userId is correctly parsed as an integer
     });
 
-    if (stories.length === 0) {
+    if (!stories.length) {
       return res
         .status(404)
         .json({ message: "No stories found for this user." });
