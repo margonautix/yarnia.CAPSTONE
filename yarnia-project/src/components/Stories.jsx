@@ -7,6 +7,7 @@ const Stories = () => {
   const [loading, setLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null); // For storing the currently selected story
   const [showModal, setShowModal] = useState(false); // For modal visibility
+  const [searchQuery, setSearchQuery] = useState(""); // For the search query
 
   const navigate = useNavigate(); // Initialize the navigate function
 
@@ -35,11 +36,18 @@ const Stories = () => {
       console.error("Failed to load full story:", error);
     }
   };
-  
 
   const closeModal = () => {
     setShowModal(false); // Hide the modal
   };
+
+  const filteredStories = stories.filter(
+    (story) =>
+      story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (story.author?.username || "Unknown")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+  );
 
   if (loading) {
     return <p>Loading stories...</p>;
@@ -51,21 +59,34 @@ const Stories = () => {
 
   return (
     <div className="stories-list">
-      {stories.map((story) => (
-        <div key={story.storyId} className="story-card">
-          <h2>{story.title}</h2>
-          <p>
-            <strong>Author:</strong> {story.author?.username || "Unknown"}
-          </p>
-          <p>
-            <strong>Published On:</strong>{" "}
-            {new Date(story.createdAt).toLocaleDateString()}
-          </p>
-          <button onClick={() => handleReadMore(story.storyId)}>
-            Read More
-          </button>
-        </div>
-      ))}
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by title or author"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="search-bar"
+      />
+
+      {filteredStories.length > 0 ? (
+        filteredStories.map((story) => (
+          <div key={story.storyId} className="story-card">
+            <h2>{story.title}</h2>
+            <p>
+              <strong>Author:</strong> {story.author?.username || "Unknown"}
+            </p>
+            <p>
+              <strong>Published On:</strong>{" "}
+              {new Date(story.createdAt).toLocaleDateString()}
+            </p>
+            <button onClick={() => handleReadMore(story.storyId)}>
+              Read More
+            </button>
+          </div>
+        ))
+      ) : (
+        <p>No stories match your search.</p>
+      )}
 
       {/* Modal inside Stories */}
       {showModal && selectedStory && (
