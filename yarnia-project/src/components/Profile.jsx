@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
@@ -11,6 +10,8 @@ const Profile = () => {
   const [bio, setBio] = useState(""); // State for editing bio
   const [stories, setStories] = useState([]); // State to store user's stories
   const [error, setError] = useState(null); // Error state
+  const [saveError, setSaveError] = useState(null); // Error state for saving profile
+  const [loading, setLoading] = useState(true); // Loading state for user data
   const navigate = useNavigate(); // Initialize navigate
 
   // Fetch user data and their stories when the component mounts
@@ -28,33 +29,6 @@ const Profile = () => {
         // Fetch the user's stories after fetching user data
         await fetchUserStories(userData.id);
       } else {
-        setError("Failed to fetch user data");
-        setIsAuthenticated(false); // Not authenticated
-        navigate("/login"); // Optionally redirect to login
-      }
-    } catch (error) {
-      setError("Error fetching user data");
-      setIsAuthenticated(false); // Handle error as unauthenticated
-      navigate("/login"); // Optionally redirect to login
-    }
-  };
-
-  // Fetch stories written by the user
-  const fetchUserStories = async (userId) => {
-    try {
-      const response = await fetchWithAuth(
-        `http://localhost:3000/api/users/${userId}/stories`
-      );
-      if (response.ok) {
-        const userStories = await response.json();
-        setStories(userStories); // Set stories in state
-      } else {
-        setError("Failed to fetch user stories");
-      }
-    } catch (error) {
-      setError("An error occurred while fetching stories.");
-=======
-      } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
         navigate("/login"); // Optionally redirect to login
@@ -63,6 +37,8 @@ const Profile = () => {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false); // Handle error as unauthenticated
       navigate("/login"); // Optionally redirect to login
+    } finally {
+      setLoading(false); // Stop loading once user data is fetched
     }
   };
 
@@ -77,9 +53,11 @@ const Profile = () => {
         setStories(userStories); // Set stories in state
       } else {
         console.error("Failed to fetch user stories");
+        setError("Failed to load stories.");
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
+      setError("An error occurred while fetching stories.");
     }
   };
 
@@ -105,28 +83,26 @@ const Profile = () => {
       if (response.ok) {
         await fetchUserData(); // Fetch updated data again after saving
         setIsEditing(false); // Exit edit mode after saving
+        setSaveError(null); // Reset any previous save error
       } else {
-        setError("Failed to update profile");
+        setSaveError("Failed to update profile");
       }
     } catch (error) {
-      setError("Error while updating profile.");
+      setSaveError("Error while updating profile.");
     }
   };
 
-
-
-  // Function to navigate to the Add Story page
-  const handleAddStory = () => {
-    navigate("/add-story"); // Navigate to the Add Story page
+  // Handle navigation to the single story view
+  const handleReadMore = (storyId) => {
+    navigate(`/stories/${storyId}`); // Navigate to the SingleStory component using storyId
   };
 
-
-  if (!isAuthenticated) {
-    return <div>Loading user data or redirecting...</div>; // Show loading or redirect
+  if (loading) {
+    return <div>Loading user data...</div>; // Show loading spinner or message
   }
 
-  if (!user) {
-    return <div>Loading...</div>; // Fallback if user data isn't loaded
+  if (!isAuthenticated || !user) {
+    return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
 
   return (
@@ -191,31 +167,28 @@ const Profile = () => {
         </button>
       )}
 
+      {saveError && <p className="error-message">{saveError}</p>}
+
       <h2>Your Stories</h2>
-
       {error && <p className="error-message">{error}</p>}
-
       {stories.length > 0 ? (
         <ul className="story-list">
           {stories.map((story) => (
             <li key={story.id} className="story-item">
               <h3>{story.title}</h3>
               <p>{story.summary || "No summary available"}</p>
-
-              <a href={`/stories/${story.id}`} className="story-link">
+              <button
+                onClick={() => handleReadMore(story.id)} // Navigate to the single story
+                className="story-link"
+              >
                 Read more
-              </a>
+              </button>
             </li>
           ))}
         </ul>
       ) : (
         <p>You haven't written any stories yet.</p>
       )}
-
-      {/* Add Story Button */}
-      <button className="add-story-button" onClick={handleAddStory}>
-        Add New Story
-      </button>
     </div>
   );
 };
