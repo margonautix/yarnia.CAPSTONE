@@ -99,7 +99,6 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
-
 // DELETE a single story by ID
 app.delete("/api/stories/:storyId", async (req, res, next) => {
   const { storyId } = req.params;
@@ -565,8 +564,6 @@ app.post("/api/auth/login", async (req, res, next) => {
     next(err);
   }
 });
-
-
 
 // GET /api/auth/me - Get the authenticated user
 app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
