@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
 const Bookmarks = () => {

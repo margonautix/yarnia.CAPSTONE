@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Stories from "./Components/Stories";
+import Bookmarks from "./components/Bookmarks";
 import NavBar from "./components/Navbar";
 import Register from "./components/Register";
 import SingleStory from "./components/SingleStory";
@@ -25,6 +26,7 @@ function App() {
       <NavBar user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Stories />} />
+        <Route path="bookmarks" element = {<Bookmarks />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />

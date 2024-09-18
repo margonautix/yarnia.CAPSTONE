@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Assuming this function sends authenticated requests
@@ -90,6 +91,10 @@ const AddStory = () => {
       </form>
     </div>
   );
+import React from "react";
+
+const AddStory = () => {
+  return <div></div>;
 };
 
 export default AddStory;

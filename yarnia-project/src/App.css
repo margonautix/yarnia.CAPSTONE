@@ -19,7 +19,7 @@
   background-color: #333; /* Dark background for the navbar */
   padding: 10px 20px; /* Padding inside the navbar */
   display: flex;
-  justify-content: space-between; /* Space between items on the left and right */
+  justify-content: flex-start; 
   align-items: center;
   position: fixed; /* Fix the navbar at the top */
   top: 0;
@@ -36,10 +36,15 @@
   gap: 20px; /* Space between the list items */
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .navbar li {
   display: inline; /* Inline list items */
+}
+
+.navbar li:last-child {
+  margin-left: auto; /* Push the last list item to the right */
 }
 
 .navbar a,
@@ -70,8 +75,9 @@
 /* Responsive Navbar */
 @media (max-width: 600px) {
   .navbar ul {
-    flex-direction: column; /* Stack the items vertically on smaller screens */
+    flex-direction: row; /* Stack the items vertically on smaller screens */
     align-items: flex-start; /* Align the items to the left */
+    gap: 5px;
   }
 
   .navbar li {
@@ -90,17 +96,6 @@
   outline: none; /* Remove outline when button is focused */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar ul {
-    flex-direction: column; /* Stack the items vertically on smaller screens */
-    align-items: center; /* Center items on smaller screens */
-  }
-
-  .navbar li {
-    margin-bottom: 10px; /* Space out the items vertically */
-  }
-}
 
 /* Stories Container */
 .stories-list {
