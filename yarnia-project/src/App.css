@@ -19,7 +19,7 @@
   background-color: #333; /* Dark background for the navbar */
   padding: 10px 20px; /* Padding inside the navbar */
   display: flex;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: center;
   position: fixed; /* Fix the navbar at the top */
   top: 0;
@@ -95,7 +95,6 @@
 .navbar button:focus {
   outline: none; /* Remove outline when button is focused */
 }
-
 
 /* Stories Container */
 .stories-list {
@@ -326,40 +325,50 @@ input[type="password"]:focus {
 
 /* Single Story Container */
 .story-container {
+  width: 900px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center; /* Ensure the content is centered horizontally */
   padding: 40px 20px;
-  background-color: #f0f0f0;
+  background-color: #151515; /* Darker background color */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow for depth */
+  color: #e5e5e5; /* Light text color for contrast */
 }
 
 /* Story Single Styling */
 .story-single {
   list-style-type: none;
-  background-color: #fff;
+  background-color: #444; /* Darker background for the story card */
   padding: 20px;
   max-width: 600px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  color: #e5e5e5; /* Light text color for contrast */
 }
 
+/* Headings */
 .story-single h2 {
   font-size: 2rem;
-  color: #333;
+  color: #00ff88; /* Green accent for heading */
   margin-bottom: 10px;
 }
 
 .story-single h4 {
   font-size: 1.2rem;
-  color: #555;
+  color: #00c368; /* Green accent for subheadings */
   margin-bottom: 10px;
 }
 
+/* Paragraph and text content */
 .story-single p {
   font-size: 1.2rem;
-  color: #555;
+  color: #cccccc; /* Softer contrast for text */
   margin-bottom: 10px;
 }
 
+/* Input and Textarea Styling */
 .story-single p input,
 .story-single p textarea {
   font-size: 1.2rem;
@@ -367,12 +376,38 @@ input[type="password"]:focus {
   width: 100%; /* Full width */
   height: 300px; /* Increased height */
   padding: 10px; /* Padding for better readability */
-  border: 1px solid #ccc;
+  background-color: #555; /* Darker background for input fields */
+  color: #e5e5e5; /* Light text color */
+  border: 1px solid #00ff88; /* Green border for input */
   border-radius: 5px;
   box-sizing: border-box; /* Ensures padding is included in width/height */
   resize: vertical; /* Allows the user to manually resize the height if needed */
   white-space: pre-wrap; /* Ensure text wraps properly */
   overflow-wrap: break-word; /* Ensure long words break properly */
+}
+
+/* Input and Textarea Focus State */
+.story-single p input:focus,
+.story-single p textarea:focus {
+  outline: none;
+  border-color: #00ff88; /* Green border on focus */
+}
+
+/* Button Styling (optional if needed) */
+.story-single button {
+  background-color: #00ff88; /* Green background for buttons */
+  color: #1e1e1e; /* Dark text color for buttons */
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border: none;
+}
+
+.story-single button:hover {
+  background-color: #00cc6a; /* Darker green on hover */
+  transform: translateY(-3px); /* Slight lift on hover */
 }
 
 textarea {
