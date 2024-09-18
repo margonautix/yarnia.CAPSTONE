@@ -27,12 +27,12 @@ const Profile = () => {
         // Fetch the user's stories after fetching user data
         await fetchUserStories(userData.id);
       } else {
-        console.error("Failed to fetch user data");
+        setError("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
         navigate("/login"); // Optionally redirect to login
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      setError("Error fetching user data");
       setIsAuthenticated(false); // Handle error as unauthenticated
       navigate("/login"); // Optionally redirect to login
     }
@@ -48,11 +48,9 @@ const Profile = () => {
         const userStories = await response.json();
         setStories(userStories); // Set stories in state
       } else {
-        console.error("Failed to fetch user stories");
-        setError("Failed to load stories.");
+        setError("Failed to fetch user stories");
       }
     } catch (error) {
-      console.error("Error fetching user stories:", error);
       setError("An error occurred while fetching stories.");
     }
   };
@@ -80,10 +78,10 @@ const Profile = () => {
         await fetchUserData(); // Fetch updated data again after saving
         setIsEditing(false); // Exit edit mode after saving
       } else {
-        console.error("Failed to update profile");
+        setError("Failed to update profile");
       }
     } catch (error) {
-      console.error("Error while updating profile:", error);
+      setError("Error while updating profile.");
     }
   };
 
