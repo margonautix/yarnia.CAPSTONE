@@ -39,7 +39,7 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT); // Verify the token
-    req.user = decoded; // Attach the decoded user data (id, etc.) to the request
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -147,11 +147,11 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   const { title, summary, content } = req.body;
 
   try {
-    // Ensure all required fields are provided
-    if (!title || !content) {
+    // Ensure at least one field is provided
+    if (!title && !content) {
       return res
         .status(400)
-        .json({ message: "Title and content are required." });
+        .json({ message: "At least title or content is required." });
     }
 
     // Update the story in the database

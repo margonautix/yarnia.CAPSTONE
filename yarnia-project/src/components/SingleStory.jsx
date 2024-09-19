@@ -38,8 +38,8 @@ export default function SingleStory() {
   const handleSave = async () => {
     if (story) {
       try {
-        // Send updated content to the server
-        await updateStoryContent(storyId, content); // Assuming this API call updates the story on the server
+        // Include title and summary if necessary
+        await updateStoryContent(storyId, content); // Add other fields as needed
 
         // Update the story locally to reflect the change immediately
         setStory({ ...story, content });
