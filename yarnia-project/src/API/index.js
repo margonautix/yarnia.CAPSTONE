@@ -194,8 +194,12 @@ export async function removeBookmark(storyId) {
 
 export const deleteStory = async (storyId) => {
   try {
-    const response = await fetch(`/api/stories/${storyId}`, {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Make sure to include token
+      },
     });
 
     if (!response.ok) {

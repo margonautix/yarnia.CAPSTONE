@@ -79,10 +79,12 @@ export default function SingleStory() {
       if (result) {
         console.log("Story deleted successfully");
         navigate("/profile"); // Navigate to profile after deletion
+      } else {
+        setError("Failed to delete the story: No result returned");
       }
     } catch (error) {
       console.error("Failed to delete the story:", error);
-      setError("Failed to delete the story.");
+      setError("Failed to delete the story. See console for details.");
     }
   };
 
