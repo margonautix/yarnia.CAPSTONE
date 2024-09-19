@@ -107,6 +107,7 @@ const Profile = () => {
 
   return (
     <>
+      <br />
       <div className="profile-stories-wrapper">
         <div className="profile-container">
           <h1>
@@ -167,19 +168,24 @@ const Profile = () => {
         <div className="stories-container">
           <h2>Your Stories</h2>
           {error && <p className="error-message">{error}</p>}
+
           {stories.length > 0 ? (
             <ul className="story-list">
               {stories.map((story) => (
-                <li key={story.storyId} className="story-item">
-                  <h3>{story.title}</h3>
-                  <p>{story.summary || "No summary available"}</p>
-                  <button
-                    onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                    className="button"
-                  >
-                    Read more
-                  </button>
-                </li>
+                <div className="story-item">
+                  <li key={story.storyId}>
+                    <div id="story-card">
+                      <h3>{story.title}</h3>
+                      <p>{story.summary || "No summary available"}</p>
+                    </div>
+                    <button
+                      onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                      className="button"
+                    >
+                      Read more
+                    </button>
+                  </li>
+                </div>
               ))}
             </ul>
           ) : (

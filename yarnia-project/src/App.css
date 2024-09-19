@@ -711,7 +711,16 @@ p.email {
 }
 
 .story-item {
+  background-color: #000000e6;
   margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+#story-card {
+  background-color: #00410b2e;
+  margin-bottom: 20px;
+  border-radius: 20px;
 }
 
 .story-link {

@@ -13,6 +13,8 @@ export default function SingleStory() {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
   const { storyId } = useParams(); // Get the storyId from the URL
   const [story, setStory] = useState(null); // Store story details
+  const [title, setTitle] = useState(""); // Store title while editing
+  const [summary, setSummary] = useState(""); // Store summary while editing
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
   const [comments, setComments] = useState([]); // Holds comments for the story
@@ -25,6 +27,8 @@ export default function SingleStory() {
       const response = await fetchSingleStory(storyId); // Fetch story using the id
       if (response) {
         setStory(response); // Set story if it exists
+        setTitle(response.title); // Set initial title for editing
+        setSummary(response.summary); // Set initial summary for editing
         setContent(response.content); // Set initial content for editing
 
         // Fetch comments for the story
@@ -55,12 +59,13 @@ export default function SingleStory() {
     }
   }, [storyId]);
 
-  // Handle saving the updated story content
+  // Handle saving the updated story content, title, and summary
   const handleSave = async () => {
     if (story) {
       try {
-        await updateStoryContent(storyId, content); // Update story content
-        setStory({ ...story, content });
+        // Update story title, summary, and content
+        await updateStoryContent(storyId, { title, summary, content });
+        setStory({ ...story, title, summary, content });
         setIsEditing(false);
       } catch (error) {
         console.error("Failed to update the story content:", error);
@@ -106,9 +111,30 @@ export default function SingleStory() {
     <div className="story-container">
       <main>
         <ul className="story-single">
-          <h2>{story.title || "No Title"}</h2>
-          <h4>Author: {story.author?.username || "Unknown Author"}</h4>{" "}
-          <h4>Description: {story.summary || "No Description"}</h4>
+          <h2>
+            Title:{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            ) : (
+              story.title || "No Title"
+            )}
+          </h2>
+          <h4>Author: {story.author?.username || "Unknown Author"}</h4>
+          <h4>
+            Description:{" "}
+            {isEditing ? (
+              <textarea
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+              />
+            ) : (
+              story.summary || "No Description"
+            )}
+          </h4>
           <p>
             Content:{" "}
             {isEditing ? (
@@ -135,7 +161,7 @@ export default function SingleStory() {
           {/* Dropdown for comments */}
           <h2
             onClick={toggleComments}
-            style={{ cursor: "pointer", color: "blue" }}
+            style={{ cursor: "pointer", color: "green" }}
           >
             {isCommentsOpen
               ? "Hide Comments"
