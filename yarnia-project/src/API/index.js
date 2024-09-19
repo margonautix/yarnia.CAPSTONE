@@ -171,7 +171,7 @@ export async function fetchBookmarkedStories() {
 
 export async function removeBookmark(storyId) {
   try {
-    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+    const response = await fetch(`${API_URL}/${authorId}/bookmarks/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -199,12 +199,12 @@ export const deleteStory = async (storyId) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete story");
+      throw new Error(`Failed to delete story with status: ${response.status}`);
     }
 
     return response.json();
   } catch (error) {
-    console.error("Failed to delete story:", error);
-    throw error; // Rethrow the error so the calling function can handle it
+    console.error("Error deleting story:", error);
+    throw error;
   }
 };

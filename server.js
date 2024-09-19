@@ -104,8 +104,7 @@ app.delete("/api/stories/:storyId", async (req, res) => {
   const { storyId } = req.params;
 
   try {
-    // Assuming you're using a database call to delete the story
-    const result = await db.deleteStoryById(storyId);
+    const result = await db.deleteStoryById(storyId); // Ensure this removes the story from DB
     if (result) {
       res.status(200).json({ message: "Story deleted successfully" });
     } else {
@@ -113,7 +112,7 @@ app.delete("/api/stories/:storyId", async (req, res) => {
     }
   } catch (error) {
     console.error("Error deleting story:", error);
-    res.status(500).json({ message: "Failed to delete story" });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

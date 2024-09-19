@@ -8,7 +8,7 @@ export default function SingleStory() {
   const [story, setStory] = useState(null); // Store story details
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
-  const navigate = useNavigate(); // For navigation after deletion
+  const navigate = useNavigate(); // For navigation after deletion or saving
 
   // Fetch the story from the server
   const fetchStory = async (storyId) => {
@@ -39,13 +39,8 @@ export default function SingleStory() {
   const handleSave = async () => {
     if (story) {
       try {
-        // Include title and summary if necessary
-        await updateStoryContent(storyId, content); // Add other fields as needed
-
-        // Update the story locally to reflect the change immediately
+        await updateStoryContent(storyId, content); // Update story content
         setStory({ ...story, content });
-
-        // Exit editing mode
         setIsEditing(false);
       } catch (error) {
         console.error("Failed to update the story content:", error);
@@ -54,24 +49,34 @@ export default function SingleStory() {
     }
   };
 
-  // Handle deleting the story
   const handleDelete = async () => {
-    setStory(null);
     try {
-      await deleteStory(storyId); // Call delete API
-      navigate("/stories"); // Redirect to stories list after deletion
+      console.log("Attempting to delete story with ID:", storyId);
+
+      // Call the deleteStory API
+      const result = await deleteStory(storyId);
+
+      if (result) {
+        console.log("Story deleted successfully");
+
+        // Option 1: Navigate back to the profile page (if the profile page will automatically re-fetch stories)
+        navigate("/profile"); // Assuming "/profile" is your route
+
+        // Option 2: If you're not navigating, re-fetch the user's stories
+        // fetchUserStories();  // Re-fetch the stories for the profile
+      }
     } catch (error) {
       console.error("Failed to delete the story:", error);
       setError("Failed to delete the story.");
     }
   };
 
-  if (error) return <div>{error}</div>; // Show error message if any
+  if (error) return <div>{error}</div>;
 
-  if (!story) return <div>Loading...</div>; // Show loading state while fetching
+  if (!story) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="story-container">
       <main>
         <ul className="story-single">
           <h2>{story.title || "No Title"}</h2>
@@ -88,14 +93,11 @@ export default function SingleStory() {
               story.content || "No Content"
             )}
           </p>
+
           {isEditing ? (
-            <>
-              {/* Render Save button when in editing mode */}
-              <button onClick={handleSave}>Save</button>
-            </>
+            <button onClick={handleSave}>Save</button>
           ) : (
             <>
-              {/* Render Edit and Delete buttons when not in editing mode */}
               <button onClick={() => setIsEditing(true)}>Edit</button>
               <button onClick={handleDelete}>Delete</button>
             </>
