@@ -107,7 +107,7 @@ export default function SingleStory() {
       <main>
         <ul className="story-single">
           <h2>{story.title || "No Title"}</h2>
-          <h4>Author: {story.author || "Unknown Author"}</h4>
+          <h4>Author: {story.author?.username || "Unknown Author"}</h4>{" "}
           <h4>Description: {story.summary || "No Description"}</h4>
           <p>
             Content:{" "}
@@ -120,7 +120,6 @@ export default function SingleStory() {
               story.content || "No Content"
             )}
           </p>
-
           {canEditOrDelete && (
             <>
               {isEditing ? (
@@ -133,7 +132,6 @@ export default function SingleStory() {
               )}
             </>
           )}
-
           {/* Dropdown for comments */}
           <h2
             onClick={toggleComments}
