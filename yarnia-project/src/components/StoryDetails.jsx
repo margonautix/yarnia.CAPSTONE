@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Authenticated fetch function
 import DOMPurify from "dompurify";
 
-const StoryDetails = (story) => {
+const StoryDetails = () => {
   const { storyId } = useParams(); // Get storyId from route params
   const [story, setStory] = useState(null); // Story state
   const [error, setError] = useState(null); // Error state
