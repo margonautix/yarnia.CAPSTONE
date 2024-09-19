@@ -171,7 +171,7 @@ export async function fetchBookmarkedStories() {
 
 export async function removeBookmark(storyId) {
   try {
-    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+    const response = await fetch(`${API_URL}/${authorId}/bookmarks/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -191,3 +191,20 @@ export async function removeBookmark(storyId) {
 }
 
 // girl who knows
+
+export const deleteStory = async (storyId) => {
+  try {
+    const response = await fetch(`/api/stories/${storyId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete story with status: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error deleting story:", error);
+    throw error;
+  }
+};
