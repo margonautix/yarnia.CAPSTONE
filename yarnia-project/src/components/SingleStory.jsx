@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchSingleStory, updateStoryContent, deleteStory } from "../API"; // Assuming these API calls are defined
+import {
+  fetchSingleStory,
+  updateStoryContent,
+  deleteStory,
+  fetchCommentsForStory,
+} from "../API"; // Adjust the API import path as necessary
 
 export default function SingleStory() {
   const [isEditing, setIsEditing] = useState(false); // Track editing state
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
   const { storyId } = useParams(); // Get the storyId from the URL
   const [story, setStory] = useState(null); // Store story details
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
+  const [comments, setComments] = useState([]); // Holds comments for the story
   const navigate = useNavigate(); // For navigation after deletion or saving
 
   // Fetch the story from the server
@@ -17,6 +24,10 @@ export default function SingleStory() {
       if (response) {
         setStory(response); // Set story if it exists
         setContent(response.content); // Set initial content for editing
+
+        // Fetch comments for the story
+        const commentsResponse = await fetchCommentsForStory(storyId);
+        setComments(commentsResponse); // Set the comments
       } else {
         setError("Story not found.");
       }
@@ -58,17 +69,17 @@ export default function SingleStory() {
 
       if (result) {
         console.log("Story deleted successfully");
-
-        // Option 1: Navigate back to the profile page (if the profile page will automatically re-fetch stories)
-        navigate("/profile"); // Assuming "/profile" is your route
-
-        // Option 2: If you're not navigating, re-fetch the user's stories
-        // fetchUserStories();  // Re-fetch the stories for the profile
+        navigate("/profile"); // Navigate to profile after deletion
       }
     } catch (error) {
       console.error("Failed to delete the story:", error);
       setError("Failed to delete the story.");
     }
+  };
+
+  // Toggle the comments dropdown
+  const toggleComments = () => {
+    setIsCommentsOpen(!isCommentsOpen); // Toggle comments dropdown
   };
 
   if (error) return <div>{error}</div>;
@@ -101,6 +112,31 @@ export default function SingleStory() {
               <button onClick={() => setIsEditing(true)}>Edit</button>
               <button onClick={handleDelete}>Delete</button>
             </>
+          )}
+
+          {/* Dropdown for comments */}
+          <h2
+            onClick={toggleComments}
+            style={{ cursor: "pointer", color: "blue" }}
+          >
+            {isCommentsOpen
+              ? "Hide Comments"
+              : `Show Comments (${comments.length})`}
+          </h2>
+          {isCommentsOpen && (
+            <div>
+              {comments.length > 0 ? (
+                <ul>
+                  {comments.map((comment) => (
+                    <li key={comment.id}>
+                      <strong>{comment.author}</strong>: {comment.text}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No comments yet.</p>
+              )}
+            </div>
           )}
         </ul>
       </main>
