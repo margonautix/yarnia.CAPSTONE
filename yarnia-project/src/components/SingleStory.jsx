@@ -6,6 +6,7 @@ import {
   deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
+import jwt_decode from "jwt-decode"; // Import jwt-decode to decode JWT
 
 export default function SingleStory() {
   const [isEditing, setIsEditing] = useState(false); // Track editing state
@@ -15,6 +16,7 @@ export default function SingleStory() {
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
   const [comments, setComments] = useState([]); // Holds comments for the story
+  const [currentUser, setCurrentUser] = useState(null); // To store current user details
   const navigate = useNavigate(); // For navigation after deletion or saving
 
   // Fetch the story from the server
@@ -43,6 +45,13 @@ export default function SingleStory() {
       fetchStory(storyId);
     } else {
       setError("No story ID provided.");
+    }
+
+    // Decode the JWT and set the current user
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwt_decode(token); // Decode the token to get user info
+      setCurrentUser(decoded);
     }
   }, [storyId]);
 
@@ -82,6 +91,11 @@ export default function SingleStory() {
     setIsCommentsOpen(!isCommentsOpen); // Toggle comments dropdown
   };
 
+  // Check if the current user is the author or an admin
+  const canEditOrDelete = currentUser
+    ? currentUser.id === story?.authorId || currentUser.isAdmin
+    : false;
+
   if (error) return <div>{error}</div>;
 
   if (!story) return <div>Loading...</div>;
@@ -105,12 +119,16 @@ export default function SingleStory() {
             )}
           </p>
 
-          {isEditing ? (
-            <button onClick={handleSave}>Save</button>
-          ) : (
+          {canEditOrDelete && (
             <>
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
+              {isEditing ? (
+                <button onClick={handleSave}>Save</button>
+              ) : (
+                <>
+                  <button onClick={() => setIsEditing(true)}>Edit</button>
+                  <button onClick={handleDelete}>Delete</button>
+                </>
+              )}
             </>
           )}
 
