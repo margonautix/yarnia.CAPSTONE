@@ -20,6 +20,12 @@ app.use(
     credentials: true, // Allow credentials such as Authorization headers or cookies
   })
 );
+app.use((err, req, res, next) => {
+  console.error(err);
+  const status = err.status ?? 500;
+  const message = err.message ?? "Internal server error.";
+  res.status(status).json({ message });
+});
 
 // Helper function to generate JWT
 const generateToken = (user) => {
@@ -70,13 +76,19 @@ const authenticateAdmin = (req, res, next) => {
 
 // API routes go here
 
-// GET all stories
-app.get("/api/stories", async (req, res, next) => {
+// Example of your `fetchAllStories` backend endpoint
+app.get("/api/stories", async (req, res) => {
   try {
-    const stories = await prisma.story.findMany();
+    const stories = await prisma.story.findMany({
+      include: {
+        author: {
+          select: { username: true }, // Include only the author's username
+        },
+      },
+    });
     res.json(stories);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch stories." });
   }
 });
 
@@ -86,15 +98,22 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
 
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) }, // Convert to integer only if needed
+      where: { storyId: parseInt(storyId) }, // Ensure storyId is an integer
+      include: {
+        author: {
+          // Include the related author information
+          select: { username: true }, // Only select the username (or add more fields if needed)
+        },
+      },
     });
 
     if (!story) {
       return res.status(404).json({ message: "Story not found." });
     }
 
-    res.json(story);
+    res.json(story); // Return the story with author information included
   } catch (err) {
+    console.error("Error fetching story:", err); // Log the error
     next(err);
   }
 });
@@ -665,14 +684,6 @@ app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-// Simple error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err);
-  const status = err.status ?? 500;
-  const message = err.message ?? "Internal server error.";
-  res.status(status).json({ message });
 });
 
 app.listen(PORT, () => {

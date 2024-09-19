@@ -41,13 +41,16 @@ const Stories = () => {
     setShowModal(false); // Hide the modal
   };
 
-  const filteredStories = stories.filter(
-    (story) =>
-      story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (story.author?.username || "Unknown")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-  );
+  const filteredStories = stories
+    .filter(
+      (story) =>
+        story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (story.author?.username || "Unknown")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+    )
+    // Sort by the published date (newest to oldest)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   if (loading) {
     return <p>Loading stories...</p>;
@@ -97,8 +100,9 @@ const Stories = () => {
             </button>
             <h2>{selectedStory.title}</h2>
             <p>
-              <strong>Author:</strong>{" "}
-              {selectedStory.author?.username || "Unknown"}
+              <h4>
+                Author: {selectedStory.author?.username || "Unknown Author"}
+              </h4>
             </p>
             <p>
               <strong>Published On:</strong>{" "}
