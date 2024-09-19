@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const prisma = require("./prisma");
@@ -13,7 +14,12 @@ const JWT = process.env.JWT || "shhh";
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Only allow your frontend origin
+    credentials: true, // Allow credentials such as Authorization headers or cookies
+  })
+);
 
 // Helper function to generate JWT
 const generateToken = (user) => {
@@ -26,14 +32,14 @@ const generateToken = (user) => {
 
 // Middleware to authenticate the user using JWT
 const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
+  const token = req.headers.authorization?.split(" ")[1]; // Extract the token
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, token missing" });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT);
-    req.user = decoded; // Attach the decoded token to the request object
+    const decoded = jwt.verify(token, JWT); // Verify the token
+    req.user = decoded; // Attach the decoded user data (id, etc.) to the request
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -74,12 +80,13 @@ app.get("/api/stories", async (req, res, next) => {
   }
 });
 
-// GET a single story by ID
 app.get("/api/stories/:storyId", async (req, res, next) => {
-  const { storyId } = req.params; // Extract storyId from the URL
+  const { storyId } = req.params;
+  console.log(`Received storyId: ${storyId}`); // Log the storyId
+
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) },
+      where: { storyId: parseInt(storyId) }, // Convert to integer only if needed
     });
 
     if (!story) {
@@ -110,30 +117,27 @@ app.delete("/api/stories/:storyId", async (req, res, next) => {
 });
 
 // POST (create) a new story
-app.post("/api/stories", async (req, res, next) => {
-  const { title, authorId, summary, content } = req.body;
+app.post("/api/stories", authenticateUser, async (req, res) => {
+  const { title, summary, content } = req.body;
+
+  if (!title || !content) {
+    return res.status(400).json({ message: "Title and content are required." });
+  }
 
   try {
-    // Ensure all required fields are provided
-    if (!title || !authorId || !content) {
-      return res
-        .status(400)
-        .json({ message: "Title, authorId, and content are required." });
-    }
-
-    // Create a new story in the database
     const newStory = await prisma.story.create({
       data: {
         title,
-        authorId: parseInt(authorId), // Convert to integer if necessary
         summary,
         content,
+        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
       },
     });
 
-    res.status(201).json({ message: "Story created successfully.", newStory });
-  } catch (err) {
-    next(err);
+    res.status(201).json(newStory);
+  } catch (error) {
+    console.error("Error creating story:", error);
+    res.status(500).json({ message: "Failed to create story." });
   }
 });
 
@@ -243,6 +247,21 @@ app.get("/api/users/:authorId/comments", async (req, res, next) => {
     res.status(200).json(comments);
   } catch (err) {
     next(err);
+  }
+});
+
+app.put("/api/users/me", authenticateUser, async (req, res, next) => {
+  const { username, bio } = req.body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id }, // Use the authenticated user's ID
+      data: { username, bio }, // Update the username and bio fields
+    });
+
+    res.json(updatedUser); // Return the updated user data
+  } catch (error) {
+    next(error); // Pass any errors to your error-handling middleware
   }
 });
 
@@ -482,6 +501,7 @@ app.get("/api/users/:authorId", async (req, res, next) => {
       select: {
         id: true,
         username: true,
+        password: true,
         email: true, // You can choose whether to expose the email or not
         bio: true,
       },
@@ -528,17 +548,15 @@ app.post("/api/auth/login", async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Compare hashed passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    // Generate a token for the authenticated user
     const token = generateToken(user);
 
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, user }); // Send both token and user
   } catch (err) {
     next(err);
   }
@@ -556,6 +574,95 @@ app.get("/api/auth/me", authenticateUser, async (req, res, next) => {
   }
 });
 
+// Get new bookmarks in database
+
+app.get("/api/user/bookmarks", async (req, res, next) => {
+  const { bookmarkId } = req.params;
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: { bookmarkId: parseInt(bookmarkId) },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "bookmark not found." });
+    }
+    res.json(bookmark);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/stories/:storyId/bookmarks
+
+app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+  const { bookmarkId, userId, storyId, createdAt } = req.body;
+
+  try {
+    if (!userId || !storyId || !createdAt || !bookmarkId) {
+      return res.status(400).json({
+        message: "userId, storyId, createdAt, and bookmarkId are required",
+      });
+    }
+
+    const bookmark = await prisma.bookmark.create({
+      data: {
+        userId: parseInt(userId),
+        storyId: parseInt(storyId),
+        createdAt: new Date(createdAt),
+      },
+    });
+
+    res
+      .status(201)
+      .json({ message: "Bookmark created successfully", bookmark });
+  } catch (err) {
+    if (err.code === "P2002") {
+      return res.status(409).json({ message: "Bookmark already exists." });
+    }
+
+    next(err);
+  }
+});
+
+// DELETE /api/stories/:storyId/bookmarks
+
+app.delete(
+  "/api/stories/:storyId/bookmarks/:bookmarkId",
+  async (req, res, next) => {
+    const { storyId, bookmarkId } = req.params;
+
+    try {
+      await prisma.bookmark.delete({
+        where: { id: parseInt(bookmarkId) },
+      });
+      res.status(200).json({ message: "Bookmark deleted successfully." });
+    } catch (err) {
+      if (err.code === "P2025") {
+        return res.status(404).json({ message: "Bookmark not found." });
+      }
+      next(err);
+    }
+  }
+);
+
+// GET /api/user/:authorId/bookmarks
+
+app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
+  const { bookmarkId } = req.params;
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: { bookmarkId: parseInt(bookmarkId) },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "Story not found." });
+    }
+    res.json(bookmark);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
@@ -566,4 +673,25 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+});
+
+app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const stories = await prisma.story.findMany({
+      where: { authorId: parseInt(userId, 10) }, // Ensure the userId is correctly parsed as an integer
+    });
+
+    if (!stories.length) {
+      return res
+        .status(404)
+        .json({ message: "No stories found for this user." });
+    }
+
+    res.status(200).json(stories);
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    res.status(500).json({ message: "Failed to fetch stories." });
+  }
 });
