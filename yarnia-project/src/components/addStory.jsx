@@ -1,6 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Assuming this function sends authenticated requests
+import ReactQuill from "react-quill"; // Import ReactQuill component
+import "react-quill/dist/quill.snow.css"; // Import styles for ReactQuill
 
 const AddStory = () => {
   const [title, setTitle] = useState(""); // State for story title
@@ -80,12 +82,44 @@ const AddStory = () => {
 
         <div className="form-group">
           <label htmlFor="content">Content</label>
-          <textarea
-            id="content"
+          <ReactQuill
             value={content}
-            onChange={(e) => setContent(e.target.value)} // Update content state
+            onChange={setContent} // Update content state using ReactQuill
+            modules={{
+              toolbar: [
+                [{ header: "1" }, { header: "2" }, { font: [] }],
+                [{ size: [] }],
+                ["bold", "italic", "underline", "strike", "blockquote"],
+                [
+                  { list: "ordered" },
+                  { list: "bullet" },
+                  { indent: "-1" },
+                  { indent: "+1" },
+                ],
+                ["link", "image", "video"],
+                ["clean"],
+              ],
+            }}
+            formats={[
+              "header",
+              "font",
+              "size",
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              "blockquote",
+              "list",
+              "bullet",
+              "indent",
+              "link",
+              "image",
+              "video",
+            ]}
+            placeholder="Write your story here..."
+            theme="snow" // Use the "snow" theme for styling
             required
-            rows="10"
+            style={{ height: "200px" }} // Adjust the height as needed
           />
         </div>
 

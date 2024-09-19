@@ -39,7 +39,7 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT); // Verify the token
-    req.user = decoded; // Attach the decoded user data (id, etc.) to the request
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -100,19 +100,19 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
 });
 
 // DELETE a single story by ID
-app.delete("/api/stories/:storyId", async (req, res, next) => {
+app.delete("/api/stories/:storyId", async (req, res) => {
   const { storyId } = req.params;
-  try {
-    const story = await prisma.story.delete({
-      where: { storyId: parseInt(storyId) },
-    });
 
-    res.json({ message: "Story deleted successfully.", story });
-  } catch (err) {
-    if (err.code === "P2025") {
-      return res.status(404).json({ message: "Story not found." });
+  try {
+    const result = await db.deleteStoryById(storyId); // Ensure this removes the story from DB
+    if (result) {
+      res.status(200).json({ message: "Story deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Story not found" });
     }
-    next(err);
+  } catch (error) {
+    console.error("Error deleting story:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -147,11 +147,11 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
   const { title, summary, content } = req.body;
 
   try {
-    // Ensure all required fields are provided
-    if (!title || !content) {
+    // Ensure at least one field is provided
+    if (!title && !content) {
       return res
         .status(400)
-        .json({ message: "Title and content are required." });
+        .json({ message: "At least title or content is required." });
     }
 
     // Update the story in the database
