@@ -6,6 +6,7 @@ import {
   deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
+import "react-quill/dist/quill.snow.css";
 
 export default function SingleStory() {
   const [isEditing, setIsEditing] = useState(false); // Track editing state

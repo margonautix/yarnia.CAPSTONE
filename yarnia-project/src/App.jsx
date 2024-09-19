@@ -9,6 +9,8 @@ import Register from "./components/Register";
 import SingleStory from "./components/SingleStory";
 import Logout from "./components/Logout";
 import AddStory from "./components/addStory";
+import StoryDetails from "./components/StoryDetails";
+import "react-quill/dist/quill.snow.css";
 import "./App.css";
 
 function App() {
@@ -33,6 +35,7 @@ function App() {
         <Route path="/stories/:storyId" element={<SingleStory />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/add-story" element={<AddStory />} />
+        <Route path="/stories" element={<StoryDetails />} />
       </Routes>
     </div>
   );
