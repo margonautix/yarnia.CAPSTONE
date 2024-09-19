@@ -1,128 +1,86 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { fetchSingleStory, updateStoryContent, fetchWithAuth } from "../API"; // Assuming fetchWithAuth is an API utility
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchSingleStory, updateStoryContent } from "../API"; // Assuming these API calls are defined
 
-const SingleStory = () => {
-  const { storyId } = useParams(); // Get storyId from URL params
-  const [story, setStory] = useState(null);
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null); // Holds the authenticated user
-  const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
-  const [content, setContent] = useState(""); // Content for editing
+export default function SingleStory() {
+  // const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false); // Track editing state
+  const { storyId } = useParams(); // Get the storyId from the URL
+  const [story, setStory] = useState(null); // Store story details
+  const [content, setContent] = useState(""); // Store content while editing
+  const [error, setError] = useState(null); // To track errors
 
-  // Fetch authenticated user when the component mounts
   useEffect(() => {
-    async function fetchUser() {
+    async function fetchStory(storyId) {
       try {
-        const response = await fetchWithAuth(
-          "http://localhost:3000/api/auth/me"
-        );
-        if (response.ok) {
-          const userData = await response.json();
-          console.log("Fetched user data:", userData); // Log user data for debugging
-          setUser(userData); // Set the authenticated user
-        } else {
-          setError("Failed to authenticate user.");
-        }
-      } catch (error) {
-        setError("Failed to fetch authenticated user.", error);
-      }
-    }
+        console.log(`Fetching story with id: ${storyId}`);
+        const response = await fetchSingleStory(storyId); // Fetch story using the id
+        console.log("API response:", response); // Log the full response
 
-    fetchUser();
-  }, []);
-
-  // Fetch story by ID
-  useEffect(() => {
-    const fetchStory = async (id) => {
-      try {
-        const storyData = await fetchSingleStory(id); // Assume it returns JSON
-        if (storyData) {
-          console.log("Fetched story data:", storyData); // Log story data for debugging
-          setStory(storyData); // Set the fetched story
-          setContent(storyData.content); // Set content for editing
+        if (response) {
+          setStory(response); // Set story if it exists
+          setContent(response.content); // Set initial content
         } else {
           setError("Story not found.");
         }
       } catch (error) {
-        setError("Error fetching the story.", error);
+        console.error("Failed to fetch the story:", error);
+        setError("Failed to fetch the story."); // Set error state
       }
-    };
+    }
 
     if (storyId) {
-      fetchStory(storyId); // Fetch the story if ID is available
+      fetchStory(storyId); // Fetch the story only if the storyId is present
     } else {
       setError("No story ID provided.");
     }
-  }, [storyId]);
+  }, [storyId]); // Re-fetch the story when the storyId changes
 
-  // Function to handle saving changes
   const handleSave = async () => {
     if (story) {
       try {
-        // Update the story content on the backend
-        await updateStoryContent(storyId, content);
+        // Optionally, send updated content to the server
+        await updateStoryContent(storyId, content); // Assuming this API call updates the story on the server
 
-        // Update the local state with the new content
-        setStory({ ...story, content }); // Update the UI
+        // Update the story locally
+        setStory({ ...story, content });
         setIsEditing(false); // Exit editing mode
       } catch (error) {
-        setError("Failed to update the story content.", error);
+        console.error("Failed to update the story content:", error);
+        setError("Failed to update the story content.");
       }
     }
   };
 
-  // Check if the authenticated user is the author or an admin
-  const canEdit = () => {
-    if (!user || !story) return false; // Ensure user and story are loaded
+  if (error) return <div>{error}</div>; // Show error message if any
 
-    // Check if user is the author or an admin
-    const isAuthor = user.username === story.author?.username; // Assuming story.author is an object with a username
-    const isAdmin = user.role === "admin";
-
-    console.log("Checking edit permissions:", {
-      user,
-      story,
-      isAuthor,
-      isAdmin,
-    }); // Log permission check
-
-    return isAuthor || isAdmin;
-  };
-
-  if (error) return <div>{error}</div>; // Display errors
-  if (!story) return <div>Loading...</div>; // Display loading
+  if (!story) return <div>Loading...</div>; // Show loading state while fetching
 
   return (
     <div className="story-container">
-      <h2>{story.title}</h2>
-      <h4>Author: {story.author?.username || "Unknown Author"}</h4>{" "}
-      <p>{story.summary}</p>
       <main>
         <ul className="story-single">
-          {" "}
-          {/* Adjusted to access author username correctly */}
+          <h2>{story.title || "No Title"}</h2>
+          <h4>Author: {story.author || "Unknown Author"}</h4>
+          <h4>Description: {story.summary || "No Description"}</h4>
           <p>
+            Content:{" "}
             {isEditing ? (
-              <textarea
+              <input
                 value={content}
-                onChange={(e) => setContent(e.target.value)} // Update content as you type
-                rows="10"
+                onChange={(e) => setContent(e.target.value)}
               />
             ) : (
               story.content || "No Content"
             )}
           </p>
-          {canEdit() &&
-            (isEditing ? (
-              <button onClick={handleSave}>Save</button>
-            ) : (
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-            ))}
+          {isEditing ? (
+            <button onClick={handleSave}>Save</button>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit</button>
+          )}
         </ul>
       </main>
     </div>
   );
-};
-
-export default SingleStory;
+}
