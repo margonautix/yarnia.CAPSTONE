@@ -596,17 +596,8 @@ p.email {
   border-radius: 5px;
 }
 
-.add-story-form .submit-button {
-  background-color: #00b894;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add-story-form .submit-button:hover {
-  background-color: #019871;
+.submit-button {
+  margin-top: 70px;
 }
 
 .error-message {
