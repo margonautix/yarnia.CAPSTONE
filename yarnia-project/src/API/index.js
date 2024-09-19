@@ -191,3 +191,20 @@ export async function removeBookmark(storyId) {
 }
 
 // girl who knows
+
+export const deleteStory = async (storyId) => {
+  try {
+    const response = await fetch(`/api/stories/${storyId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete story");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Failed to delete story:", error);
+    throw error; // Rethrow the error so the calling function can handle it
+  }
+};

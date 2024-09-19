@@ -688,3 +688,7 @@ p.email {
 .error-message {
   color: red;
 }
+
+.story-single button {
+  margin-right: 10px;
+}

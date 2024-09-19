@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { fetchSingleStory, updateStoryContent } from "../API"; // Assuming these API calls are defined
+import { useParams, useNavigate } from "react-router-dom";
+import { fetchSingleStory, updateStoryContent, deleteStory } from "../API"; // Assuming these API calls are defined
 
 export default function SingleStory() {
   const [isEditing, setIsEditing] = useState(false); // Track editing state
@@ -8,6 +8,7 @@ export default function SingleStory() {
   const [story, setStory] = useState(null); // Store story details
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
+  const navigate = useNavigate(); // For navigation after deletion
 
   // Fetch the story from the server
   const fetchStory = async (storyId) => {
@@ -53,12 +54,24 @@ export default function SingleStory() {
     }
   };
 
+  // Handle deleting the story
+  const handleDelete = async () => {
+    setStory(null);
+    try {
+      await deleteStory(storyId); // Call delete API
+      navigate("/stories"); // Redirect to stories list after deletion
+    } catch (error) {
+      console.error("Failed to delete the story:", error);
+      setError("Failed to delete the story.");
+    }
+  };
+
   if (error) return <div>{error}</div>; // Show error message if any
 
   if (!story) return <div>Loading...</div>; // Show loading state while fetching
 
   return (
-    <div className="story-container">
+    <div>
       <main>
         <ul className="story-single">
           <h2>{story.title || "No Title"}</h2>
@@ -76,9 +89,16 @@ export default function SingleStory() {
             )}
           </p>
           {isEditing ? (
-            <button onClick={handleSave}>Save</button>
+            <>
+              {/* Render Save button when in editing mode */}
+              <button onClick={handleSave}>Save</button>
+            </>
           ) : (
-            <button onClick={() => setIsEditing(true)}>Edit</button>
+            <>
+              {/* Render Edit and Delete buttons when not in editing mode */}
+              <button onClick={() => setIsEditing(true)}>Edit</button>
+              <button onClick={handleDelete}>Delete</button>
+            </>
           )}
         </ul>
       </main>

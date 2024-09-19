@@ -100,19 +100,20 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
 });
 
 // DELETE a single story by ID
-app.delete("/api/stories/:storyId", async (req, res, next) => {
+app.delete("/api/stories/:storyId", async (req, res) => {
   const { storyId } = req.params;
-  try {
-    const story = await prisma.story.delete({
-      where: { storyId: parseInt(storyId) },
-    });
 
-    res.json({ message: "Story deleted successfully.", story });
-  } catch (err) {
-    if (err.code === "P2025") {
-      return res.status(404).json({ message: "Story not found." });
+  try {
+    // Assuming you're using a database call to delete the story
+    const result = await db.deleteStoryById(storyId);
+    if (result) {
+      res.status(200).json({ message: "Story deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Story not found" });
     }
-    next(err);
+  } catch (error) {
+    console.error("Error deleting story:", error);
+    res.status(500).json({ message: "Failed to delete story" });
   }
 });
 
