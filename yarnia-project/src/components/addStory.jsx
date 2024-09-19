@@ -54,80 +54,79 @@ const AddStory = () => {
   };
 
   return (
-    <div className="add-story-container">
-      <h1>Create a New Story</h1>
-      {error && <p className="error-message">{error}</p>}{" "}
-      {/* Show error if exists */}
-      <form onSubmit={handleSubmit} className="add-story-form">
-        <div className="form-group">
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)} // Update title state
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="summary">Summary</label>
-          <textarea
-            id="summary"
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)} // Update summary state
-            placeholder="Write a short summary (optional)"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="content">Content</label>
-          <ReactQuill
-            value={content}
-            onChange={setContent} // Update content state using ReactQuill
-            modules={{
-              toolbar: [
-                [{ header: "1" }, { header: "2" }, { font: [] }],
-                [{ size: [] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [
-                  { list: "ordered" },
-                  { list: "bullet" },
-                  { indent: "-1" },
-                  { indent: "+1" },
+    <>
+      <div className="add-story-container">
+        <h1>Create a New Story</h1>
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Show error if exists */}
+        <form onSubmit={handleSubmit} className="add-story-form">
+          <div className="form-group">
+            <label htmlFor="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)} // Update title state
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="summary">Summary</label>
+            <textarea
+              id="summary"
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)} // Update summary state
+              placeholder="Write a short summary (optional)"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="content">Content</label>
+            <ReactQuill
+              value={content}
+              onChange={setContent} // Update content state using ReactQuill
+              modules={{
+                toolbar: [
+                  [{ header: "1" }, { header: "2" }, { font: [] }],
+                  [{ size: [] }],
+                  ["bold", "italic", "underline", "strike", "blockquote"],
+                  [
+                    { list: "ordered" },
+                    { list: "bullet" },
+                    { indent: "-1" },
+                    { indent: "+1" },
+                  ],
+                  ["link", "image", "video"],
+                  ["clean"],
                 ],
-                ["link", "image", "video"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "font",
-              "size",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-              "video",
-            ]}
-            placeholder="Write your story here..."
-            theme="snow" // Use the "snow" theme for styling
-            required
-            style={{ height: "200px" }} // Adjust the height as needed
-          />
-        </div>
-
-        <button type="submit" className="button submit-button">
-          Submit Story
-        </button>
-      </form>
-    </div>
+              }}
+              formats={[
+                "header",
+                "font",
+                "size",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "blockquote",
+                "list",
+                "bullet",
+                "indent",
+                "link",
+                "image",
+                "video",
+              ]}
+              placeholder="Write your story here..."
+              theme="snow" // Use the "snow" theme for styling
+              required
+              style={{ height: "200px" }} // Adjust the height as needed
+            />
+          </div>
+          <button type="submit" className="submit-button">
+            Submit Story
+          </button>{" "}
+        </form>{" "}
+      </div>
+    </>
   );
 };
 
