@@ -155,28 +155,54 @@ export const updateStoryContent = async (storyId, content) => {
 
 // Girl who knows (bookmark stuff)
 
-export async function fetchBookmarkedStories() {
+export const fetchBookmarkedStories = async (userId, token) => {
+  console.log(userId)
   try {
-    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`);
-    //  check the response for validity in the fetch statement
-    if (!response.ok) {
-      throw new Error(`Error fetching story: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching user bookmarks", error);
-    throw error;
-  }
-}
+    const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include token for authorization
+      }
+    });
 
-export async function removeBookmark(storyId) {
+    if (!response.ok) {
+      throw new Error(`Error fetching bookmarks: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data; // Return the bookmarked stories
+  } catch (error) {
+    console.error("Error fetching user bookmarks:", error);
+    throw error; // Re-throw the error for further handling
+  }
+};
+
+export const bookmarkStory = async (storyId, token) => {
+  const response = await fetch(`${API_URL}/users/${userId}/bookmarks/${storyId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ storyId })
+  });
+
+  // Check if the response is OK (status in the range 200-299)
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to bookmark the story');
+  }
+
+  return response.json(); // Assuming you want to return the response data
+};
+
+
+export const removeBookmark = async (storyId, userId, token) => {
   try {
-    const response = await fetch(`${API_URL}/api/${authorId}/bookmarks/`, {
+    const response = await fetch(`${API_URL}/users/${userId}/bookmarks/${storyId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       }
     });
 
@@ -185,10 +211,12 @@ export async function removeBookmark(storyId) {
     }
 
     const json = await response.json();
-    return json;
+    return json; // Return any response data if necessary
   } catch (error) {
-    console.error("Failed to remove the bookmark.")
+    console.error("Failed to remove the bookmark:", error);
+    throw error; // Re-throw the error for further handling
   }
-}
+};
+
 
 // girl who knows

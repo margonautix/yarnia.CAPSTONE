@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { fetchSingleStory, updateStoryContent, fetchWithAuth } from "../API"; // Assuming fetchWithAuth is an API utility
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchSingleStory, updateStoryContent, fetchWithAuth, bookmarkStory } from "../API"; // Ensure all imports are correct
 
 const SingleStory = () => {
   const { storyId } = useParams(); // Get storyId from URL params
@@ -8,13 +8,16 @@ const SingleStory = () => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null); // Holds the authenticated user
   const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
+  const [bookmarked, setBookmarked] = useState(false);
   const [content, setContent] = useState(""); // Content for editing
+
+  const navigate = useNavigate();
 
   // Fetch authenticated user when the component mounts
   useEffect(() => {
-    async function fetchUser() {
+    const fetchUser = async () => {
       try {
-        const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
+        const response = await fetchWithAuth(`http://localhost:3000/api/auth/me`);
         if (response.ok) {
           const userData = await response.json();
           setUser(userData); // Set the authenticated user
@@ -22,9 +25,9 @@ const SingleStory = () => {
           setError("Failed to authenticate user.");
         }
       } catch (error) {
-        setError("Failed to fetch authenticated user.", error);
+        setError("Failed to fetch authenticated user.");
       }
-    }
+    };
 
     fetchUser();
   }, []);
@@ -33,20 +36,20 @@ const SingleStory = () => {
   useEffect(() => {
     const fetchStory = async (id) => {
       try {
-        const storyData = await fetchSingleStory(id); // Assume it returns JSON
+        const storyData = await fetchSingleStory(id);
         if (storyData) {
-          setStory(storyData); // Set the fetched story
+          setStory(storyData);
           setContent(storyData.content); // Set content for editing
         } else {
           setError("Story not found.");
         }
       } catch (error) {
-        setError("Error fetching the story.", error);
+        setError("Error fetching the story.");
       }
     };
 
     if (storyId) {
-      fetchStory(storyId); // Fetch the story if ID is available
+      fetchStory(storyId);
     } else {
       setError("No story ID provided.");
     }
@@ -56,17 +59,31 @@ const SingleStory = () => {
   const handleSave = async () => {
     if (story) {
       try {
-        // Update the story content on the backend
         await updateStoryContent(storyId, content);
-
-        // Update the local state with the new content
-        setStory({ ...story, content }); // Update the UI
-        setIsEditing(false); // Exit editing mode
+        setStory({ ...story, content });
+        setIsEditing(false);
       } catch (error) {
-        setError("Failed to update the story content.", error);
+        setError("Failed to update the story content.");
       }
     }
   };
+
+  // Function to handle bookmarking
+  const handleBookmark = async () => {
+    if (!user) {
+      setError("You must be logged in to bookmark stories.");
+      return;
+    }
+  
+    const token = localStorage.getItem("token"); // Get the token
+    try {
+      await bookmarkStory(storyId, token); // Pass the token correctly
+      setBookmarked(true);
+    } catch (error) {
+      setError("Error occurred while bookmarking the story.");
+    }
+  };
+  
 
   // Check if the authenticated user is the author or an admin
   const canEdit = () => {
@@ -80,6 +97,9 @@ const SingleStory = () => {
     <div className="story-container">
       <h2>{story.title}</h2>
       <p>{story.content}</p>
+      <button onClick={handleBookmark} disabled={bookmarked}>
+        {bookmarked ? "Bookmarked" : "Bookmark"}
+      </button>
       <main>
         <ul className="story-single">
           <h2>{story.title || "No Title"}</h2>
@@ -96,14 +116,11 @@ const SingleStory = () => {
               story.content || "No Content"
             )}
           </p>
-
-          {/* Only show edit button if user is the author or admin */}
-          {canEdit() &&
-            (isEditing ? (
-              <button onClick={handleSave}>Save</button>
-            ) : (
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-            ))}
+          {canEdit() && (isEditing ? (
+            <button onClick={handleSave}>Save</button>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit</button>
+          ))}
         </ul>
       </main>
     </div>
