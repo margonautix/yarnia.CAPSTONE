@@ -198,46 +198,58 @@ app.put("/api/stories/:storyId", async (req, res, next) => {
 
 // GET all comments on individual story
 app.get("/api/stories/:storyId/comments", async (req, res, next) => {
-  const { storyId } = req.params; // Extract storyId from the URL
+  const { storyId } = req.params;
   try {
+    // Fetch comments with user details
     const comments = await prisma.comment.findMany({
       where: {
-        storyId: parseInt(storyId), // Filter comments by storyId
+        storyId: parseInt(storyId),
+      },
+      include: {
+        user: {
+          select: { username: true }, // Include only the user's username
+        },
       },
     });
     res.json(comments);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Failed to fetch comments." });
   }
 });
 
 // POST new comment on individual story
-app.post("/api/stories/:storyId/comments", async (req, res, next) => {
-  const { storyId } = req.params;
-  const { userId, content } = req.body;
+app.post(
+  "/api/stories/:storyId/comments",
+  authenticateUser,
+  async (req, res, next) => {
+    const { storyId } = req.params;
+    const { content } = req.body;
 
-  try {
-    if (!userId || !content) {
-      return res
-        .status(400)
-        .json({ message: "User ID and content are required" });
+    // Validate content
+    if (!content) {
+      return res.status(400).json({ message: "Content is required" });
     }
 
-    const newComment = await prisma.comment.create({
-      data: {
-        userId: parseInt(userId),
-        storyId: parseInt(storyId),
-        content,
-      },
-    });
+    try {
+      // Create the comment in the database
+      const newComment = await prisma.comment.create({
+        data: {
+          userId: req.user.id, // Use authenticated user's ID
+          storyId: parseInt(storyId), // Ensure the storyId is an integer
+          content, // Use content from the request body
+        },
+      });
 
-    res
-      .status(201)
-      .json({ message: "Comment added successfully.", newComment });
-  } catch (err) {
-    next(err);
+      res
+        .status(201)
+        .json({ message: "Comment added successfully.", newComment });
+    } catch (error) {
+      console.error("Error posting comment:", error);
+      res.status(500).json({ message: "Failed to post comment." });
+    }
   }
-});
+);
 
 // DELETE a specific comment
 app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
