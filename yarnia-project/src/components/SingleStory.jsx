@@ -62,13 +62,44 @@ export default function SingleStory() {
     }
   }, [storyId]);
 
+  // Function to handle content update
+  const handleSaveContent = async () => {
+    try {
+      const response = await updateStoryContent(storyId, content); // Send updated content to API
+      if (response) {
+        setIsEditing(false); // Exit editing mode after saving
+        fetchStory(storyId); // Refresh the story data
+      }
+    } catch (error) {
+      console.error("Failed to update the story:", error);
+      alert("Failed to update the story.");
+    }
+  };
+
+  // Function to handle story deletion
+  const handleDeleteStory = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this story?"
+    );
+    if (confirmDelete) {
+      try {
+        await deleteStory(storyId); // Call API to delete the story
+        alert("Story deleted successfully!");
+        navigate("/"); // Navigate back to the home page after deletion
+      } catch (error) {
+        console.error("Failed to delete the story:", error);
+        alert("Failed to delete the story.");
+      }
+    }
+  };
+
   // Render each comment correctly with author and content
   const renderComments = () => {
     if (comments.length > 0) {
       return (
-        <ul>
+        <ul className="comments-list">
           {comments.map((comment) => (
-            <li key={comment.id}>
+            <li key={comment.id} className="comment-item">
               <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
               {comment.content || "No content available"}
             </li>
@@ -128,7 +159,6 @@ export default function SingleStory() {
 
           {/* Display or edit story content */}
           <p>
-            Content:{" "}
             {isEditing ? (
               <textarea
                 value={content}
@@ -138,25 +168,30 @@ export default function SingleStory() {
               story?.content || "No Content"
             )}
           </p>
-
-          {isEditing ? (
-            <button onClick={handleSave}>Save</button>
-          ) : (
-            <>
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
-              <button onClick={handleBookmark} disabled={bookmarked}>
-                {bookmarked ? "Bookmarked" : "Bookmark"}
+          {/* Edit and Save/Delete Buttons */}
+          {currentUser?.id === story?.authorId && (
+            <div className="button-group">
+              {isEditing ? (
+                <button onClick={handleSaveContent} className="save-button">
+                  Save
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="edit-button"
+                >
+                  Edit
+                </button>
+              )}
+              <button onClick={handleDeleteStory} className="cancel-button">
+                Delete
               </button>
-            </>
+            </div>
           )}
 
-          {/* Dropdown for comments */}
+          {/* Comments toggle and display */}
+          <h2 onClick={toggleComments} className="toggle-comments-btn">
 
-          <h2
-            onClick={toggleComments}
-            style={{ cursor: "pointer", color: "blue" }}
-          >
             {isCommentsOpen
               ? "Hide Comments"
               : `Show Comments (${comments.length})`}
@@ -165,10 +200,12 @@ export default function SingleStory() {
           {isCommentsOpen && renderComments()}
 
           {/* Add new comment functionality */}
-          <Comments
-            storyId={storyId}
-            refreshComments={() => fetchStory(storyId)}
-          />
+          {isCommentsOpen && (
+            <Comments
+              storyId={storyId}
+              refreshComments={() => fetchStory(storyId)}
+            />
+          )}
         </ul>
       </main>
     </div>
