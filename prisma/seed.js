@@ -47,7 +47,7 @@ const seed = async () => {
         await prisma.comment.create({
           data: {
             content: faker.lorem.sentence(),
-            userId: user.id,
+            userId: faker.user.id,
             storyId: story.storyId,
             createdAt: faker.date.past(),
           },
