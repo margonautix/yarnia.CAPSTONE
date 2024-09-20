@@ -5,38 +5,44 @@ import {
   updateStoryContent,
   fetchWithAuth,
   bookmarkStory,
-  // deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import Comments from "./Comments"; // Import the Comments component
 
 export default function SingleStory() {
-  const { storyId } = useParams(); // Get storyId from the URL
-  const navigate = useNavigate(); // For navigating after delete or save
-  const [currentUser, setCurrentUser] = useState(null); // State for current user info
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
-  const [story, setStory] = useState(null); // Store story details
-  const [content, setContent] = useState(""); // Store content while editing
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const { storyId } = useParams();
+  const [story, setStory] = useState(null);
+  const [content, setContent] = useState("");
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null); // To track errors
-  const [comments, setComments] = useState([]); // Holds comments for the story
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
 
-  // Fetch the story and comments from the server
+  // Fetch the user data
+  const fetchUser = async () => {
+    try {
+      const userData = await fetchWithAuth(); // Fetch user data
+      setUser(userData);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setError("Failed to fetch user data.");
+    }
+  };
+
+  // Fetch the story from the server
   const fetchStory = async (storyId) => {
     try {
-      const storyResponse = await fetchSingleStory(storyId); // Fetch the story
-      if (storyResponse) {
-        setStory(storyResponse); // Set the story state
-        setContent(storyResponse.content); // Set the content for editing
+      const response = await fetchSingleStory(storyId);
+      if (response) {
+        setStory(response);
+        setContent(response.content);
 
-        // Fetch the comments related to the story
         const commentsResponse = await fetchCommentsForStory(storyId);
-        if (commentsResponse) {
-          setComments(commentsResponse); // Set the comments state
-        }
+        setComments(commentsResponse);
       } else {
         setError("Story not found.");
       }
@@ -46,8 +52,9 @@ export default function SingleStory() {
     }
   };
 
-  // Fetch story and user data when the component mounts or when storyId changes
+  // Fetch story and user when the component mounts
   useEffect(() => {
+    fetchUser(); // Fetch user data
     if (storyId) {
       fetchStory(storyId);
     } else {
@@ -62,64 +69,30 @@ export default function SingleStory() {
     }
   }, [storyId]);
 
-  // Function to handle content update
-  const handleSaveContent = async () => {
-    try {
-      const response = await updateStoryContent(storyId, content); // Send updated content to API
-      if (response) {
-        setIsEditing(false); // Exit editing mode after saving
-        fetchStory(storyId); // Refresh the story data
-      }
-    } catch (error) {
-      console.error("Failed to update the story:", error);
-      alert("Failed to update the story.");
-    }
-  };
-
-  // Function to handle story deletion
-  const handleDeleteStory = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this story?"
-    );
-    if (confirmDelete) {
+  const handleSave = async () => {
+    if (story) {
       try {
-        await deleteStory(storyId); // Call API to delete the story
-        alert("Story deleted successfully!");
-        navigate("/"); // Navigate back to the home page after deletion
+        await updateStoryContent(storyId, content);
+        setStory({ ...story, content });
+        setIsEditing(false);
       } catch (error) {
-        console.error("Failed to delete the story:", error);
-        alert("Failed to delete the story.");
+        console.error("Failed to update the story content:", error);
+        setError("Failed to update the story content.");
+        console.log(hi);
       }
-    }
-  };
-
-  // Render each comment correctly with author and content
-  const renderComments = () => {
-    if (comments.length > 0) {
-      return (
-        <ul className="comments-list">
-          {comments.map((comment) => (
-            <li key={comment.id} className="comment-item">
-              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
-              {comment.content || "No content available"}
-            </li>
-          ))}
-        </ul>
-      );
-    } else {
-      return <p>No comments yet.</p>;
     }
   };
 
   const handleBookmark = async () => {
+    console.log("User state:", user); // Check user state
     if (!user) {
       setError("You must be logged in to bookmark stories.");
       return;
     }
 
-    const token = localStorage.getItem("token"); // Get the token
+    const token = localStorage.getItem("token");
     try {
-      await bookmarkStory(storyId, token); // Pass the token correctly
+      await bookmarkStory(storyId, token);
       setBookmarked(true);
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
@@ -127,15 +100,11 @@ export default function SingleStory() {
   };
 
   const handleDelete = async () => {
+    // Assume deleteStory is implemented correctly
     try {
-      console.log("Attempting to delete story with ID:", storyId);
-
-      // Call the deleteStory API
       const result = await deleteStory(storyId);
-
       if (result) {
-        console.log("Story deleted successfully");
-        navigate("/profile"); // Navigate to profile after deletion
+        navigate("/profile");
       }
     } catch (error) {
       console.error("Failed to delete the story:", error);
@@ -143,9 +112,8 @@ export default function SingleStory() {
     }
   };
 
-  // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+    setIsCommentsOpen(!isCommentsOpen);
   };
 
   return (
@@ -189,9 +157,10 @@ export default function SingleStory() {
             </div>
           )}
 
-          {/* Comments toggle and display */}
-          <h2 onClick={toggleComments} className="toggle-comments-btn">
-
+          <h2
+            onClick={toggleComments}
+            style={{ cursor: "pointer", color: "blue" }}
+          >
             {isCommentsOpen
               ? "Hide Comments"
               : `Show Comments (${comments.length})`}
