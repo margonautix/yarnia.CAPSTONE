@@ -62,9 +62,9 @@ export default function SingleStory() {
   const renderComments = () => {
     if (comments.length > 0) {
       return (
-        <ul>
+        <ul className="comments-list">
           {comments.map((comment) => (
-            <li key={comment.id}>
+            <li key={comment.id} className="comment-item">
               <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
               {comment.content || "No content available"}
             </li>
@@ -104,10 +104,7 @@ export default function SingleStory() {
           </p>
 
           {/* Comments toggle and display */}
-          <h2
-            onClick={toggleComments}
-            style={{ cursor: "pointer", color: "blue" }}
-          >
+          <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
               ? "Hide Comments"
               : `Show Comments (${comments.length})`}
@@ -116,10 +113,12 @@ export default function SingleStory() {
           {isCommentsOpen && renderComments()}
 
           {/* Add new comment functionality */}
-          <Comments
-            storyId={storyId}
-            refreshComments={() => fetchStory(storyId)}
-          />
+          {isCommentsOpen && (
+            <Comments
+              storyId={storyId}
+              refreshComments={() => fetchStory(storyId)}
+            />
+          )}
         </ul>
       </main>
     </div>

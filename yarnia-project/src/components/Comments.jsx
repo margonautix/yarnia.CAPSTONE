@@ -38,13 +38,17 @@ const Comments = ({ storyId, refreshComments }) => {
   };
 
   return (
-    <div>
+    <div className="comments-container">
+      <label htmlFor="comment-input">Comment</label>
       <textarea
+        id="comment-input"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Write your comment here..."
       />
-      <button onClick={handleComment}>Post Comment</button>
+      <button onClick={handleComment} aria-label="Post comment">
+        Post Comment
+      </button>
     </div>
   );
 };
