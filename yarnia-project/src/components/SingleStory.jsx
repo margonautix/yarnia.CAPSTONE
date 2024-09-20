@@ -3,13 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
-  deleteStory,
+  fetchWithAuth,
+  bookmarkStory,
+  // deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import Comments from "./Comments"; // Import the Comments component
 
 export default function SingleStory() {
+<<<<<<< HEAD
   const { storyId } = useParams(); // Get storyId from the URL
   const navigate = useNavigate(); // For navigating after delete or save
   const [story, setStory] = useState(null); // State to hold story details
@@ -19,6 +22,18 @@ export default function SingleStory() {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false); // Track if comments section is open
   const [error, setError] = useState(null); // Track any errors
   const [currentUser, setCurrentUser] = useState(null); // State for current user info
+=======
+  const [isEditing, setIsEditing] = useState(false); // Track editing state
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
+  const { storyId } = useParams(); // Get the storyId from the URL
+  const [story, setStory] = useState(null); // Store story details
+  const [content, setContent] = useState(""); // Store content while editing
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null); // To track errors
+  const [comments, setComments] = useState([]); // Holds comments for the story
+  const navigate = useNavigate(); // For navigation after deletion or saving
+  const [bookmarked, setBookmarked] = useState(false);
+>>>>>>> df9b9ff04e7d1bfe25b978f8c6a9f1529e23993f
 
   // Fetch the story and comments from the server
   const fetchStory = async (storyId) => {
@@ -76,7 +91,43 @@ export default function SingleStory() {
     }
   };
 
+<<<<<<< HEAD
   // Toggle comments visibility
+=======
+  const handleBookmark = async () => {
+    if (!user) {
+      setError("You must be logged in to bookmark stories.");
+      return;
+    }
+  
+    const token = localStorage.getItem("token"); // Get the token
+    try {
+      await bookmarkStory(storyId, token); // Pass the token correctly
+      setBookmarked(true);
+    } catch (error) {
+      setError("Error occurred while bookmarking the story.");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      console.log("Attempting to delete story with ID:", storyId);
+
+      // Call the deleteStory API
+      const result = await deleteStory(storyId);
+
+      if (result) {
+        console.log("Story deleted successfully");
+        navigate("/profile"); // Navigate to profile after deletion
+      }
+    } catch (error) {
+      console.error("Failed to delete the story:", error);
+      setError("Failed to delete the story.");
+    }
+  };
+
+  // Toggle the comments dropdown
+>>>>>>> df9b9ff04e7d1bfe25b978f8c6a9f1529e23993f
   const toggleComments = () => {
     setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
   };
@@ -103,7 +154,23 @@ export default function SingleStory() {
             )}
           </p>
 
+<<<<<<< HEAD
           {/* Comments toggle and display */}
+=======
+          {isEditing ? (
+            <button onClick={handleSave}>Save</button>
+          ) : (
+            <>
+              <button onClick={() => setIsEditing(true)}>Edit</button>
+              <button onClick={handleDelete}>Delete</button>
+              <button onClick={handleBookmark} disabled={bookmarked}>
+                {bookmarked ? "Bookmarked" : "Bookmark"}
+              </button>
+            </>
+          )}
+
+          {/* Dropdown for comments */}
+>>>>>>> df9b9ff04e7d1bfe25b978f8c6a9f1529e23993f
           <h2
             onClick={toggleComments}
             style={{ cursor: "pointer", color: "blue" }}
