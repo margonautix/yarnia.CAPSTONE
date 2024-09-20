@@ -5,33 +5,42 @@ import {
   updateStoryContent,
   fetchWithAuth,
   bookmarkStory,
-  // deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 
 export default function SingleStory() {
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
-  const { storyId } = useParams(); // Get the storyId from the URL
-  const [story, setStory] = useState(null); // Store story details
-  const [content, setContent] = useState(""); // Store content while editing
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const { storyId } = useParams();
+  const [story, setStory] = useState(null);
+  const [content, setContent] = useState("");
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null); // To track errors
-  const [comments, setComments] = useState([]); // Holds comments for the story
-  const navigate = useNavigate(); // For navigation after deletion or saving
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
+
+  // Fetch the user data
+  const fetchUser = async () => {
+    try {
+      const userData = await fetchWithAuth(); // Fetch user data
+      setUser(userData);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setError("Failed to fetch user data.");
+    }
+  };
 
   // Fetch the story from the server
   const fetchStory = async (storyId) => {
     try {
-      const response = await fetchSingleStory(storyId); // Fetch story using the id
+      const response = await fetchSingleStory(storyId);
       if (response) {
-        setStory(response); // Set story if it exists
-        setContent(response.content); // Set initial content for editing
+        setStory(response);
+        setContent(response.content);
 
-        // Fetch comments for the story
         const commentsResponse = await fetchCommentsForStory(storyId);
-        setComments(commentsResponse); // Set the comments
+        setComments(commentsResponse);
       } else {
         setError("Story not found.");
       }
@@ -41,8 +50,9 @@ export default function SingleStory() {
     }
   };
 
-  // Fetch story when the component mounts or the storyId changes
+  // Fetch story and user when the component mounts
   useEffect(() => {
+    fetchUser(); // Fetch user data
     if (storyId) {
       fetchStory(storyId);
     } else {
@@ -50,11 +60,10 @@ export default function SingleStory() {
     }
   }, [storyId]);
 
-  // Handle saving the updated story content
   const handleSave = async () => {
     if (story) {
       try {
-        await updateStoryContent(storyId, content); // Update story content
+        await updateStoryContent(storyId, content);
         setStory({ ...story, content });
         setIsEditing(false);
       } catch (error) {
@@ -65,14 +74,15 @@ export default function SingleStory() {
   };
 
   const handleBookmark = async () => {
+    console.log("User state:", user); // Check user state
     if (!user) {
       setError("You must be logged in to bookmark stories.");
       return;
     }
-  
-    const token = localStorage.getItem("token"); // Get the token
+
+    const token = localStorage.getItem("token");
     try {
-      await bookmarkStory(storyId, token); // Pass the token correctly
+      await bookmarkStory(storyId, token);
       setBookmarked(true);
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
@@ -80,15 +90,11 @@ export default function SingleStory() {
   };
 
   const handleDelete = async () => {
+    // Assume deleteStory is implemented correctly
     try {
-      console.log("Attempting to delete story with ID:", storyId);
-
-      // Call the deleteStory API
       const result = await deleteStory(storyId);
-
       if (result) {
-        console.log("Story deleted successfully");
-        navigate("/profile"); // Navigate to profile after deletion
+        navigate("/profile");
       }
     } catch (error) {
       console.error("Failed to delete the story:", error);
@@ -96,9 +102,8 @@ export default function SingleStory() {
     }
   };
 
-  // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle comments dropdown
+    setIsCommentsOpen(!isCommentsOpen);
   };
 
   if (error) return <div>{error}</div>;
@@ -136,14 +141,8 @@ export default function SingleStory() {
             </>
           )}
 
-          {/* Dropdown for comments */}
-          <h2
-            onClick={toggleComments}
-            style={{ cursor: "pointer", color: "blue" }}
-          >
-            {isCommentsOpen
-              ? "Hide Comments"
-              : `Show Comments (${comments.length})`}
+          <h2 onClick={toggleComments} style={{ cursor: "pointer", color: "blue" }}>
+            {isCommentsOpen ? "Hide Comments" : `Show Comments (${comments.length})`}
           </h2>
           {isCommentsOpen && (
             <div>
