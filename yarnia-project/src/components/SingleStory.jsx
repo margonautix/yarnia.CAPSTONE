@@ -69,6 +69,7 @@ export default function SingleStory() {
       } catch (error) {
         console.error("Failed to update the story content:", error);
         setError("Failed to update the story content.");
+        console.log(hi)
       }
     }
   };
