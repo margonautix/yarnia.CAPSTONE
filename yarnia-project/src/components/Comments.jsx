@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { fetchCommentsForStory } from "../API";
 
 const Comments = ({ storyId, refreshComments }) => {
   const [comment, setComment] = useState(""); // Track the comment text
@@ -11,7 +12,7 @@ const Comments = ({ storyId, refreshComments }) => {
     }
 
     try {
-      const response = await fetch(`/api/stories/${storyId}/comments`, {
+      const response = await fetchCommentsForStory({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
