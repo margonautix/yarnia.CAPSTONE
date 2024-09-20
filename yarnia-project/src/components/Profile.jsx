@@ -108,33 +108,6 @@ const Profile = () => {
   return (
     <>
       <br />
-      <div className="stories-container">
-        <h2>Your Stories</h2>
-        {error && <p className="error-message">{error}</p>}
-
-        {stories.length > 0 ? (
-          <ul className="story-list">
-            {stories.map((story) => (
-              <div className="story-item">
-                <li key={story.storyId}>
-                  <div id="story-card">
-                    <h3>{story.title}</h3>
-                    <p>{story.summary || "No summary available"}</p>
-                  </div>
-                  <button
-                    onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                    className="button"
-                  >
-                    Read more
-                  </button>
-                </li>
-              </div>
-            ))}
-          </ul>
-        ) : (
-          <p>You have not written any stories yet.</p>
-        )}
-      </div>
       <div className="profile-stories-wrapper">
         <div className="profile-container">
           <h1>
@@ -189,14 +162,12 @@ const Profile = () => {
               Edit Profile
             </button>
           )}
+
           {saveError && <p className="error-message">{saveError}</p>}
         </div>
         <div className="stories-container">
           <h2>Bookmarks</h2>
         </div>
-      </div>
-      <div className="stories-container">
-        <h3>Comments:</h3>
       </div>
     </>
   );

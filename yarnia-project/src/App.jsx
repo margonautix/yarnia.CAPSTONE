@@ -33,7 +33,7 @@ function App() {
       <NavBar user={user} setUser={setUser} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Stories />} />
-        <Route path="bookmarks" element={<Bookmarks />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
