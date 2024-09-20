@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
-  deleteStory,
+  fetchWithAuth,
+  bookmarkStory,
+  // deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 
@@ -13,9 +15,11 @@ export default function SingleStory() {
   const { storyId } = useParams(); // Get the storyId from the URL
   const [story, setStory] = useState(null); // Store story details
   const [content, setContent] = useState(""); // Store content while editing
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null); // To track errors
   const [comments, setComments] = useState([]); // Holds comments for the story
   const navigate = useNavigate(); // For navigation after deletion or saving
+  const [bookmarked, setBookmarked] = useState(false);
 
   // Fetch the story from the server
   const fetchStory = async (storyId) => {
@@ -57,6 +61,21 @@ export default function SingleStory() {
         console.error("Failed to update the story content:", error);
         setError("Failed to update the story content.");
       }
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!user) {
+      setError("You must be logged in to bookmark stories.");
+      return;
+    }
+  
+    const token = localStorage.getItem("token"); // Get the token
+    try {
+      await bookmarkStory(storyId, token); // Pass the token correctly
+      setBookmarked(true);
+    } catch (error) {
+      setError("Error occurred while bookmarking the story.");
     }
   };
 
@@ -111,6 +130,9 @@ export default function SingleStory() {
             <>
               <button onClick={() => setIsEditing(true)}>Edit</button>
               <button onClick={handleDelete}>Delete</button>
+              <button onClick={handleBookmark} disabled={bookmarked}>
+                {bookmarked ? "Bookmarked" : "Bookmark"}
+              </button>
             </>
           )}
 
