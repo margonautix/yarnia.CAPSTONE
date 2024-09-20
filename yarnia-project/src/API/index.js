@@ -163,22 +163,6 @@ export async function loginUser(email, password) {
   }
 }
 
-// Fetch comments for a specific story by its ID
-export async function fetchCommentsForStory(storyId) {
-  try {
-    const response = await fetch(`${API_URL}/stories/${storyId}/comments`);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch comments for story ID ${storyId}: ${response.statusText}`
-      );
-    }
-    return await response.json(); // Assuming the data is an array of comments
-  } catch (error) {
-    console.error(`Error fetching comments for story ID ${storyId}:`, error);
-    throw error;
-  }
-}
-
 // Fetch with authentication
 export async function fetchWithAuth(url, options = {}) {
   const token = localStorage.getItem("token");
