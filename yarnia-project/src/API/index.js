@@ -7,22 +7,21 @@ export async function fetchAllStories() {
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data; // Assuming the data is an array of stories
+    return await response.json(); // Assuming the data is an array of stories
   } catch (error) {
     console.error("Error fetching all stories:", error);
     throw error;
   }
 }
 
+// Fetch a single story by its ID
 export async function fetchSingleStory(storyId) {
   try {
     const response = await fetch(`${API_URL}/stories/${storyId}`);
     if (!response.ok) {
       throw new Error("Error fetching story");
     }
-    const storyData = await response.json();
-    return storyData;
+    return await response.json();
   } catch (error) {
     console.error("Error fetching the story:", error);
     throw error;
@@ -114,8 +113,7 @@ export async function fetchAllComments() {
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data; // Assuming the data is an array of comments
+    return await response.json(); // Assuming the data is an array of comments
   } catch (error) {
     console.error("Error fetching all comments:", error);
     throw error;
@@ -128,16 +126,11 @@ export async function createNewUser(username, email, password) {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
+      body: JSON.stringify({ username, email, password }),
     });
 
     const json = await response.json();
     if (response.ok) {
-      console.log("Registration successful, token:", json.token);
       localStorage.setItem("token", json.token); // Store the token
       return json;
     } else {
@@ -160,13 +153,17 @@ export async function loginUser(email, password) {
     });
 
     const json = await response.json();
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
     return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);
+    throw err; // Rethrow the error for further handling
   }
 }
 
-// Modified fetchWithAuth to correctly handle the request body
+// Fetch with authentication
 export async function fetchWithAuth(url, options = {}) {
   const token = localStorage.getItem("token");
 
@@ -174,20 +171,17 @@ export async function fetchWithAuth(url, options = {}) {
     throw new Error("User is not authenticated");
   }
 
-  // Ensure the body is properly stringified if it exists
-  const body =
-    options.body && typeof options.body === "object"
-      ? JSON.stringify(options.body)
-      : options.body;
-
   return await fetch(url, {
     ...options,
     headers: {
       ...options.headers,
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+      Authorization: `Bearer ${token}`,
     },
-    body, // Ensure the request body is passed correctly
+    body:
+      options.body && typeof options.body === "object"
+        ? JSON.stringify(options.body)
+        : options.body,
   });
 }
 
@@ -200,7 +194,7 @@ export const updateStoryContent = async (storyId, content) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ content }), // Make sure this matches what your backend expects
+      body: JSON.stringify({ content }),
     });
 
     if (!response.ok) {
@@ -210,65 +204,74 @@ export const updateStoryContent = async (storyId, content) => {
     return await response.json();
   } catch (error) {
     console.error("Error updating story content:", error);
+    throw error; // Rethrow the error for further handling
   }
 };
 
-// Fetch bookmarked stories for a specific author
-export async function fetchBookmarkedStories(authorId) {
+export const fetchBookmarkedStories = async (userId, token) => {
+  console.log(userId);
   try {
-    const response = await fetch(`${API_URL}/users/${authorId}/bookmarks`);
+    const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include token for authorization
+      },
+    });
+
     if (!response.ok) {
       throw new Error(`Error fetching bookmarks: ${response.statusText}`);
     }
+
     const data = await response.json();
-    return data;
+    return data; // Return the bookmarked stories
   } catch (error) {
-    console.error("Error fetching user bookmarks", error);
-    throw error;
+    console.error("Error fetching user bookmarks:", error);
+    throw error; // Re-throw the error for further handling
   }
-}
+};
 
-// Remove a bookmark for a specific story
-export async function removeBookmark(storyId) {
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await fetch(`${API_URL}/stories/${storyId}/bookmarks`, {
-      method: "DELETE",
+export const bookmarkStory = async (storyId, token) => {
+  const response = await fetch(
+    `${API_URL}/users/${userId}/bookmarks/${storyId}`,
+    {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    });
+      body: JSON.stringify({ storyId }),
+    }
+  );
+
+  // Check if the response is OK (status in the range 200-299)
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to bookmark the story");
+  }
+
+  return response.json(); // Assuming you want to return the response data
+};
+
+export const removeBookmark = async (storyId, userId, token) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/users/${userId}/bookmarks/${storyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to remove bookmark.");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return json; // Return any response data if necessary
   } catch (error) {
-    console.error("Failed to remove the bookmark.", error);
-  }
-}
-
-// Delete a specific story
-export const deleteStory = async (storyId) => {
-  try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Make sure to include token
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete story with status: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Error deleting story:", error);
-    throw error;
+    console.error("Failed to remove the bookmark:", error);
+    throw error; // Re-throw the error for further handling
   }
 };
