@@ -58,6 +58,37 @@ export default function SingleStory() {
     }
   }, [storyId]);
 
+  // Function to handle content update
+  const handleSaveContent = async () => {
+    try {
+      const response = await updateStoryContent(storyId, content); // Send updated content to API
+      if (response) {
+        setIsEditing(false); // Exit editing mode after saving
+        fetchStory(storyId); // Refresh the story data
+      }
+    } catch (error) {
+      console.error("Failed to update the story:", error);
+      alert("Failed to update the story.");
+    }
+  };
+
+  // Function to handle story deletion
+  const handleDeleteStory = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this story?"
+    );
+    if (confirmDelete) {
+      try {
+        await deleteStory(storyId); // Call API to delete the story
+        alert("Story deleted successfully!");
+        navigate("/"); // Navigate back to the home page after deletion
+      } catch (error) {
+        console.error("Failed to delete the story:", error);
+        alert("Failed to delete the story.");
+      }
+    }
+  };
+
   // Render each comment correctly with author and content
   const renderComments = () => {
     if (comments.length > 0) {
@@ -92,7 +123,6 @@ export default function SingleStory() {
 
           {/* Display or edit story content */}
           <p>
-            Content:{" "}
             {isEditing ? (
               <textarea
                 value={content}
@@ -102,6 +132,27 @@ export default function SingleStory() {
               story?.content || "No Content"
             )}
           </p>
+
+          {/* Edit and Save/Delete Buttons */}
+          {currentUser?.id === story?.authorId && (
+            <div className="button-group">
+              {isEditing ? (
+                <button onClick={handleSaveContent} className="save-button">
+                  Save
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="edit-button"
+                >
+                  Edit
+                </button>
+              )}
+              <button onClick={handleDeleteStory} className="cancel-button">
+                Delete
+              </button>
+            </div>
+          )}
 
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
