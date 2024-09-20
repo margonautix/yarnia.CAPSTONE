@@ -192,7 +192,7 @@ const Profile = () => {
           {saveError && <p className="error-message">{saveError}</p>}
         </div>
         <div className="stories-container">
-          <h2>Your Stories</h2>
+          <h2>Bookmarks</h2>
         </div>
       </div>
       <div className="stories-container">

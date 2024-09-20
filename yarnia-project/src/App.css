@@ -760,6 +760,7 @@ p.email {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  margin: 0;
 }
 
 /* Optional: Adjust heading and text for better layout */
