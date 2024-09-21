@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import catGif from "./images/Yarnia.gif";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -29,18 +30,19 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar">
+      <img src={catGif} alt="Harley" className="navbar-gif" />
       <ul>
         <li>
           <Link to="/">Home</Link>
         </li>
-  
+
         {/* Conditionally render the Bookmarks link based on user login status */}
         {user && (
           <li>
             <Link to="/bookmarks">Bookmarks</Link>
           </li>
         )}
-  
+
         {/* Conditionally render links based on user login status */}
         {user ? (
           <>
@@ -52,7 +54,11 @@ const NavBar = ({ user, setUser }) => {
             </li>
             {/* Keep Logout as a link but add onClick to handle logout */}
             <li>
-              <Link to="/logout" onClick={handleLogout} style={{ marginLeft: 'auto' }}>
+              <Link
+                to="/logout"
+                onClick={handleLogout}
+                style={{ marginLeft: "auto" }}
+              >
                 Logout
               </Link>
             </li>
@@ -70,6 +76,6 @@ const NavBar = ({ user, setUser }) => {
       </ul>
     </nav>
   );
-}
+};
 
 export default NavBar;
