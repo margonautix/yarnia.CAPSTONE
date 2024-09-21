@@ -67,6 +67,14 @@
   border: none; /* Remove border from the button */
   cursor: pointer; /* Change cursor to pointer on hover */
 }
+.navbar-gif {
+  width: 100px; /* Adjust size */
+  height: auto;
+  border: 20px inset rgba(124, 64, 0, 0.899); /* Temporary border to see if the element is being rendered */
+  padding-top: 20px;
+  margin-right: 20px;
+  box-shadow: 2px 2px 10px black;
+}
 
 .navbar button:hover {
   background-color: #0056b3; /* Darken the button background on hover */
