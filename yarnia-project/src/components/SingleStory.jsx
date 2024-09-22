@@ -191,7 +191,6 @@ export default function SingleStory() {
 
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
-
             {isCommentsOpen
               ? "Hide Comments"
               : `Show Comments (${comments.length})`}

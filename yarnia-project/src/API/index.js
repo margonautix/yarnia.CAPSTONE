@@ -275,3 +275,7 @@ export const removeBookmark = async (storyId, userId, token) => {
     throw error; // Re-throw the error for further handling
   }
 };
+
+export const clearLocalStorage = () => {
+  localStorage.clear();
+};
