@@ -196,7 +196,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="stories-container">
-        <h3>Comments:</h3>
+        <h3>Comment History:</h3>
       </div>
     </>
   );
