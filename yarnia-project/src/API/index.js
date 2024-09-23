@@ -188,6 +188,11 @@ export async function loginUser(email, password) {
     if (!response.ok) {
       throw new Error("Login failed");
     }
+
+    // Save token and user to localStorage
+    localStorage.setItem("token", json.token); // Save the token
+    localStorage.setItem("user", JSON.stringify(json.user)); // Save the user info
+
     return json; // Expect this to return both the user and token
   } catch (err) {
     console.error("Login failed:", err);

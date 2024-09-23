@@ -12,22 +12,47 @@ import AddStory from "./components/addStory";
 import StoryDetails from "./components/StoryDetails";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
+import jwt_decode from "jwt-decode";
 
 function App() {
-  // Lift user state to the App component
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Get user info from localStorage when the component loads
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    setUser(userInfo);
+    // Get user info and token from localStorage when the component loads
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        // Decode the token to get user info
+        const decodedUser = jwt_decode(token);
+
+        // Check if the token is expired
+        if (decodedUser.exp * 1000 < Date.now()) {
+          console.log("Token expired");
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+          return;
+        }
+
+        // Set the user state based on the stored user information
+        const userInfo = JSON.parse(localStorage.getItem("user"));
+        setUser(userInfo);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser(null);
+      }
+    }
   }, []);
-  // Handle logout
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
   };
+
   return (
     <div>
       <NavBar user={user} setUser={setUser} handleLogout={handleLogout} />
