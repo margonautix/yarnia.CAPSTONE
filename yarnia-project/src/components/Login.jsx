@@ -15,10 +15,11 @@ const Login = ({ setUser }) => {
     try {
       const response = await loginUser(email, password);
       if (response && response.token) {
+        // Save token and user info to localStorage
         localStorage.setItem("token", response.token);
-        localStorage.setItem("user", JSON.stringify(response.user)); // Save user information
+        localStorage.setItem("user", JSON.stringify(response.user));
 
-        setUser(response.user); // Update the user in NavBar
+        setUser(response.user); // Update the user state in the App component
 
         navigate("/profile");
       } else {
@@ -40,6 +41,7 @@ const Login = ({ setUser }) => {
           <input
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
@@ -49,6 +51,7 @@ const Login = ({ setUser }) => {
           <input
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>

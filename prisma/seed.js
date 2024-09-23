@@ -18,6 +18,9 @@ const seed = async () => {
     });
   }
 
+  // Array to store all users (including administrators and regular users)
+  const users = [];
+
   // Create 20 regular users
   for (let i = 0; i < 20; i++) {
     const user = await prisma.user.create({
@@ -30,33 +33,37 @@ const seed = async () => {
       },
     });
 
-    // Each user creates between 1 and 5 stories
-    for (let j = 0; j < getRandomNumber(1, 5); j++) {
+    users.push(user);
+
+    for (let j = 0; j < getRandomNumber(1, 20); j++) {
       const story = await prisma.story.create({
         data: {
           title: faker.lorem.words(3),
-          content: faker.lorem.paragraphs(3),
-          summary: faker.lorem.sentence(),
-          authorId: user.id,
+          content: faker.lorem.paragraphs(getRandomNumber(1, 100)),
+          summary: faker.lorem.sentence(10),
+          authorId: user.id, // The story's author
           createdAt: faker.date.past(),
         },
       });
 
-      // Create random comments for each story
-      for (let k = 0; k < getRandomNumber(0, 5); k++) {
+      for (let k = 0; k < getRandomNumber(0, 100); k++) {
+        const randomUser = users[getRandomNumber(0, users.length - 1)];
+
         await prisma.comment.create({
           data: {
             content: faker.lorem.sentence(),
-            userId: user.id,
+            userId: randomUser.id, // Use random user for comment
             storyId: story.storyId,
             createdAt: faker.date.past(),
           },
         });
       }
+
+      // Create random bookmarks for each story from the story's author
       for (let k = 0; k < getRandomNumber(0, 5); k++) {
         await prisma.bookmark.create({
           data: {
-            userId: user.id,
+            userId: user.id, // The author of the story bookmarks the story
             storyId: story.storyId,
             createdAt: faker.date.past(),
           },
