@@ -32,7 +32,7 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar">
-      <img src={catGif} alt="Harley" className="navbar-gif" />
+      <img src={catGif} alt="Harlee" className="navbar-gif" />
       <ul>
         <li>
           <Link to="/">Home</Link>
