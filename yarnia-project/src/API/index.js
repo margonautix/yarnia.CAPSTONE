@@ -22,8 +22,87 @@ export async function fetchSingleStory(storyId) {
       throw new Error("Error fetching story");
     }
     return await response.json();
+    return await response.json();
   } catch (error) {
     console.error("Error fetching the story:", error);
+    throw error;
+  }
+}
+
+// Fetch comments for a specific story by its ID
+export async function fetchCommentsForStory(storyId) {
+  try {
+    const response = await fetch(`${API_URL}/stories/${storyId}/comments`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch comments for story ID ${storyId}: ${response.statusText}`
+      );
+    }
+    const data = await response.json(); // Assuming the data is an array of comments
+    return data;
+  } catch (error) {
+    console.error(`Error fetching comments for story ID ${storyId}:`, error);
+    throw error;
+  }
+}
+
+// Post a new comment for a specific story
+export async function postComment(storyId, content) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated.");
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/stories/${storyId}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content }), // Sending only the comment content
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to post comment.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error posting comment:", error);
+    throw error;
+  }
+}
+
+// Delete a specific comment by its ID
+export async function deleteComment(storyId, commentId) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated.");
+  }
+
+  try {
+    const response = await fetch(
+      `${API_URL}/stories/${storyId}/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete comment with ID ${commentId}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error deleting comment with ID ${commentId}:`, error);
     throw error;
   }
 }
@@ -212,7 +291,31 @@ export const removeBookmark = async (storyId, userId) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    });
+      body: JSON.stringify({ storyId }),
+    }
+  );
+
+  // Check if the response is OK (status in the range 200-299)
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to bookmark the story");
+  }
+
+  return response.json(); // Assuming you want to return the response data
+};
+
+export const removeBookmark = async (storyId, userId, token) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/users/${userId}/bookmarks/${storyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to remove bookmark.");
