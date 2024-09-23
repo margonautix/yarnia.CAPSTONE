@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
-  fetchWithAuth,
   bookmarkStory,
   deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import Comments from "./Comments"; // Import the Comments component
+import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
 
 export default function SingleStory() {
   const { storyId } = useParams(); // Get storyId from the URL
@@ -158,16 +158,21 @@ export default function SingleStory() {
           <h4>Description: {story?.summary || "No Description"}</h4>
 
           {/* Display or edit story content */}
-          <p>
+          <div>
             {isEditing ? (
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)} // Update content state
               />
             ) : (
-              story?.content || "No Content"
+              <div
+                className="story-content"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(story?.content || "No Content"),
+                }} // Use DOMPurify to sanitize and render the content as HTML
+              />
             )}
-          </p>
+          </div>
           {/* Edit and Save/Delete Buttons */}
           {currentUser?.id === story?.authorId && (
             <div className="button-group">
