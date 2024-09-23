@@ -107,96 +107,98 @@ const Profile = () => {
 
   return (
     <>
-      <br />
-      <div className="stories-container">
-        <h2>Your Stories</h2>
-        {error && <p className="error-message">{error}</p>}
+      <div className="profile-container">
+        <br />
+        <div className="stories-container">
+          <h2>Your Stories</h2>
+          {error && <p className="error-message">{error}</p>}
 
-        {stories.length > 0 ? (
-          <ul className="story-list">
-            {stories.map((story) => (
-              <div className="story-item">
-                <li key={story.storyId}>
-                  <div id="story-card">
-                    <h3>{story.title}</h3>
-                    <p>{story.summary || "No summary available"}</p>
-                  </div>
-                  <button
-                    onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                    className="button"
-                  >
-                    Read more
-                  </button>
-                </li>
-              </div>
-            ))}
-          </ul>
-        ) : (
-          <p>You have not written any stories yet.</p>
-        )}
-      </div>
-      <div className="profile-stories-wrapper">
-        <div className="profile-container">
-          <h1>
-            Welcome,{" "}
-            {isEditing ? (
-              <div className="group">
-                <input
-                  id="username"
-                  className="input"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-            ) : (
-              user.username
-            )}
-            !
-          </h1>
-          <div className="info">
-            <h4 id="label"> Email:</h4>
-            <p>{user.email}</p>
-
-            <br />
-            <br />
-            <h4 id="label">Bio:</h4>
-            <p>
+          {stories.length > 0 ? (
+            <ul className="story-list">
+              {stories.map((story) => (
+                <div className="story-item">
+                  <li key={story.storyId}>
+                    <div id="story-card">
+                      <h3>{story.title}</h3>
+                      <p>{story.summary || "No summary available"}</p>
+                    </div>
+                    <button
+                      onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                      className="button"
+                    >
+                      Read more
+                    </button>
+                  </li>
+                </div>
+              ))}
+            </ul>
+          ) : (
+            <p>You have not written any stories yet.</p>
+          )}
+        </div>
+        <div className="profile-stories-wrapper">
+          <div className="profile-container">
+            <h1>
+              Welcome,{" "}
               {isEditing ? (
                 <div className="group">
-                  <textarea
-                    id="bio"
-                    className="form-textarea"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
+                  <input
+                    id="username"
+                    className="input"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
               ) : (
-                user.bio
+                user.username
               )}
-            </p>
-          </div>
-          {isEditing ? (
-            <div className="group">
-              <button className="button" onClick={handleSave}>
-                Save
-              </button>
-              <button className="button" onClick={() => setIsEditing(false)}>
-                Cancel
-              </button>
+              !
+            </h1>
+            <div className="info">
+              <h4 id="label"> Email:</h4>
+              <p>{user.email}</p>
+
+              <br />
+              <br />
+              <h4 id="label">Bio:</h4>
+              <p>
+                {isEditing ? (
+                  <div className="group">
+                    <textarea
+                      id="bio"
+                      className="form-textarea"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  user.bio
+                )}
+              </p>
             </div>
-          ) : (
-            <button className="button" onClick={() => setIsEditing(true)}>
-              Edit Profile
-            </button>
-          )}
-          {saveError && <p className="error-message">{saveError}</p>}
+            {isEditing ? (
+              <div className="group">
+                <button className="button" onClick={handleSave}>
+                  Save
+                </button>
+                <button className="button" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button className="button" onClick={() => setIsEditing(true)}>
+                Edit Profile
+              </button>
+            )}
+            {saveError && <p className="error-message">{saveError}</p>}
+          </div>
+          <div className="stories-container">
+            <h2>Your Stories</h2>
+          </div>
         </div>
         <div className="stories-container">
-          <h2>Your Stories</h2>
+          <h3>Comment History:</h3>
         </div>
-      </div>
-      <div className="stories-container">
-        <h3>Comment History:</h3>
       </div>
     </>
   );
