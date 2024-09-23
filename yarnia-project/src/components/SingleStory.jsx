@@ -5,7 +5,7 @@ import {
   updateStoryContent,
   fetchWithAuth,
   bookmarkStory,
-  // deleteStory,
+  deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
@@ -83,7 +83,7 @@ export default function SingleStory() {
     );
     if (confirmDelete) {
       try {
-        await deleteStory(storyId); // Call API to delete the story
+        await deleteStory(storyId); // Call the deleteStory function
         alert("Story deleted successfully!");
         navigate("/"); // Navigate back to the home page after deletion
       } catch (error) {

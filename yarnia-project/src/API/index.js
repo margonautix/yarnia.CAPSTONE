@@ -28,6 +28,34 @@ export async function fetchSingleStory(storyId) {
   }
 }
 
+// Function to delete a story by its ID
+export async function deleteStory(storyId) {
+  const token = localStorage.getItem("token"); // Assuming you're using token-based authentication
+
+  if (!token) {
+    throw new Error("User is not authenticated.");
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Include the token in the request headers
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete story: ${response.statusText}`);
+    }
+
+    return await response.json(); // Return the response data
+  } catch (error) {
+    console.error(`Error deleting story with ID ${storyId}:`, error);
+    throw error; // Rethrow the error to be handled by the calling function
+  }
+}
+
 // Fetch comments for a specific story by its ID
 export async function fetchCommentsForStory(storyId) {
   try {
@@ -274,8 +302,4 @@ export const removeBookmark = async (storyId, userId, token) => {
     console.error("Failed to remove the bookmark:", error);
     throw error; // Re-throw the error for further handling
   }
-};
-
-export const clearLocalStorage = () => {
-  localStorage.clear();
 };
