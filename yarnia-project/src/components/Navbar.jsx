@@ -1,31 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import catGif from "./images/Yarnia.gif";
-import { clearLocalStorage } from "../API";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-
-  // Check for user data in localStorage when the component mounts
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser); // Set user state if the stored data is valid
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user"); // Clear invalid user data if parsing fails
-      }
-    }
-  }, [setUser]); // Include setUser as a dependency
 
   // Handle logout functionality
   const handleLogout = (event) => {
     event.preventDefault(); // Prevent default link behavior
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    clearLocalStorage();
     setUser(null); // Clear the user state
     navigate("/login"); // Redirect to login page after logging out
   };
