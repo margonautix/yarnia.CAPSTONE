@@ -108,99 +108,107 @@ const Profile = () => {
   return (
     <>
       <br />
-      <div className="stories-container">
-        <div className="profile-container">
-          <h2>Your Stories</h2>
-          {error && <p className="error-message">{error}</p>}
-
-          {stories.length > 0 ? (
-            <ul className="story-list">
-              {stories.map((story) => (
-                <div className="story-item">
-                  <li key={story.storyId}>
-                    <div id="story-card">
-                      <h3>{story.title}</h3>
-                      <p>{story.summary || "No summary available"}</p>
+      <section id="whole-profile">
+        <div className="profile">
+          <div className="stories-container">
+            <div className="profile-stories-wrapper">
+              <div className="profile-container">
+                <h1>
+                  Welcome,{" "}
+                  {isEditing ? (
+                    <div className="group">
+                      <input
+                        id="username"
+                        className="input"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
                     </div>
-                    <button
-                      onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                      className="button"
-                    >
-                      Read more
-                    </button>
-                  </li>
-                </div>
-              ))}
-            </ul>
-          ) : (
-            <p>You have not written any stories yet.</p>
-          )}
-        </div>
+                  ) : (
+                    user.username
+                  )}
+                  !
+                </h1>
+                <div className="info">
+                  <h4 id="label"> Email:</h4>
+                  <p>{user.email}</p>
 
-        <div className="profile-stories-wrapper">
-          <div className="profile-container">
-            <h1>
-              Welcome,{" "}
-              {isEditing ? (
-                <div className="group">
-                  <input
-                    id="username"
-                    className="input"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
+                  <br />
+                  <br />
+                  <h4 id="label">Bio:</h4>
+                  <p>
+                    {isEditing ? (
+                      <div className="group">
+                        <textarea
+                          id="bio"
+                          className="form-textarea"
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value)}
+                        />
+                      </div>
+                    ) : (
+                      user.bio
+                    )}
+                  </p>
                 </div>
-              ) : (
-                user.username
-              )}
-              !
-            </h1>
-            <div className="info">
-              <h4 id="label"> Email:</h4>
-              <p>{user.email}</p>
-
-              <br />
-              <br />
-              <h4 id="label">Bio:</h4>
-              <p>
                 {isEditing ? (
                   <div className="group">
-                    <textarea
-                      id="bio"
-                      className="form-textarea"
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                    />
+                    <button className="button" onClick={handleSave}>
+                      Save
+                    </button>
+                    <button
+                      className="button"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 ) : (
-                  user.bio
+                  <button className="button" onClick={() => setIsEditing(true)}>
+                    Edit Profile
+                  </button>
                 )}
-              </p>
-            </div>
-            {isEditing ? (
-              <div className="group">
-                <button className="button" onClick={handleSave}>
-                  Save
-                </button>
-                <button className="button" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </button>
+                {saveError && <p className="error-message">{saveError}</p>}
               </div>
-            ) : (
-              <button className="button" onClick={() => setIsEditing(true)}>
-                Edit Profile
-              </button>
-            )}
-            {saveError && <p className="error-message">{saveError}</p>}
+              <div className="profile-container">
+                <h2>Your Bookmarks</h2>
+              </div>
+            </div>
+            <div className="profile-container">
+              <h2>Your Stories</h2>
+              {error && <p className="error-message">{error}</p>}
+
+              {stories.length > 0 ? (
+                <ul className="story-list">
+                  {stories.map((story) => (
+                    <div className="story-item">
+                      <li key={story.storyId}>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p>You have not written any stories yet.</p>
+              )}
+            </div>
           </div>
-          <div className="profile-container">
-            <h2>Your Bookmarks</h2>
+          <div className="profile">
+            <div className="profile-container">
+              <h3 id="history">Comment History:</h3>
+            </div>
           </div>
         </div>
-        <div className="profile-container">
-          <h3 id="history">Comment History:</h3>
-        </div>
-      </div>
+      </section>
     </>
   );
 };
