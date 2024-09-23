@@ -1,8 +1,31 @@
 import { Link, useNavigate } from "react-router-dom";
 import catGif from "./images/Yarnia.gif";
+import { useState } from "react";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
+
+  // Example categories
+  const categories = [
+    "Fiction",
+    "Non-fiction",
+    "Sci-Fi",
+    "Fantasy",
+    "Mystery",
+    "Horror",
+  ];
+
+  // State to handle selected category
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Handle category change and navigate to the appropriate search page
+  const handleCategoryChange = (event) => {
+    const selected = event.target.value;
+    setSelectedCategory(selected);
+    if (selected) {
+      navigate(`/search?category=${selected}`); // Assuming you have query parameters in your route
+    }
+  };
 
   // Handle logout functionality
   const handleLogout = (event) => {
@@ -20,14 +43,12 @@ const NavBar = ({ user, setUser }) => {
         <li>
           <Link to="/">Home</Link>
         </li>
-
         {/* Conditionally render the Bookmarks link based on user login status */}
         {user && (
           <li>
             <Link to="/bookmarks">Bookmarks</Link>
           </li>
         )}
-
         {/* Conditionally render links based on user login status */}
         {user ? (
           <>
