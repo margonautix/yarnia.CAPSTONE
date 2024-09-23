@@ -126,23 +126,6 @@ export default function SingleStory() {
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      console.log("Attempting to delete story with ID:", storyId);
-
-      // Call the deleteStory API
-      const result = await deleteStory(storyId);
-
-      if (result) {
-        console.log("Story deleted successfully");
-        navigate("/profile"); // Navigate to profile after deletion
-      }
-    } catch (error) {
-      console.error("Failed to delete the story:", error);
-      setError("Failed to delete the story.");
-    }
-  };
-
   // Toggle the comments dropdown
   const toggleComments = () => {
     setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
@@ -188,6 +171,7 @@ export default function SingleStory() {
               </button>
             </div>
           )}
+          <button onClick={handleBookmark}>Bookmark</button>
 
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
