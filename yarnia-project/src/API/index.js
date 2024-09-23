@@ -1,5 +1,9 @@
 const API_URL = "http://localhost:3000/api"; // Base URL for your API
 
+export const clearLocalStorage = () => {
+  localStorage.clear();
+};
+
 // Fetch all stories from the API
 export async function fetchAllStories() {
   try {
