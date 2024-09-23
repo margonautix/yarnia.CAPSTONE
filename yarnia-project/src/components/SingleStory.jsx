@@ -5,7 +5,7 @@ import {
   updateStoryContent,
   fetchWithAuth,
   bookmarkStory,
-  // deleteStory,
+  deleteStory,
   fetchCommentsForStory,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT

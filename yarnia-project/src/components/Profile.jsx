@@ -107,9 +107,9 @@ const Profile = () => {
 
   return (
     <>
-      <div className="profile-container">
-        <br />
-        <div className="stories-container">
+      <br />
+      <div className="stories-container">
+        <div className="profile-container">
           <h2>Your Stories</h2>
           {error && <p className="error-message">{error}</p>}
 
@@ -136,6 +136,7 @@ const Profile = () => {
             <p>You have not written any stories yet.</p>
           )}
         </div>
+
         <div className="profile-stories-wrapper">
           <div className="profile-container">
             <h1>
@@ -192,12 +193,12 @@ const Profile = () => {
             )}
             {saveError && <p className="error-message">{saveError}</p>}
           </div>
-          <div className="stories-container">
-            <h2>Your Stories</h2>
+          <div className="profile-container">
+            <h2>Your Bookmarks</h2>
           </div>
         </div>
-        <div className="stories-container">
-          <h3>Comment History:</h3>
+        <div className="profile-container">
+          <h3 id="history">Comment History:</h3>
         </div>
       </div>
     </>

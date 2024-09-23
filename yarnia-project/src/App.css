@@ -654,12 +654,6 @@ p.email {
   margin-bottom: 20px;
 }
 
-.profile-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 .form-group {
   margin-bottom: 20px;
 }
@@ -753,8 +747,7 @@ p.email {
 }
 
 /* Ensure both containers take up equal width */
-.profile-container,
-.stories-container {
+.profile-container {
   flex: 1; /* This makes both containers the same size */
   padding: 40px;
   background-color: #585858; /* Dark gray background */
@@ -765,6 +758,14 @@ p.email {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.stories-container {
+  background-color: transparent;
+  box-shadow: none;
+  width: fit-content;
 }
 
 /* Optional: Adjust heading and text for better layout */
@@ -811,7 +812,10 @@ h2 {
   font-size: 1.8rem;
   text-shadow: 3px 3px 2px black;
 }
-
+#history {
+  font-size: 3rem;
+  width: 500px;
+}
 /* Responsive Layout for Smaller Screens */
 @media (max-width: 768px) {
   .profile-stories-wrapper {
