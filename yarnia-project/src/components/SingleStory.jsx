@@ -10,6 +10,8 @@ import {
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
+import ReactQuill from "react-quill"; // Import ReactQuill
+import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
 
 
 export default function SingleStory({user}) {
@@ -165,9 +167,10 @@ export default function SingleStory({user}) {
           {/* Display or edit story content */}
           <div>
             {isEditing ? (
-              <textarea
+              <ReactQuill
                 value={content}
-                onChange={(e) => setContent(e.target.value)} // Update content state
+                onChange={setContent} // Update content state
+                theme="snow" // Quill theme
               />
             ) : (
               <div
