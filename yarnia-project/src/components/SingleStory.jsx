@@ -11,7 +11,8 @@ import {
 import jwt_decode from "jwt-decode"; // To decode JWT
 import Comments from "./Comments"; // Import the Comments component
 
-export default function SingleStory() {
+
+export default function SingleStory({user}) {
   const { storyId } = useParams(); // Get storyId from the URL
   const navigate = useNavigate(); // For navigating after delete or save
   const [currentUser, setCurrentUser] = useState(null); // State for current user info
@@ -19,17 +20,8 @@ export default function SingleStory() {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
   const [story, setStory] = useState(null); // Store story details
   const [content, setContent] = useState(""); // Store content while editing
-  const [isEditing, setIsEditing] = useState(false);
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
-  const { storyId } = useParams();
-  const [story, setStory] = useState(null);
-  const [content, setContent] = useState("");
-  const [user, setUser] = useState(null);
   const [error, setError] = useState(null); // To track errors
   const [comments, setComments] = useState([]); // Holds comments for the story
-  const [error, setError] = useState(null);
-  const [comments, setComments] = useState([]);
-  const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
 
   // Fetch the story and comments from the server
@@ -122,13 +114,17 @@ export default function SingleStory() {
   const handleBookmark = async () => {
     if (!user) {
       setError("You must be logged in to bookmark stories.");
+      console.log("hi");
       return;
     }
-
     const token = localStorage.getItem("token"); // Get the token
     try {
-      await bookmarkStory(storyId, token); // Pass the token correctly
+      console.log(token);
+      console.log(user);
+      await bookmarkStory(storyId,user.id, token); // Pass the token correctly
+      console.log("anything")
       setBookmarked(true);
+      console.log("bye")
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
@@ -196,7 +192,9 @@ export default function SingleStory() {
               </button>
             </div>
           )}
-
+              <button onClick={handleBookmark} disabled={bookmarked}>
+                {bookmarked ? "Bookmarked" : "Bookmark"}
+              </button>
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
