@@ -142,12 +142,13 @@ app.delete(
   }
 );
 
-// POST (create) a new story
-app.post("/api/stories", authenticateUser, async (req, res) => {
-  const { title, summary, content } = req.body;
+app.post("/api/stories", async (req, res) => {
+  const { title, summary, content, genre, authorId } = req.body;
 
-  if (!title || !content) {
-    return res.status(400).json({ message: "Title and content are required." });
+  if (!title || !content || !genre) {
+    return res
+      .status(400)
+      .json({ error: "Title, content, and genre are required." });
   }
 
   try {
@@ -156,14 +157,14 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         title,
         summary,
         content,
-        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
+        genre, // Make sure to include genre
+        authorId,
+        createdAt: new Date(),
       },
     });
-
     res.status(201).json(newStory);
   } catch (error) {
-    console.error("Error creating story:", error);
-    res.status(500).json({ message: "Failed to create story." });
+    res.status(500).json({ error: "Failed to create story" });
   }
 });
 
@@ -638,11 +639,11 @@ app.get("/api/user/bookmarks", async (req, res, next) => {
 // POST /api/stories/:storyId/bookmarks
 
 app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
-  console.log("milk")
+  console.log("milk");
   const { userId, storyId } = req.body;
   console.log(userId, userId);
   try {
-    if (!userId || !storyId ) {
+    if (!userId || !storyId) {
       return res.status(400).json({
         message: "userId and storyId are required",
       });
