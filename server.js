@@ -54,13 +54,13 @@ const authenticateUser = (req, res, next) => {
 // Middleware to check if the user is an admin
 const authenticateAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Extract token from header
-
   if (!token) {
     return res.status(401).json({ message: "Authorization header missing" });
   }
 
   try {
     const decoded = jwt.verify(token, JWT); // Verify token
+    console.log("Decoded token:", decoded); // Log decoded token for debugging
 
     if (!decoded.isAdmin) {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -117,26 +117,30 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
-app.delete("/api/stories/:storyId", async (req, res) => {
-  const { storyId } = req.params;
+app.delete(
+  "/api/stories/:storyId",
+  authenticateUser,
+  authenticateAdmin,
+  async (req, res) => {
+    const { storyId } = req.params;
 
-  try {
-    const deletedStory = await prisma.story.delete({
-      where: { storyId: parseInt(storyId) },
-    });
+    try {
+      const deletedStory = await prisma.story.delete({
+        where: { storyId: parseInt(storyId) },
+      });
 
-    res
-      .status(200)
-      .json({ message: "Story deleted successfully", deletedStory });
-  } catch (error) {
-    if (error.code === "P2025") {
-      // Handle "Record to delete does not exist" error
-      return res.status(404).json({ message: "Story not found." });
+      res
+        .status(200)
+        .json({ message: "Story deleted successfully", deletedStory });
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ message: "Story not found." });
+      }
+      console.error("Error deleting story:", error);
+      res.status(500).json({ message: "Server error." });
     }
-    console.error("Error deleting story:", error);
-    res.status(500).json({ message: "Server error." });
   }
-});
+);
 
 // POST (create) a new story
 app.post("/api/stories", authenticateUser, async (req, res) => {
@@ -299,11 +303,16 @@ app.put("/api/users/me", authenticateUser, async (req, res, next) => {
   }
 });
 
-// GET all comments in database
+// GET all comments in the database with user information
 app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
   try {
-    // Fetch all comments from the database
-    const comments = await prisma.comment.findMany();
+    const comments = await prisma.comment.findMany({
+      include: {
+        user: {
+          select: { username: true }, // Include only the user's username
+        },
+      },
+    });
 
     res.status(200).json(comments);
   } catch (err) {

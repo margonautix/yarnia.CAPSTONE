@@ -9,6 +9,7 @@ import Register from "./components/Register";
 import SingleStory from "./components/SingleStory";
 import Logout from "./components/Logout";
 import AddStory from "./components/addStory";
+import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
@@ -66,6 +67,7 @@ function App() {
         <Route path="/logout" element={<Logout setUser={setUser} />} />
         <Route path="/add-story" element={<AddStory />} />
         <Route path="/stories" element={<StoryDetails />} />
+        <Route path="/comments" element={<AdminCommentsFeed />} />
       </Routes>
     </div>
   );

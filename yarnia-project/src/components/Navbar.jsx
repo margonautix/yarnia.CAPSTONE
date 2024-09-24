@@ -58,6 +58,12 @@ const NavBar = ({ user, setUser }) => {
             <li>
               <Link to="/add-story">Add Story</Link> {/* Add Story Link */}
             </li>
+            {/* Admin-only link to comments feed */}
+            {user.isAdmin && (
+              <li>
+                <Link to="/comments">All Comments</Link>
+              </li>
+            )}
             {/* Keep Logout as a link but add onClick to handle logout */}
             <li>
               <Link

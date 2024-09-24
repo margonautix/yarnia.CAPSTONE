@@ -157,7 +157,7 @@ export default function SingleStory() {
             )}
           </div>
           {/* Edit and Save/Delete Buttons */}
-          {currentUser?.id === story?.authorId && (
+          {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
               {isEditing ? (
                 <button onClick={handleSaveContent} className="save-button">

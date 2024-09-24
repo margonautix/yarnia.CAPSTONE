@@ -140,8 +140,17 @@ export async function deleteComment(storyId, commentId) {
 
 // Fetch all comments from the API
 export async function fetchAllComments() {
+  const token = localStorage.getItem("token"); // Get token from localStorage
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
   try {
-    const response = await fetch(`${API_URL}/comments`);
+    const response = await fetch(`${API_URL}/comments`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include token in request headers
+      },
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
@@ -151,7 +160,6 @@ export async function fetchAllComments() {
     throw error;
   }
 }
-
 // Register a new user
 export async function createNewUser(username, email, password) {
   try {
