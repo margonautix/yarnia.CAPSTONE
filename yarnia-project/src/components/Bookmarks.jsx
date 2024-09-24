@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
-const Bookmarks = () => {
+
+
+const Bookmarks = ({user}) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const token = localStorage.getItem("token");
+  console.log(bookmarks);
   useEffect(() => {
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(); // Fetch bookmarks from the API
+        const data = await fetchBookmarkedStories(user.id, token); // Fetch bookmarks from the API
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -48,11 +51,11 @@ const Bookmarks = () => {
         <div key={bookmark.storyId} className="bookmark-card">
           <h2>{bookmark.title}</h2>
           <p>
-            <strong>Author:</strong> {bookmark.author?.username || "Unknown"}
+            <strong>Author:</strong> {bookmark.story.authorId || "Unknown"}
           </p>
           <p>
             <strong>Summary:</strong>{" "}
-            {bookmark.summary || "No summary available"}
+            {bookmark.story.summary || "No summary available"}
           </p>
           <button onClick={() => alert(`Open story: ${bookmark.storyId}`)}>
             View Story

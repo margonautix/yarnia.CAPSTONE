@@ -14,6 +14,7 @@ import StoryDetails from "./components/StoryDetails";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
 import jwt_decode from "jwt-decode";
+import Comments from "./components/Comments";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -59,15 +60,15 @@ function App() {
       <NavBar user={user} setUser={setUser} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Stories />} />
-        <Route path="bookmarks" element={<Bookmarks />} />
+        <Route path="/bookmarks" element={<Bookmarks user={user} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/stories/:storyId" element={<SingleStory />} />
+        <Route path="/stories/:storyId" element={<SingleStory user={user} />} />
         <Route path="/logout" element={<Logout setUser={setUser} />} />
         <Route path="/add-story" element={<AddStory />} />
         <Route path="/stories" element={<StoryDetails />} />
-        <Route path="/comments" element={<AdminCommentsFeed />} />
+        <Route path="/comment" element={<Comments />} />
       </Routes>
     </div>
   );
