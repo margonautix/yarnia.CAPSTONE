@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
-  fetchWithAuth,
   bookmarkStory,
   deleteStory,
-  fetchCommentsForStory,
+  fetchComments, // Assuming this API fetches comments
+  postComment, // Assuming this API allows posting a comment
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
-import Comments from "./Comments"; // Import the Comments component
+import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
 
 
 export default function SingleStory({user}) {
@@ -22,10 +22,11 @@ export default function SingleStory({user}) {
   const [content, setContent] = useState(""); // Store content while editing
   const [error, setError] = useState(null); // To track errors
   const [comments, setComments] = useState([]); // Holds comments for the story
+  const [newComment, setNewComment] = useState(""); // Store new comment input
   const [bookmarked, setBookmarked] = useState(false);
 
   // Fetch the story and comments from the server
-  const fetchStory = async (storyId) => {
+  const fetchStoryAndComments = async (storyId) => {
     try {
       const storyResponse = await fetchSingleStory(storyId); // Fetch the story
       if (storyResponse) {
@@ -33,7 +34,7 @@ export default function SingleStory({user}) {
         setContent(storyResponse.content); // Set the content for editing
 
         // Fetch the comments related to the story
-        const commentsResponse = await fetchCommentsForStory(storyId);
+        const commentsResponse = await fetchComments(storyId); // Ensure this API call works
         if (commentsResponse) {
           setComments(commentsResponse); // Set the comments state
         }
@@ -41,7 +42,7 @@ export default function SingleStory({user}) {
         setError("Story not found.");
       }
     } catch (error) {
-      console.error("Failed to fetch the story:", error);
+      console.error("Failed to fetch the story and comments:", error);
       setError("Failed to fetch the story.");
     }
   };
@@ -49,7 +50,7 @@ export default function SingleStory({user}) {
   // Fetch story and user data when the component mounts or when storyId changes
   useEffect(() => {
     if (storyId) {
-      fetchStory(storyId);
+      fetchStoryAndComments(storyId);
     } else {
       setError("No story ID provided.");
     }
@@ -68,7 +69,7 @@ export default function SingleStory({user}) {
       const response = await updateStoryContent(storyId, content); // Send updated content to API
       if (response) {
         setIsEditing(false); // Exit editing mode after saving
-        fetchStory(storyId); // Refresh the story data
+        fetchStoryAndComments(storyId); // Refresh the story data
       }
     } catch (error) {
       console.error("Failed to update the story:", error);
@@ -99,7 +100,8 @@ export default function SingleStory({user}) {
       return (
         <ul className="comments-list">
           {comments.map((comment) => (
-            <li key={comment.id} className="comment-item">
+            <li key={comment.commentId} className="comment-item">
+              {/* Optional chaining to handle undefined username */}
               <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
               {comment.content || "No content available"}
             </li>
@@ -111,8 +113,24 @@ export default function SingleStory({user}) {
     }
   };
 
+  // Handle new comment submission
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!newComment) return;
+
+    try {
+      await postComment(storyId, newComment); // Post the new comment to the API
+      setNewComment(""); // Clear the comment input
+      fetchStoryAndComments(storyId); // Refresh the comments
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+      setError("Failed to post comment.");
+    }
+  };
+
+  // Handle bookmarking the story
   const handleBookmark = async () => {
-    if (!user) {
+    if (!currentUser) {
       setError("You must be logged in to bookmark stories.");
       console.log("hi");
       return;
@@ -127,23 +145,6 @@ export default function SingleStory({user}) {
       console.log("bye")
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      console.log("Attempting to delete story with ID:", storyId);
-
-      // Call the deleteStory API
-      const result = await deleteStory(storyId);
-
-      if (result) {
-        console.log("Story deleted successfully");
-        navigate("/profile"); // Navigate to profile after deletion
-      }
-    } catch (error) {
-      console.error("Failed to delete the story:", error);
-      setError("Failed to delete the story.");
     }
   };
 
@@ -162,16 +163,21 @@ export default function SingleStory({user}) {
           <h4>Description: {story?.summary || "No Description"}</h4>
 
           {/* Display or edit story content */}
-          <p>
+          <div>
             {isEditing ? (
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)} // Update content state
               />
             ) : (
-              story?.content || "No Content"
+              <div
+                className="story-content"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(story?.content || "No Content"),
+                }} // Use DOMPurify to sanitize and render the content as HTML
+              />
             )}
-          </p>
+          </div>
           {/* Edit and Save/Delete Buttons */}
           {currentUser?.id === story?.authorId && (
             <div className="button-group">
@@ -204,13 +210,21 @@ export default function SingleStory({user}) {
 
           {isCommentsOpen && renderComments()}
 
-          {/* Add new comment functionality */}
-          {isCommentsOpen && (
-            <Comments
-              storyId={storyId}
-              refreshComments={() => fetchStory(storyId)}
-            />
+          {/* New Comment Form */}
+          {isCommentsOpen && currentUser && (
+            <form onSubmit={handleSubmitComment}>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Write a comment..."
+                required
+              />
+              <button type="submit">Submit Comment</button>
+            </form>
           )}
+
+          {/* Display error if there is any */}
+          {error && <p className="error">{error}</p>}
         </ul>
       </main>
     </div>

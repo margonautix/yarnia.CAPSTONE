@@ -13,6 +13,7 @@ import StoryDetails from "./components/StoryDetails";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
 import jwt_decode from "jwt-decode";
+import Comments from "./components/Comments";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -66,6 +67,7 @@ function App() {
         <Route path="/logout" element={<Logout setUser={setUser} />} />
         <Route path="/add-story" element={<AddStory />} />
         <Route path="/stories" element={<StoryDetails />} />
+        <Route path="/comment" element={<Comments />} />
       </Routes>
     </div>
   );

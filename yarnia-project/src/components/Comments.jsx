@@ -1,54 +1,72 @@
-import { useState } from "react";
-import { fetchCommentsForStory } from "../API";
+import { useState, useEffect } from "react";
+import { fetchComments, postComment } from "../API"; // Ensure the correct API functions are imported
 
 const Comments = ({ storyId, refreshComments }) => {
-  const [comment, setComment] = useState(""); // Track the comment text
-  const user = JSON.parse(localStorage.getItem("user")); // Get user from localStorage
+  const [comments, setComments] = useState([]); // Store comments
+  const [newComment, setNewComment] = useState(""); // Store new comment input
+  const [error, setError] = useState(null); // Error handling
 
-  const handleComment = async () => {
-    if (!user) {
-      alert("You must be logged in to comment.");
-      return;
-    }
-
-    try {
-      const response = await fetchCommentsForStory({
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`, // Use token for authentication
-        },
-        body: JSON.stringify({ content: comment }), // Send the content in the body
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        alert(`Error: ${error.message}`);
-        return;
+  // Fetch comments when the component mounts or when `storyId` changes
+  useEffect(() => {
+    const fetchStoryComments = async () => {
+      try {
+        const commentsResponse = await fetchComments(storyId); // Fetch comments from the API
+        setComments(commentsResponse); // Set the comments state
+      } catch (error) {
+        console.error("Failed to fetch comments:", error);
+        setError("Failed to load comments.");
       }
+    };
 
-      // Comment was posted successfully
-      alert("Comment added!");
-      setComment(""); // Clear the input field
-      refreshComments(); // Refresh comments after posting
+    if (storyId) {
+      fetchStoryComments();
+    }
+  }, [storyId, refreshComments]);
+
+  // Handle new comment submission
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    try {
+      await postComment(storyId, newComment); // Post the new comment
+      setNewComment(""); // Clear the comment input
+      refreshComments(); // Optionally refresh comments after posting
     } catch (error) {
-      console.error("Error posting comment:", error);
-      alert("Failed to post the comment. Please try again.");
+      console.error("Failed to post comment:", error);
+      setError("Failed to post comment.");
     }
   };
 
   return (
-    <div className="comments-container">
-      <label htmlFor="comment-input">Comment</label>
-      <textarea
-        id="comment-input"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder="Write your comment here..."
-      />
-      <button onClick={handleComment} aria-label="Post comment">
-        Post Comment
-      </button>
+    <div className="comments-section">
+      <h3>Comments</h3>
+
+      {/* Display comments */}
+      {comments.length > 0 ? (
+        <ul className="comments-list">
+          {comments.map((comment) => (
+            <li key={comment.commentId}>
+              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
+              <p>{comment.content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No comments yet.</p>
+      )}
+
+      {/* Error message */}
+      {error && <p className="error">{error}</p>}
+
+      {/* Add new comment */}
+      <form onSubmit={handleSubmitComment}>
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Write a comment..."
+          required
+        />
+        <button type="submit">Submit Comment</button>
+      </form>
     </div>
   );
 };

@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const prisma = require("./prisma");
-
 const cors = require("cors");
 
 const PORT = 3000;
@@ -269,13 +268,13 @@ app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
 });
 
 // GET all comments by specific user
-app.get("/api/users/:authorId/comments", async (req, res, next) => {
-  const { authorId } = req.params; // Extract authorId from the URL
+app.get("/api/users/:userId/comments", async (req, res, next) => {
+  const { userId } = req.params; // Extract authorId from the URL
   try {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        authorId: parseInt(authorId), // Filter comments by authorId
+        userId: parseInt(userId), // Filter comments by authorId
       },
     });
 
@@ -723,5 +722,18 @@ app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
   } catch (error) {
     console.error("Error fetching stories:", error);
     res.status(500).json({ message: "Failed to fetch stories." });
+  }
+});
+
+app.get("/api/users/:userId/comments", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { userId: Number(userId) },
+      include: { story: true }, // Include the related story
+    });
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user comments" });
   }
 });
