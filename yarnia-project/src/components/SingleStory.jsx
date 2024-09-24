@@ -11,7 +11,8 @@ import {
 import jwt_decode from "jwt-decode"; // To decode JWT
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
 
-export default function SingleStory() {
+
+export default function SingleStory({user}) {
   const { storyId } = useParams(); // Get storyId from the URL
   const navigate = useNavigate(); // For navigating after delete or save
   const [currentUser, setCurrentUser] = useState(null); // State for current user info
@@ -131,13 +132,17 @@ export default function SingleStory() {
   const handleBookmark = async () => {
     if (!currentUser) {
       setError("You must be logged in to bookmark stories.");
+      console.log("hi");
       return;
     }
-
     const token = localStorage.getItem("token"); // Get the token
     try {
-      await bookmarkStory(storyId, token); // Pass the token correctly
+      console.log(token);
+      console.log(user);
+      await bookmarkStory(storyId,user.id, token); // Pass the token correctly
+      console.log("anything")
       setBookmarked(true);
+      console.log("bye")
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
@@ -193,10 +198,9 @@ export default function SingleStory() {
               </button>
             </div>
           )}
-          <button onClick={handleBookmark}>
-            {bookmarked ? "Bookmarked" : "Bookmark"}
-          </button>
-
+              <button onClick={handleBookmark} disabled={bookmarked}>
+                {bookmarked ? "Bookmarked" : "Bookmark"}
+              </button>
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen

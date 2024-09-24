@@ -223,7 +223,7 @@ export const updateStoryContent = async (storyId, content) => {
 };
 
 export const fetchBookmarkedStories = async (userId, token) => {
-  console.log(userId);
+  console.log("userId" , userId);
   try {
     const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
       headers: {
@@ -243,26 +243,28 @@ export const fetchBookmarkedStories = async (userId, token) => {
   }
 };
 
-export const bookmarkStory = async (storyId, token) => {
+export const bookmarkStory = async (storyId, userId, token) => {
+  console.log("something identifiable", userId);
   const response = await fetch(
-    `${API_URL}/users/${userId}/bookmarks/${storyId}`,
+    `${API_URL}/stories/${storyId}/bookmarks/`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ storyId }),
+      body: JSON.stringify({ storyId, userId  }),
     }
   );
-
+  const result = await response.json()
+  console.log(result);
   // Check if the response is OK (status in the range 200-299)
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Failed to bookmark the story");
   }
 
-  return response.json(); // Assuming you want to return the response data
+  return result; // Assuming you want to return the response data
 };
 
 export const removeBookmark = async (storyId, userId, token) => {
