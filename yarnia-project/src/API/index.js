@@ -17,12 +17,12 @@ export async function fetchAllStories() {
 
 export async function fetchSingleStory(storyId) {
   try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`); // Assuming the API endpoint is `/stories/:id`
+    const response = await fetch(`${API_URL}/stories/${storyId}`);
     if (!response.ok) {
-      throw new Error(`Error fetching story: ${response.statusText}`);
+      throw new Error("Error fetching story");
     }
-    const data = await response.json(); // Parse the response data
-    return data; // Return the data (should include the story object)
+    const storyData = await response.json();
+    return storyData;
   } catch (error) {
     console.error("Error fetching the story:", error);
     throw error;
@@ -125,6 +125,12 @@ export async function fetchWithAuth(url, options = {}) {
     throw new Error("User is not authenticated");
   }
 
+  // Ensure the body is properly stringified if it exists
+  const body =
+    options.body && typeof options.body === "object"
+      ? JSON.stringify(options.body)
+      : options.body;
+
   return await fetch(url, {
     ...options,
     headers: {
@@ -132,17 +138,20 @@ export async function fetchWithAuth(url, options = {}) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`, // Add the token to the Authorization header
     },
+    body, // Ensure the request body is passed correctly
   });
 }
 
+// Update story content function
 export const updateStoryContent = async (storyId, content) => {
   try {
-    const response = await fetch(`${API_URL}/api/stories/${storyId}`, {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "PUT", // Or PATCH, depending on your API design
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content }), // Ensure body is correctly passed
     });
 
     if (!response.ok) {

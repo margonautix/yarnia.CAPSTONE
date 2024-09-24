@@ -535,3 +535,46 @@ p {
 p.email {
   color: #cccccc;
 }
+
+.add-story-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.add-story-form .form-group {
+  margin-bottom: 20px;
+}
+
+.add-story-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.add-story-form input,
+.add-story-form textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-story-form .submit-button {
+  background-color: #00b894;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-story-form .submit-button:hover {
+  background-color: #019871;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 20px;
+}
