@@ -9,6 +9,7 @@ const Profile = () => {
   const [username, setUsername] = useState(""); // State for editing username
   const [bio, setBio] = useState(""); // State for editing bio
   const [stories, setStories] = useState([]); // State to store user's stories
+  const [comments, setComments] = useState([]); // State to store user's comments
   const [error, setError] = useState(null); // Error state
   const [saveError, setSaveError] = useState(null); // Error state for saving profile
   const [loading, setLoading] = useState(true); // Loading state for user data
@@ -26,8 +27,9 @@ const Profile = () => {
         setBio(userData.bio);
         setIsAuthenticated(true); // User is authenticated
 
-        // Fetch the user's stories after fetching user data
+        // Fetch the user's stories and comments after fetching user data
         await fetchUserStories(userData.id);
+        await fetchUserComments(userData.id); // Fetch comments posted by the user
       } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
@@ -52,12 +54,31 @@ const Profile = () => {
         const userStories = await response.json();
         setStories(userStories); // Set stories in state
       } else {
-        console.error("Failed to fetch user stories");
-        setError("Failed to load stories.");
+        console.error("Failed to fetch");
+        setError("Failed to load");
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
       setError("An error occurred while fetching stories.");
+    }
+  };
+
+  // Fetch all comments made by the user
+  const fetchUserComments = async (userId) => {
+    try {
+      const response = await fetchWithAuth(
+        `http://localhost:3000/api/users/${userId}/comments`
+      ); // Assuming this API endpoint returns all comments by the user
+      if (response.ok) {
+        const userComments = await response.json();
+        setComments(userComments); // Set comments in state
+      } else {
+        console.error("Failed to fetch");
+        setError("Failed to load");
+      }
+    } catch (error) {
+      console.error("Error fetching user comments:", error);
+      setError("An error occurred while fetching comments.");
     }
   };
 
@@ -181,8 +202,8 @@ const Profile = () => {
               {stories.length > 0 ? (
                 <ul className="story-list">
                   {stories.map((story) => (
-                    <div className="story-item">
-                      <li key={story.storyId}>
+                    <div className="story-item" key={story.storyId}>
+                      <li>
                         <div id="story-card">
                           <h3>{story.title}</h3>
                           <p>{story.summary || "No summary available"}</p>
@@ -198,13 +219,26 @@ const Profile = () => {
                   ))}
                 </ul>
               ) : (
-                <p>You have not written any stories yet.</p>
+                <p>Nothing to find here...</p>
               )}
             </div>
           </div>
           <div className="profile">
             <div className="profile-container">
               <h3 id="history">Comment History:</h3>
+              {error && <p className="error-message">{error}</p>}
+              {comments.length > 0 ? (
+                <ul className="comment-list">
+                  {comments.map((comment) => (
+                    <li key={comment.commentId}>
+                      <strong>Story: </strong> {comment.story.title} <br />
+                      <strong>Comment: </strong> {comment.content}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Nothing to find here...</p>
+              )}
             </div>
           </div>
         </div>

@@ -273,7 +273,7 @@ input[type="password"]:focus {
 
 .modal-content {
   position: relative; /* Add relative positioning to the modal content */
-  background-color: #fff;
+  background-color: #fff8dd;
   color: black;
   padding: 20px;
   border-radius: 8px;
@@ -284,13 +284,14 @@ input[type="password"]:focus {
 
 .modal-content h2 {
   margin-top: 0;
+  color: #000;
 }
 
 .modal-content button {
   margin-top: 20px;
   padding: 10px 20px;
   background-color: #0d9900;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -336,7 +337,7 @@ input[type="password"]:focus {
   background-color: #151515; /* Darker background color */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow for depth */
-  color: #e5e5e5; /* Light text color for contrast */
+  color: #000000; /* Light text color for contrast */
 }
 
 /* Story Single Styling */
@@ -347,13 +348,13 @@ input[type="password"]:focus {
   max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-  color: #e5e5e5; /* Light text color for contrast */
+  color: #000000; /* Light text color for contrast */
 }
 
 /* Headings */
 .story-single h2 {
   font-size: 2rem;
-  color: #00ff88; /* Green accent for heading */
+  color: #000000; /* Green accent for heading */
   margin-bottom: 10px;
 }
 
@@ -366,7 +367,7 @@ input[type="password"]:focus {
 /* Paragraph and text content */
 .story-single p {
   font-size: 1.2rem;
-  color: #cccccc; /* Softer contrast for text */
+  color: #000000; /* Softer contrast for text */
   margin-bottom: 10px;
 }
 
@@ -379,7 +380,7 @@ input[type="password"]:focus {
   height: 300px; /* Increased height */
   padding: 10px; /* Padding for better readability */
   background-color: #555; /* Darker background for input fields */
-  color: #e5e5e5; /* Light text color */
+  color: #000000; /* Light text color */
   border: 1px solid #00ff88; /* Green border for input */
   border-radius: 5px;
   box-sizing: border-box; /* Ensures padding is included in width/height */
@@ -774,7 +775,7 @@ p.email {
 #whole-profile {
   display: flex;
   flex-direction: row;
-  margin-left: -300px;
+  margin-left: 0px;
   width: 100%;
 }
 
@@ -1180,4 +1181,40 @@ p.email {
   flex-direction: column;
   justify-content: space-between;
   width: 100%; /* Ensure full width within the grid cell */
+}
+
+.comments-section {
+  margin-top: 20px;
+}
+
+.comments-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.comments-list li {
+  margin-bottom: 10px;
+}
+
+.error {
+  color: red;
+}
+
+form textarea {
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 10px;
+}
+
+form button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
 }
