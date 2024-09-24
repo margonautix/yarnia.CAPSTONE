@@ -10,6 +10,8 @@ import {
 import jwt_decode from "jwt-decode"; // To decode JWT
 import Comments from "./Comments"; // Import the Comments component
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
+import ReactQuill from "react-quill"; // Import ReactQuill
+import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
 
 export default function SingleStory() {
   const { storyId } = useParams(); // Get storyId from the URL
@@ -143,9 +145,10 @@ export default function SingleStory() {
           {/* Display or edit story content */}
           <div>
             {isEditing ? (
-              <textarea
+              <ReactQuill
                 value={content}
-                onChange={(e) => setContent(e.target.value)} // Update content state
+                onChange={setContent} // Update content state
+                theme="snow" // Quill theme
               />
             ) : (
               <div
