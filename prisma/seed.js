@@ -4,6 +4,18 @@ const { faker } = require("@faker-js/faker");
 const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
+// Predefined genres
+const genres = [
+  "Fantasy",
+  "Science Fiction",
+  "Romance",
+  "Thriller",
+  "Horror",
+  "Mystery",
+  "Drama",
+  "Comedy",
+];
+
 const seed = async () => {
   // Create 5 administrators
   for (let i = 0; i < 5; i++) {
@@ -35,17 +47,22 @@ const seed = async () => {
 
     users.push(user);
 
+    // Create random number of stories for each user
     for (let j = 0; j < getRandomNumber(1, 20); j++) {
+      const randomGenre = genres[getRandomNumber(0, genres.length - 1)]; // Pick a random genre
+
       const story = await prisma.story.create({
         data: {
           title: faker.lorem.words(3),
           content: faker.lorem.paragraphs(getRandomNumber(1, 100)),
           summary: faker.lorem.sentence(10),
+          genre: randomGenre, // Assign a random genre to each story
           authorId: user.id, // The story's author
           createdAt: faker.date.past(),
         },
       });
 
+      // Create random number of comments on the story
       for (let k = 0; k < getRandomNumber(0, 100); k++) {
         const randomUser = users[getRandomNumber(0, users.length - 1)];
 

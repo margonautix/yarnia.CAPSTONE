@@ -9,6 +9,7 @@ const Stories = () => {
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Sidebar dropdown
+  const [selectedCategory, setSelectedCategory] = useState(""); // Selected genre filter
 
   const navigate = useNavigate();
 
@@ -41,29 +42,38 @@ const Stories = () => {
   // Close the modal
   const closeModal = () => setShowModal(false);
 
-  // Filter and sort stories based on search query
+  // Filter and sort stories based on search query and selected genre (category)
   const filteredStories = stories
-    .filter(
-      (story) =>
+    .filter((story) => {
+      const matchesSearchQuery =
         story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (story.author?.username || "Unknown")
           .toLowerCase()
-          .includes(searchQuery.toLowerCase())
-    )
+          .includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        !selectedCategory || story.genre === selectedCategory;
+      return matchesSearchQuery && matchesCategory;
+    })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // Categories for the sidebar
+  // Categories (Genres) for the sidebar
   const categories = [
-    { name: "Fiction", path: "/search?category=Fiction" },
-    { name: "Non-fiction", path: "/search?category=Non-fiction" },
-    { name: "Sci-Fi", path: "/search?category=Sci-Fi" },
-    { name: "Fantasy", path: "/search?category=Fantasy" },
-    { name: "Mystery", path: "/search?category=Mystery" },
-    { name: "Horror", path: "/search?category=Horror" },
+    "Fiction",
+    "Non-fiction",
+    "Sci-Fi",
+    "Fantasy",
+    "Mystery",
+    "Horror",
   ];
 
   // Toggle dropdown menu
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+  // Handle category selection for filtering stories by genre
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setIsDropdownOpen(false);
+  };
 
   // Conditional rendering for loading state
   if (loading) {
@@ -85,11 +95,19 @@ const Stories = () => {
 
           {isDropdownOpen && (
             <ul className="sidebar-menu">
+              <li
+                onClick={() => handleCategorySelect("")}
+                className={selectedCategory === "" ? "active" : ""}
+              >
+                All
+              </li>
               {categories.map((category, index) => (
-                <li key={index}>
-                  <Link to={category.path} onClick={toggleDropdown}>
-                    {category.name}
-                  </Link>
+                <li
+                  key={index}
+                  onClick={() => handleCategorySelect(category)}
+                  className={selectedCategory === category ? "active" : ""}
+                >
+                  {category}
                 </li>
               ))}
             </ul>
@@ -119,6 +137,9 @@ const Stories = () => {
                 <strong>Published On:</strong>{" "}
                 {new Date(story.createdAt).toLocaleDateString()}
               </p>
+              <p>
+                <strong>Genre:</strong> {story.genre}
+              </p>
               <button onClick={() => handleReadMore(story.storyId)}>
                 Read More
               </button>
@@ -146,6 +167,9 @@ const Stories = () => {
               </p>
               <p>
                 <strong>Summary:</strong> {selectedStory.summary}
+              </p>
+              <p>
+                <strong>Genre:</strong> {selectedStory.genre}
               </p>
               <button
                 onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
