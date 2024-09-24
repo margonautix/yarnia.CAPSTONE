@@ -229,7 +229,7 @@ export const fetchBookmarkedStories = async (userId, token) => {
   }
 };
 
-export const bookmarkStory = async (storyId, token) => {
+export const bookmarkStory = async (storyId, userId, token) => {
   const response = await fetch(
     `${API_URL}/users/${userId}/bookmarks/${storyId}`,
     {
