@@ -57,21 +57,23 @@ const Stories = () => {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   // Categories (Genres) for the sidebar
-  const categories = [
-    "Fiction",
-    "Non-fiction",
-    "Sci-Fi",
+  const genres = [
     "Fantasy",
-    "Mystery",
+    "Science Fiction",
+    "Romance",
+    "Thriller",
     "Horror",
+    "Mystery",
+    "Drama",
+    "Comedy",
   ];
 
   // Toggle dropdown menu
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   // Handle category selection for filtering stories by genre
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (genre) => {
+    setSelectedCategory(genre);
     setIsDropdownOpen(false);
   };
 
@@ -90,7 +92,7 @@ const Stories = () => {
         {/* Sidebar for Categories and Search */}
         <aside className="sidebar">
           <h2 onClick={toggleDropdown} className="sidebar-toggle">
-            {isDropdownOpen ? "Categories" : "Categories"}
+            {isDropdownOpen ? "Genres" : "Genres"}
           </h2>
 
           {isDropdownOpen && (
@@ -101,13 +103,13 @@ const Stories = () => {
               >
                 All
               </li>
-              {categories.map((category, index) => (
+              {genres.map((genre, index) => (
                 <li
                   key={index}
-                  onClick={() => handleCategorySelect(category)}
-                  className={selectedCategory === category ? "active" : ""}
+                  onClick={() => handleCategorySelect(genre)}
+                  className={selectedCategory === genre ? "active" : ""}
                 >
-                  {category}
+                  {genre}
                 </li>
               ))}
             </ul>
