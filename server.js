@@ -268,13 +268,13 @@ app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
 });
 
 // GET all comments by specific user
-app.get("/api/users/:authorId/comments", async (req, res, next) => {
-  const { authorId } = req.params; // Extract authorId from the URL
+app.get("/api/users/:userId/comments", async (req, res, next) => {
+  const { userId } = req.params; // Extract authorId from the URL
   try {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        authorId: parseInt(authorId), // Filter comments by authorId
+        userId: parseInt(userId), // Filter comments by authorId
       },
     });
 

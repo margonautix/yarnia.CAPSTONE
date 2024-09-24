@@ -218,17 +218,14 @@ const Profile = () => {
               )}
             </div>
           </div>
-
           <div className="profile-container">
             <h3 id="history">Comment History:</h3>
-            {error && <p className="error-message">{error}</p>}
             {comments.length > 0 ? (
               <ul className="comment-list">
                 {comments.map((comment) => (
-                  <li key={comment.commentId}>
-                    <strong>Story: </strong> {comment.story?.title || "Unknown"}{" "}
-                    <br />
-                    <strong>Comment: </strong> {comment.content}
+                  <li className="comment-item" key={comment.commentId}>
+                    <strong>Story: {comment.story?.title || "Unknown"}</strong>
+                    <p>{comment.content}</p>
                   </li>
                 ))}
               </ul>
