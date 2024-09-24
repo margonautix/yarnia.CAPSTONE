@@ -53,9 +53,6 @@ const Profile = () => {
       if (response.ok) {
         const userStories = await response.json();
         setStories(userStories); // Set stories in state
-      } else {
-        console.error("Failed to fetch");
-        setError("Failed to load");
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
@@ -71,10 +68,8 @@ const Profile = () => {
       ); // Assuming this API endpoint returns all comments by the user
       if (response.ok) {
         const userComments = await response.json();
+        console.log("Fetched comments:", userComments); // Add console log for debugging
         setComments(userComments); // Set comments in state
-      } else {
-        console.error("Failed to fetch");
-        setError("Failed to load");
       }
     } catch (error) {
       console.error("Error fetching user comments:", error);
@@ -223,23 +218,23 @@ const Profile = () => {
               )}
             </div>
           </div>
-          <div className="profile">
-            <div className="profile-container">
-              <h3 id="history">Comment History:</h3>
-              {error && <p className="error-message">{error}</p>}
-              {comments.length > 0 ? (
-                <ul className="comment-list">
-                  {comments.map((comment) => (
-                    <li key={comment.commentId}>
-                      <strong>Story: </strong> {comment.story.title} <br />
-                      <strong>Comment: </strong> {comment.content}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Nothing to find here...</p>
-              )}
-            </div>
+
+          <div className="profile-container">
+            <h3 id="history">Comment History:</h3>
+            {error && <p className="error-message">{error}</p>}
+            {comments.length > 0 ? (
+              <ul className="comment-list">
+                {comments.map((comment) => (
+                  <li key={comment.commentId}>
+                    <strong>Story: </strong> {comment.story?.title || "Unknown"}{" "}
+                    <br />
+                    <strong>Comment: </strong> {comment.content}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No comments found</p>
+            )}
           </div>
         </div>
       </section>

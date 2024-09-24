@@ -721,3 +721,16 @@ app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
     res.status(500).json({ message: "Failed to fetch stories." });
   }
 });
+
+app.get("/api/users/:userId/comments", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { userId: Number(userId) },
+      include: { story: true }, // Include the related story
+    });
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user comments" });
+  }
+});
