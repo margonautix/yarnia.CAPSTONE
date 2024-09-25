@@ -263,9 +263,6 @@ const Profile = () => {
                     <strong>Story: {comment.story.title}</strong>
                     <p>{comment.content}</p>
                     <br />
-                    <Link to={`/stories/${comment.storyId}`}>
-                      <button>View Story</button>
-                    </Link>
                   </li>
                 ))}
               </ul>
