@@ -412,11 +412,22 @@ app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the story
     const bookmarks = await prisma.bookmark.findMany({
-      where: { storyId: parseInt(storyId) }, // Filter bookmarks by storyId
+      where: { userId: parseInt(userId) },
       include: {
-        user: true, // Optionally include the user who bookmarked the story
+        story: {
+          include: {
+            author: { 
+              select: {
+                username: true, 
+              },
+            },
+          },
+        },
       },
     });
+    
+    // Return bookmarks with author info in the response
+    res.json(bookmarks);
 
     // Return bookmarks in the response
     res.json(bookmarks);

@@ -9,9 +9,10 @@ const Bookmarks = ({user}) => {
   const token = localStorage.getItem("token");
   console.log(bookmarks);
   useEffect(() => {
+    console.log("HERE")
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(user.id, token); // Fetch bookmarks from the API
+        const data = await fetchBookmarkedStories(user?.id, token); // Fetch bookmarks from the API
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -21,11 +22,11 @@ const Bookmarks = ({user}) => {
     };
 
     getBookmarks();
-  }, []);
+  }, [user]);
 
-  const handleRemoveBookmark = async (storyId) => {
+  const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
     try {
-      await removeBookmark(storyId); // Remove bookmark from the API
+      await removeBookmark(storyId, bookmarkId); // Remove bookmark from the API
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.storyId !== storyId)
@@ -44,23 +45,23 @@ const Bookmarks = ({user}) => {
       <p>You have no bookmarks yet. Start saving your favorite stories!</p>
     );
   }
-
+console.log("bookmarks", bookmarks)
   return (
     <div className="bookmarks-list">
-      {bookmarks.map((bookmark) => (
-        <div key={bookmark.storyId} className="bookmark-card">
-          <h2>{bookmark.title}</h2>
+      {bookmarks.map((bookmark, index) => (
+        <div key={index} className="bookmark-card">
+          <h2>{bookmark?.title}</h2>
           <p>
-            <strong>Author:</strong> {bookmark.story.authorId || "Unknown"}
+            <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
           </p>
           <p>
             <strong>Summary:</strong>{" "}
-            {bookmark.story.summary || "No summary available"}
+            {bookmark?.story.summary || "No summary available"}
           </p>
-          <button onClick={() => alert(`Open story: ${bookmark.storyId}`)}>
+          <button onClick={() => alert(`Open story: ${bookmark?.storyId}`)}>
             View Story
           </button>
-          <button onClick={() => handleRemoveBookmark(bookmark.storyId)}>
+          <button onClick={() => handleRemoveBookmark(bookmark?.storyId, bookmark?.userId, token, bookmark?.bookmarkId)}>
             Remove Bookmark
           </button>
         </div>
