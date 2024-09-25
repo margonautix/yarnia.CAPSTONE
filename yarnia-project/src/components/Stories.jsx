@@ -8,7 +8,6 @@ const Stories = () => {
   const [selectedStory, setSelectedStory] = useState(null); // For the selected story
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [searchQuery, setSearchQuery] = useState(""); // Search query
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Sidebar dropdown
   const [selectedCategory, setSelectedCategory] = useState(""); // Selected genre filter
 
   const navigate = useNavigate();
@@ -68,13 +67,9 @@ const Stories = () => {
     "Comedy",
   ];
 
-  // Toggle dropdown menu
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-
   // Handle category selection for filtering stories by genre
   const handleCategorySelect = (genre) => {
     setSelectedCategory(genre);
-    setIsDropdownOpen(false);
   };
 
   // Conditional rendering for loading state
@@ -91,29 +86,24 @@ const Stories = () => {
       <div id="search">
         {/* Sidebar for Categories and Search */}
         <aside className="sidebar">
-          <h2 onClick={toggleDropdown} className="sidebar-toggle">
-            {isDropdownOpen ? "Genres" : "Genres"}
-          </h2>
-
-          {isDropdownOpen && (
-            <ul className="sidebar-menu">
+          <h2>Genres</h2>
+          <ul className="sidebar-menu">
+            <li
+              onClick={() => handleCategorySelect("")}
+              className={selectedCategory === "" ? "active" : ""}
+            >
+              All
+            </li>
+            {genres.map((genre, index) => (
               <li
-                onClick={() => handleCategorySelect("")}
-                className={selectedCategory === "" ? "active" : ""}
+                key={index}
+                onClick={() => handleCategorySelect(genre)}
+                className={selectedCategory === genre ? "active" : ""}
               >
-                All
+                {genre}
               </li>
-              {genres.map((genre, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleCategorySelect(genre)}
-                  className={selectedCategory === genre ? "active" : ""}
-                >
-                  {genre}
-                </li>
-              ))}
-            </ul>
-          )}
+            ))}
+          </ul>
 
           {/* Search Bar */}
           <input
