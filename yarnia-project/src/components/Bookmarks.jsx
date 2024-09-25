@@ -7,7 +7,7 @@ const Bookmarks = ({ user }) => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    console.log("HERE")
+    console.log("HERE");
     const getBookmarks = async () => {
       try {
         const data = await fetchBookmarkedStories(user?.id, token); // Fetch bookmarks from the API
@@ -18,18 +18,15 @@ const Bookmarks = ({ user }) => {
         setLoading(false);
       }
     };
-
+  
     getBookmarks();
-  }, [user]);
-    if (user?.id) {
-      getBookmarks();
-    }
-  }, [user?.id, token]); // Add user.id and token as dependencies
+  }, [user?.id, token]);
+
 
   const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
     try {
-      await removeBookmark(storyId, bookmarkId); // Remove bookmark from the API
-      await removeBookmark(storyId, user.id, token); // Pass the correct userId and token
+      await removeBookmark(storyId, userId, token, bookmarkId); // Remove bookmark from the API
+      // Pass the correct userId and token
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.storyId !== storyId)

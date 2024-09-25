@@ -163,7 +163,8 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         summary,
         content,
         genre,
-        authorId: req.user.id, // Ensure this is set
+        authorId: req.user.id,
+        authorName, // Ensure this is set
         createdAt: new Date(),
       },
     });
@@ -734,7 +735,7 @@ app.delete(
 
     try {
       await prisma.bookmark.delete({
-        where: { id: parseInt(bookmarkId) },
+        where: { bookmarkId: parseInt(bookmarkId) },
       });
       res.status(200).json({ message: "Bookmark deleted successfully." });
     } catch (err) {
