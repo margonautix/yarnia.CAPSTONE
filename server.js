@@ -143,26 +143,34 @@ app.delete(
 );
 
 app.post("/api/stories", authenticateUser, async (req, res) => {
-  const { title, summary, content } = req.body;
+  const { title, summary, content, genre } = req.body;
 
-  if (!title || !content) {
-    return res.status(400).json({ message: "Title and content are required." });
+  // Log incoming data
+  console.log("Incoming data:", { title, summary, content, genre });
+
+  // Validate the input data
+  if (!title || !content || !genre) {
+    return res
+      .status(400)
+      .json({ error: "Title, content, and genre are required." });
   }
 
   try {
+    // Create a new story
     const newStory = await prisma.story.create({
       data: {
         title,
         summary,
         content,
-        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
+        genre,
+        authorId: req.user.id, // Ensure this is set
+        createdAt: new Date(),
       },
     });
-
     res.status(201).json(newStory);
   } catch (error) {
-    console.error("Error creating story:", error);
-    res.status(500).json({ message: "Failed to create story." });
+    console.error("Failed to create story:", error); // Log the exact error
+    res.status(500).json({ error: "Failed to create story" });
   }
 });
 
