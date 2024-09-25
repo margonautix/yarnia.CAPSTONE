@@ -1126,30 +1126,46 @@ p.email {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 100%;
-  position: fixed;
   max-width: 250px; /* Fixed width for the sidebar */
   padding: 20px;
-  background-color: #82a77f;
-  border-right: 1px solid #000000;
-  box-shadow: 2px 2px 10px black;
-  padding-top: 100px;
+  background-color: #82a77f; /* Soft green background for the sidebar */
+  border-right: 1px solid #000000; /* Subtle border on the right */
+  box-shadow: 2px 2px 10px black; /* Shadow for depth */
+  padding-top: 100px; /* Space for any fixed navbar at the top */
+  position: fixed;
 }
 
 .sidebar-toggle {
   cursor: pointer;
-  color: #000000;
+  color: #000000; /* Dark text color */
+  font-size: 1.5rem; /* Larger text size for the toggle */
   text-decoration: underline;
+  margin-bottom: 20px;
 }
 
 .sidebar-menu {
-  list-style-type: none;
+  list-style-type: none; /* Remove bullet points */
   padding: 0;
   margin: 0;
 }
 
 .sidebar-menu li {
-  padding: 5px 0;
+  padding: 10px 0; /* Spacing between list items */
+  font-size: 1.2rem; /* Slightly larger text for better readability */
+  color: #fffced; /* Light text color */
+  text-shadow: 2px 2px 2px black; /* Text shadow for contrast */
+  cursor: pointer;
+}
+
+.sidebar-menu li:hover {
+  background-color: #6d8c6f; /* Darker green background on hover */
+  border-radius: 5px; /* Rounded corners on hover */
+  padding-left: 10px; /* Subtle indent on hover */
+}
+
+.sidebar-menu li.active {
+  background-color: #575757; /* Active state background */
+  color: white;
 }
 
 .sidebar-menu li a {
@@ -1163,13 +1179,27 @@ p.email {
 }
 
 .search-bar {
-  position: absolute;
-  bottom: 20px;
-  left: 0px;
-  right: 20px;
-  padding: 8px;
+  width: 100%; /* Full width of the sidebar */
+  padding: 10px;
+  margin-top: 20px; /* Space above the search bar */
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   box-sizing: border-box;
-  max-width: 100%;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    width: 100%; /* Full width for mobile view */
+    height: auto; /* Auto height for better responsiveness */
+    padding-top: 60px; /* Reduced padding for mobile */
+  }
+
+  .sidebar-menu li {
+    padding: 15px; /* Larger tap targets for mobile */
+  }
 }
 
 .stories-list {

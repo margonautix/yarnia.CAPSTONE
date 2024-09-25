@@ -146,8 +146,8 @@ const Profile = () => {
                   !
                 </h1>
                 <div className="info">
-                  <h4 id="label"> Email:</h4>
-                  <p>{user.email}</p>
+                  {/* <h4 id="label"> Email:</h4>
+                  <p>{user.email}</p> */}
 
                   <br />
                   <br />
