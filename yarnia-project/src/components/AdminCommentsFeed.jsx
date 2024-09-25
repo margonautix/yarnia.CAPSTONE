@@ -12,7 +12,7 @@ export default function AdminCommentsFeed() {
         console.log(allComments); // Log comments to verify structure
         setComments(allComments);
       } catch (err) {
-        setError("Failed to fetch comments.");
+        setError("Failed to fetch comments.", err);
       }
     };
 
