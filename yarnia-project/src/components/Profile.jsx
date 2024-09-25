@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = () => {
@@ -188,6 +188,9 @@ const Profile = () => {
               </div>
               <div className="profile-container">
                 <h2>Your Bookmarks</h2>
+                <Link to="/bookmarks">
+                  <button>Bookmarks</button>
+                </Link>
               </div>
             </div>
             <div className="profile-container">
@@ -225,7 +228,12 @@ const Profile = () => {
                 {comments.map((comment) => (
                   <li className="comment-item" key={comment.commentId}>
                     <strong>Story: {comment.story?.title || "Unknown"}</strong>
+
                     <p>{comment.content}</p>
+                    <br />
+                    <Link to={`/stories/${comment.story}`}>
+                      <button>View Story</button>
+                    </Link>
                   </li>
                 ))}
               </ul>
