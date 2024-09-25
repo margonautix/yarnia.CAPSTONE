@@ -142,9 +142,13 @@ app.delete(
   }
 );
 
-app.post("/api/stories", async (req, res) => {
-  const { title, summary, content, genre, authorId } = req.body;
+app.post("/api/stories", authenticateUser, async (req, res) => {
+  const { title, summary, content, genre } = req.body;
 
+  // Log incoming data
+  console.log("Incoming data:", { title, summary, content, genre });
+
+  // Validate the input data
   if (!title || !content || !genre) {
     return res
       .status(400)
@@ -152,18 +156,20 @@ app.post("/api/stories", async (req, res) => {
   }
 
   try {
+    // Create a new story
     const newStory = await prisma.story.create({
       data: {
         title,
         summary,
         content,
-        genre, // Make sure to include genre
-        authorId,
+        genre,
+        authorId: req.user.id, // Ensure this is set
         createdAt: new Date(),
       },
     });
     res.status(201).json(newStory);
   } catch (error) {
+    console.error("Failed to create story:", error); // Log the exact error
     res.status(500).json({ error: "Failed to create story" });
   }
 });
@@ -279,8 +285,10 @@ app.get("/api/users/:userId/comments", async (req, res, next) => {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        userId: parseInt(userId), // Filter comments by authorId
+        userId: parseInt(userId),
+        // Filter comments by authorId
       },
+      include: { story: true },
     });
 
     res.status(200).json(comments);
@@ -322,31 +330,28 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
 });
 
 // Route to get all bookmarks for a specific user
+// Route to get all bookmarks for a specific user
 app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
-  const { userId } = req.params; // Extract authorId from request params
+  const { userId } = req.params;
 
   try {
-    // Check if the author exists (optional but recommended)
-    const author = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
-    });
-
-    if (!author) {
-      return res.status(404).json({ message: "Author not found." });
-    }
-
-    // Find all bookmarks for the author
+    // Fetch bookmarks with related story and author information
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(userId) }, // Filter bookmarks by authorId (mapped to authorId)
+      where: { userId: parseInt(userId) }, // Filter bookmarks by userId
       include: {
-        story: true, // Optionally include the related story information
+        story: {
+          include: {
+            author: { select: { username: true } }, // Include author's username
+          },
+        },
       },
     });
 
-    // Return bookmarks in the response
+    // Return bookmarks with author information included
     res.json(bookmarks);
   } catch (err) {
-    next(err);
+    console.error("Error fetching bookmarks:", err);
+    res.status(500).json({ message: "Failed to fetch bookmarks." });
   }
 });
 
@@ -377,24 +382,64 @@ app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
 // });
 
 //Route to delete a bookmark from a story
-app.delete(
-  "/api/stories/:storyId/bookmarks/:bookmarkId",
-  async (req, res, next) => {
-    const { bookmarkId } = req.params;
+app.delete("/api/users/:userId/bookmarks/:storyId", async (req, res, next) => {
+  const { userId, storyId } = req.params; // Extract userId and storyId from the params
 
-    try {
-      await prisma.bookmark.delete({
-        where: { bookmarkId: parseInt(bookmarkId) },
-      });
-      res.status(200).json({ message: "Bookmark deleted successfully." });
-    } catch (err) {
-      if (err.code === "P2025") {
-        return res.status(404).json({ message: "Bookmark not found." });
-      }
-      next(err);
+  try {
+    // Check if the bookmark exists
+    const bookmark = await prisma.bookmark.findUnique({
+      where: {
+        userId_storyId: {
+          userId: parseInt(userId),
+          storyId: parseInt(storyId),
+        },
+      },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ message: "Bookmark not found." });
     }
+
+    // Delete the bookmark if found
+    await prisma.bookmark.delete({
+      where: {
+        userId_storyId: {
+          userId: parseInt(userId),
+          storyId: parseInt(storyId),
+        },
+      },
+    });
+
+    res.status(200).json({ message: "Bookmark deleted successfully." });
+  } catch (err) {
+    next(err);
   }
-);
+});
+
+// Check if a user has bookmarked a specific story
+app.get("/api/users/:userId/stories/:storyId/bookmark", async (req, res) => {
+  const { userId, storyId } = req.params;
+
+  try {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: {
+        userId_storyId: {
+          userId: parseInt(userId),
+          storyId: parseInt(storyId),
+        },
+      },
+    });
+
+    if (!bookmark) {
+      return res.status(404).json({ bookmarked: false });
+    }
+
+    res.status(200).json({ bookmarked: true });
+  } catch (error) {
+    console.error("Error checking bookmark status:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+});
 
 // Route to get all bookmarks for a specific story
 app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {

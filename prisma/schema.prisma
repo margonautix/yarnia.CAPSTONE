@@ -19,7 +19,6 @@ model User {
   email    String   @unique
   password String
   joinedOn DateTime @default(now())
-  storyId  Int? // Optional foreign key
   bio      String?
   isAdmin  Boolean  @default(false) // Admin status
 
@@ -54,6 +53,8 @@ model Bookmark {
   // Relations
   user  User  @relation(fields: [userId], references: [id])
   story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
+
+  @@unique([userId, storyId]) // Add this line to enforce unique bookmarks for each user-story pair
 }
 
 model Comment {

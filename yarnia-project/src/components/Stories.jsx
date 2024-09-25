@@ -88,7 +88,6 @@ const Stories = () => {
         <aside className="sidebar">
           <h2>Genres</h2>
 
-          {/* Always visible genre list */}
           <ul className="sidebar-menu">
             <li
               onClick={() => handleCategorySelect("")}

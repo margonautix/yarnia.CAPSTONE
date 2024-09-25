@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
-
-
-const Bookmarks = ({user}) => {
+const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
-  console.log(bookmarks);
+
   useEffect(() => {
     console.log("HERE")
     const getBookmarks = async () => {
@@ -23,10 +21,15 @@ const Bookmarks = ({user}) => {
 
     getBookmarks();
   }, [user]);
+    if (user?.id) {
+      getBookmarks();
+    }
+  }, [user?.id, token]); // Add user.id and token as dependencies
 
   const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
     try {
       await removeBookmark(storyId, bookmarkId); // Remove bookmark from the API
+      await removeBookmark(storyId, user.id, token); // Pass the correct userId and token
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.storyId !== storyId)

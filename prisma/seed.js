@@ -79,13 +79,26 @@ const seed = async () => {
 
       // Create random bookmarks for each story from the story's author
       for (let k = 0; k < getRandomNumber(0, 5); k++) {
-        await prisma.bookmark.create({
-          data: {
-            userId: user.id, // The author of the story bookmarks the story
-            storyId: story.storyId,
-            createdAt: faker.date.past(),
+        // Check if bookmark already exists
+        const existingBookmark = await prisma.bookmark.findUnique({
+          where: {
+            userId_storyId: {
+              userId: user.id,
+              storyId: story.storyId,
+            },
           },
         });
+
+        // If it doesn't exist, create the bookmark
+        if (!existingBookmark) {
+          await prisma.bookmark.create({
+            data: {
+              userId: user.id, // The author of the story bookmarks the story
+              storyId: story.storyId,
+              createdAt: faker.date.past(),
+            },
+          });
+        }
       }
     }
   }

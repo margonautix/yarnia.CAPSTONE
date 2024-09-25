@@ -26,7 +26,7 @@ const AddStory = () => {
 
   // Function to handle form submission and create a new story
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form from submitting the default way
+    e.preventDefault();
 
     // Validate input fields
     if (!title || !content || !genre) {
@@ -35,35 +35,25 @@ const AddStory = () => {
     }
 
     try {
-      // Make a POST request to create a new story
       const response = await fetchWithAuth(
-        "http://localhost:3000/api/stories", // Your API endpoint
+        "http://localhost:3000/api/stories",
         {
-          method: "POST", // POST for creating a new story
-          headers: {
-            "Content-Type": "application/json", // Ensure the request is sent as JSON
-          },
+          method: "POST",
           body: JSON.stringify({
-            title, // Title should not be empty
-            summary, // Optional
-            content, // Content should not be empty
-            genre, // Genre should not be empty
-          }), // Convert the body to JSON format
+            title,
+            summary,
+            content,
+            genre,
+          }),
         }
       );
 
-      if (response.ok) {
-        const newStory = await response.json(); // Get the created story from the response
-
-        // Redirect the user to the new story's page using the storyId
-        navigate(`/stories/${newStory.storyId}`);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Failed to create story.");
+      if (response.storyId) {
+        navigate(`/${response.storyId}`); // Redirect to the newly created story
       }
     } catch (error) {
       console.error("Error creating story:", error);
-      setError("An error occurred while creating the story.");
+      setError(error.message || "An error occurred while creating the story.");
     }
   };
 
