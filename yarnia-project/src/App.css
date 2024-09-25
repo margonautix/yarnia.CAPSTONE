@@ -1260,3 +1260,24 @@ form button {
 form button:hover {
   background-color: #0056b3;
 }
+
+.admin-comments-feed {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 40px 20px;
+  margin: 25px;
+}
+
+.admin-comments-feed ul {
+  list-style: none;
+  text-align: left;
+  border: solid;
+  border-radius: 15px;
+  padding: 25px;
+}
+
+.admin-comments-feed li {
+  border: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+}

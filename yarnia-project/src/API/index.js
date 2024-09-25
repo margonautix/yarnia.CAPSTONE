@@ -231,7 +231,7 @@ export const updateStoryContent = async (storyId, content) => {
 };
 
 export const fetchBookmarkedStories = async (userId, token) => {
-  console.log("userId" , userId);
+  console.log("userId", userId);
   try {
     const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
       headers: {
@@ -253,18 +253,15 @@ export const fetchBookmarkedStories = async (userId, token) => {
 
 export const bookmarkStory = async (storyId, userId, token) => {
   console.log("something identifiable", userId);
-  const response = await fetch(
-    `${API_URL}/stories/${storyId}/bookmarks/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ storyId, userId  }),
-    }
-  );
-  const result = await response.json()
+  const response = await fetch(`${API_URL}/stories/${storyId}/bookmarks/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ storyId, userId }),
+  });
+  const result = await response.json();
   console.log(result);
   // Check if the response is OK (status in the range 200-299)
   if (!response.ok) {
@@ -296,6 +293,29 @@ export const removeBookmark = async (storyId, userId, token) => {
     return json; // Return any response data if necessary
   } catch (error) {
     console.error("Failed to remove the bookmark:", error);
+    throw error; // Re-throw the error for further handling
+  }
+};
+
+export const checkBookmarkStatus = async (userId, storyId) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/users/${userId}/stories/${storyId}/bookmark`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error checking bookmark status: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data; // Return the bookmark status
+  } catch (error) {
+    console.error("Error checking bookmark status:", error);
     throw error; // Re-throw the error for further handling
   }
 };

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, fetchBookmarkedStories } from "../API"; // Import necessary functions
 import { useNavigate, Link } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
@@ -9,6 +11,7 @@ const Profile = () => {
   const [username, setUsername] = useState(""); // State for editing username
   const [bio, setBio] = useState(""); // State for editing bio
   const [stories, setStories] = useState([]); // State to store user's stories
+  const [bookmarks, setBookmarks] = useState([]); // State to store user's bookmarks
   const [comments, setComments] = useState([]); // State to store user's comments
   const [error, setError] = useState(null); // Error state
   const [saveError, setSaveError] = useState(null); // Error state for saving profile
@@ -27,18 +30,19 @@ const Profile = () => {
         setBio(userData.bio);
         setIsAuthenticated(true); // User is authenticated
 
-        // Fetch the user's stories and comments after fetching user data
+        // Fetch the user's stories, bookmarks, and comments after fetching user data
         await fetchUserStories(userData.id);
+        await fetchUserBookmarks(userData.id); // Fetch user's bookmarks
         await fetchUserComments(userData.id); // Fetch comments posted by the user
       } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
-        navigate("/login"); // Optionally redirect to login
+        navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false); // Handle error as unauthenticated
-      navigate("/login"); // Optionally redirect to login
+      navigate("/login");
     } finally {
       setLoading(false); // Stop loading once user data is fetched
     }
@@ -57,6 +61,18 @@ const Profile = () => {
     } catch (error) {
       console.error("Error fetching user stories:", error);
       setError("An error occurred while fetching stories.");
+    }
+  };
+
+  // Fetch user's bookmarked stories
+  const fetchUserBookmarks = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const bookmarkedStories = await fetchBookmarkedStories(userId, token);
+      setBookmarks(bookmarkedStories); // Set bookmarks in state
+    } catch (error) {
+      console.error("Error fetching user bookmarks:", error);
+      setError("An error occurred while fetching bookmarks.");
     }
   };
 
@@ -188,6 +204,26 @@ const Profile = () => {
               </div>
               <div className="profile-container">
                 <h2>Your Bookmarks</h2>
+                {bookmarks.length > 0 ? (
+                  <ul className="bookmark-list">
+                    {bookmarks.map((bookmark) => (
+                      <li key={bookmark.bookmarkId} className="bookmark-item">
+                        <h3>{bookmark.story.title}</h3>
+                        <p>
+                          {bookmark.story.summary || "No summary available"}
+                        </p>
+                        <button
+                          onClick={() => handleReadMore(bookmark.storyId)}
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No bookmarks found.</p>
+                )}
                 <Link to="/bookmarks">
                   <button>Bookmarks</button>
                 </Link>
