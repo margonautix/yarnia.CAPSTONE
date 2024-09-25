@@ -136,7 +136,7 @@ const Profile = () => {
   if (!isAuthenticated || !user) {
     return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
-
+  
   return (
     <>
       <br />
@@ -280,6 +280,7 @@ const Profile = () => {
       </section>
     </>
   );
+
 };
 
 export default Profile;

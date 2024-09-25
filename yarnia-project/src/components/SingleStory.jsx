@@ -169,6 +169,32 @@ export default function SingleStory({ user }) {
     }
   };
 
+
+  // Handle bookmarking the story
+  const handleBookmark = async () => {
+    if (!currentUser) {
+      setError("You must be logged in to bookmark stories.");
+      console.log("hi");
+      return;
+    }
+    const token = localStorage.getItem("token"); // Get the token
+    try {
+      console.log(token);
+      console.log(user);
+      await bookmarkStory(storyId, user.id, token); // Pass the token correctly
+      console.log("anything");
+      setBookmarked(true);
+      console.log("bye");
+    } catch (error) {
+      setError("Error occurred while bookmarking the story.");
+    }
+  };
+
+  // Toggle the comments dropdown
+  const toggleComments = () => {
+    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+  };
+
   return (
     <div className="story-container">
       <main>
@@ -227,6 +253,7 @@ export default function SingleStory({ user }) {
           <button onClick={handleBookmark} disabled={bookmarked}>
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </button>
+
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
@@ -251,6 +278,7 @@ export default function SingleStory({ user }) {
 
           {/* Display error if there is any */}
           {error && <p className="error">{error}</p>}
+
         </ul>
       </main>
     </div>
