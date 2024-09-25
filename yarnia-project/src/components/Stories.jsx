@@ -87,6 +87,7 @@ const Stories = () => {
         {/* Sidebar for Categories and Search */}
         <aside className="sidebar">
           <h2>Genres</h2>
+
           <ul className="sidebar-menu">
             <li
               onClick={() => handleCategorySelect("")}

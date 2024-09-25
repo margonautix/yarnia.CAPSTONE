@@ -13,8 +13,7 @@ import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
 import ReactQuill from "react-quill"; // Import ReactQuill
 import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
 
-
-export default function SingleStory({user}) {
+export default function SingleStory({ user }) {
   const { storyId } = useParams(); // Get storyId from the URL
   const navigate = useNavigate(); // For navigating after delete or save
   const [currentUser, setCurrentUser] = useState(null); // State for current user info
@@ -141,10 +140,10 @@ export default function SingleStory({user}) {
     try {
       console.log(token);
       console.log(user);
-      await bookmarkStory(storyId,user.id, token); // Pass the token correctly
-      console.log("anything")
+      await bookmarkStory(storyId, user.id, token); // Pass the token correctly
+      console.log("anything");
       setBookmarked(true);
-      console.log("bye")
+      console.log("bye");
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
@@ -201,33 +200,9 @@ export default function SingleStory({user}) {
               </button>
             </div>
           )}
-              <button onClick={handleBookmark} disabled={bookmarked}>
-                {bookmarked ? "Bookmarked" : "Bookmark"}
-              </button>
-          {/* Comments toggle and display */}
-          <h2 onClick={toggleComments} className="toggle-comments-btn">
-            {isCommentsOpen
-              ? "Hide Comments"
-              : `Show Comments (${comments.length})`}
-          </h2>
-
-          {isCommentsOpen && renderComments()}
-
-          {/* New Comment Form */}
-          {isCommentsOpen && currentUser && (
-            <form onSubmit={handleSubmitComment}>
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-                required
-              />
-              <button type="submit">Submit Comment</button>
-            </form>
-          )}
-
-          {/* Display error if there is any */}
-          {error && <p className="error">{error}</p>}
+          <button onClick={handleBookmark} disabled={bookmarked}>
+            {bookmarked ? "Bookmarked" : "Bookmark"}
+          </button>
         </ul>
       </main>
     </div>
