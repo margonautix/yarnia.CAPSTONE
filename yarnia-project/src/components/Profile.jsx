@@ -224,9 +224,6 @@ const Profile = () => {
                 ) : (
                   <p>No bookmarks found.</p>
                 )}
-                <Link to="/bookmarks">
-                  <button>Bookmarks</button>
-                </Link>
               </div>
             </div>
             <div className="profile-container">
