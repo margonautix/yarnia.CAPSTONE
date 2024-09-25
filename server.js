@@ -143,26 +143,34 @@ app.delete(
 );
 
 app.post("/api/stories", authenticateUser, async (req, res) => {
-  const { title, summary, content } = req.body;
+  const { title, summary, content, genre } = req.body;
 
-  if (!title || !content) {
-    return res.status(400).json({ message: "Title and content are required." });
+  // Log incoming data
+  console.log("Incoming data:", { title, summary, content, genre });
+
+  // Validate the input data
+  if (!title || !content || !genre) {
+    return res
+      .status(400)
+      .json({ error: "Title, content, and genre are required." });
   }
 
   try {
+    // Create a new story
     const newStory = await prisma.story.create({
       data: {
         title,
         summary,
         content,
-        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
+        genre,
+        authorId: req.user.id, // Ensure this is set
+        createdAt: new Date(),
       },
     });
-
     res.status(201).json(newStory);
   } catch (error) {
-    console.error("Error creating story:", error);
-    res.status(500).json({ message: "Failed to create story." });
+    console.error("Failed to create story:", error); // Log the exact error
+    res.status(500).json({ error: "Failed to create story" });
   }
 });
 
@@ -322,31 +330,28 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
 });
 
 // Route to get all bookmarks for a specific user
+// Route to get all bookmarks for a specific user
 app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
-  const { userId } = req.params; // Extract authorId from request params
+  const { userId } = req.params;
 
   try {
-    // Check if the author exists (optional but recommended)
-    const author = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
-    });
-
-    if (!author) {
-      return res.status(404).json({ message: "Author not found." });
-    }
-
-    // Find all bookmarks for the author
+    // Fetch bookmarks with related story and author information
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(userId) }, // Filter bookmarks by authorId (mapped to authorId)
+      where: { userId: parseInt(userId) }, // Filter bookmarks by userId
       include: {
-        story: true, // Optionally include the related story information
+        story: {
+          include: {
+            author: { select: { username: true } }, // Include author's username
+          },
+        },
       },
     });
 
-    // Return bookmarks in the response
+    // Return bookmarks with author information included
     res.json(bookmarks);
   } catch (err) {
-    next(err);
+    console.error("Error fetching bookmarks:", err);
+    res.status(500).json({ message: "Failed to fetch bookmarks." });
   }
 });
 
