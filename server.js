@@ -277,8 +277,10 @@ app.get("/api/users/:userId/comments", async (req, res, next) => {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        userId: parseInt(userId), // Filter comments by authorId
+        userId: parseInt(userId),
+        // Filter comments by authorId
       },
+      include: { story: true },
     });
 
     res.status(200).json(comments);

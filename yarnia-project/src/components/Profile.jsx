@@ -227,11 +227,10 @@ const Profile = () => {
               <ul className="comment-list">
                 {comments.map((comment) => (
                   <li className="comment-item" key={comment.commentId}>
-                    <strong>Story: {comment.story?.title || "Unknown"}</strong>
-
+                    <strong>Story: {comment.story.title}</strong>
                     <p>{comment.content}</p>
                     <br />
-                    <Link to={`/stories/${comment.story}`}>
+                    <Link to={`/stories/${comment.storyId}`}>
                       <button>View Story</button>
                     </Link>
                   </li>
