@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
   bookmarkStory,
   deleteStory,
-  fetchComments, // Assuming this API fetches comments
-  postComment, // Assuming this API allows posting a comment
+  fetchComments, 
+  postComment,
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
@@ -161,7 +161,14 @@ export default function SingleStory({user}) {
         <ul className="story-single">
           {/* Display story title */}
           <h2>{story?.title || "No Title"}</h2>
-          <h4>Author: {story?.author?.username || "Unknown Author"}</h4>
+          <h4>
+  Author:{" "}
+  {story?.author?.username ? (
+    <Link to={`/profile/${story.authorId}`}>{story.author.username}</Link>
+  ) : (
+    "Unknown Author"
+  )}
+</h4>
           <h4>Description: {story?.summary || "No Description"}</h4>
 
           {/* Display or edit story content */}
