@@ -10,6 +10,7 @@ const AddStory = () => {
   const [content, setContent] = useState(""); // State for story content
   const [genre, setGenre] = useState(""); // State for selected genre
   const [error, setError] = useState(null); // State to handle errors
+  const [showPopup, setShowPopup] = useState(false); // To control pop-up visibility
   const navigate = useNavigate();
 
   // Predefined genres for the dropdown
@@ -24,7 +25,6 @@ const AddStory = () => {
     "Comedy",
   ];
 
-  // Function to handle form submission and create a new story
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,7 +49,11 @@ const AddStory = () => {
       );
 
       if (response.storyId) {
-        navigate(`/${response.storyId}`); // Redirect to the newly created story
+        setShowPopup(true); // Show pop-up
+        setTimeout(() => {
+          setShowPopup(false); // Hide pop-up after 3 seconds
+          navigate(`/${response.storyId}`); // Redirect to the newly created story
+        }, 3000); // Pop-up duration: 3 seconds
       }
     } catch (error) {
       console.error("Error creating story:", error);

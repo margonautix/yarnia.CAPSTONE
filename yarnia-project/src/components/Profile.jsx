@@ -136,7 +136,7 @@ const Profile = () => {
   if (!isAuthenticated || !user) {
     return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
-  
+
   return (
     <>
       <br />
@@ -266,9 +266,6 @@ const Profile = () => {
                     <strong>Story: {comment.story.title}</strong>
                     <p>{comment.content}</p>
                     <br />
-                    <Link to={`/stories/${comment.storyId}`}>
-                      <button>View Story</button>
-                    </Link>
                   </li>
                 ))}
               </ul>
@@ -280,7 +277,6 @@ const Profile = () => {
       </section>
     </>
   );
-
 };
 
 export default Profile;
