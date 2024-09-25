@@ -32,33 +32,24 @@ export async function fetchSingleStory(storyId) {
   }
 }
 
-// Function to delete a story by its ID
-export async function deleteStory(storyId) {
-  const token = localStorage.getItem("token"); // Assuming you're using token-based authentication
-
-  if (!token) {
-    throw new Error("User is not authenticated.");
-  }
-
+export const deleteStory = async (storyId) => {
+  const token = localStorage.getItem("token");
   try {
-    const response = await fetch(`${API_URL}/stories/${storyId}`, {
+    const response = await fetch(`/api/stories/${storyId}`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include the token in the request headers
+        Authorization: `Bearer ${token}`, // Ensure the correct authorization token is passed
       },
     });
-
     if (!response.ok) {
-      throw new Error(`Failed to delete story: ${response.statusText}`);
+      throw new Error("Failed to delete story: " + response.statusText);
     }
-
-    return await response.json(); // Return the response data
+    return response.json();
   } catch (error) {
-    console.error(`Error deleting story with ID ${storyId}:`, error);
-    throw error; // Rethrow the error to be handled by the calling function
+    console.error("Error deleting story with ID", storyId, ":", error);
+    throw error;
   }
-}
+};
 
 // Fetch comments for a specific story
 export const fetchComments = async (storyId) => {

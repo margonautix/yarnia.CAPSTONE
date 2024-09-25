@@ -136,7 +136,7 @@ const Profile = () => {
   if (!isAuthenticated || !user) {
     return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
-  
+
   return (
     <>
       <br />
@@ -224,9 +224,6 @@ const Profile = () => {
                 ) : (
                   <p>No bookmarks found.</p>
                 )}
-                <Link to="/bookmarks">
-                  <button>Bookmarks</button>
-                </Link>
               </div>
             </div>
             <div className="profile-container">
@@ -280,7 +277,6 @@ const Profile = () => {
       </section>
     </>
   );
-
 };
 
 export default Profile;
