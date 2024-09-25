@@ -142,13 +142,11 @@ app.delete(
   }
 );
 
-app.post("/api/stories", async (req, res) => {
-  const { title, summary, content, genre, authorId } = req.body;
+app.post("/api/stories", authenticateUser, async (req, res) => {
+  const { title, summary, content } = req.body;
 
-  if (!title || !content || !genre) {
-    return res
-      .status(400)
-      .json({ error: "Title, content, and genre are required." });
+  if (!title || !content) {
+    return res.status(400).json({ message: "Title and content are required." });
   }
 
   try {
@@ -157,14 +155,14 @@ app.post("/api/stories", async (req, res) => {
         title,
         summary,
         content,
-        genre, // Make sure to include genre
-        authorId,
-        createdAt: new Date(),
+        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
       },
     });
+
     res.status(201).json(newStory);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create story" });
+    console.error("Error creating story:", error);
+    res.status(500).json({ message: "Failed to create story." });
   }
 });
 
