@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchBookmarkedStories, removeBookmark } from "../API";
+import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
 const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
@@ -49,9 +49,11 @@ const Bookmarks = ({ user }) => {
     <div className="bookmarks-list">
       {bookmarks.map((bookmark) => (
         <div key={bookmark.storyId} className="bookmark-card">
-          <h2>{bookmark.title}</h2>
+          <h2>{bookmark.story.title}</h2>
           <p>
-            <strong>Author:</strong> {bookmark.story.authorId || "Unknown"}
+            <strong>Author:</strong>{" "}
+            {bookmark.story.author?.username || "Unknown"}{" "}
+            {/* Display author's username */}
           </p>
           <p>
             <strong>Summary:</strong>{" "}

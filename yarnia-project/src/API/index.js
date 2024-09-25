@@ -231,7 +231,6 @@ export const updateStoryContent = async (storyId, content) => {
 };
 
 export const fetchBookmarkedStories = async (userId, token) => {
-  console.log("userId", userId);
   try {
     const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
       headers: {
@@ -244,7 +243,7 @@ export const fetchBookmarkedStories = async (userId, token) => {
     }
 
     const data = await response.json();
-    return data; // Return the bookmarked stories
+    return data; // Return the bookmarked stories with author information
   } catch (error) {
     console.error("Error fetching user bookmarks:", error);
     throw error; // Re-throw the error for further handling

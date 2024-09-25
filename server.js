@@ -330,31 +330,28 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
 });
 
 // Route to get all bookmarks for a specific user
+// Route to get all bookmarks for a specific user
 app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
-  const { userId } = req.params; // Extract authorId from request params
+  const { userId } = req.params;
 
   try {
-    // Check if the author exists (optional but recommended)
-    const author = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
-    });
-
-    if (!author) {
-      return res.status(404).json({ message: "Author not found." });
-    }
-
-    // Find all bookmarks for the author
+    // Fetch bookmarks with related story and author information
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(userId) }, // Filter bookmarks by authorId (mapped to authorId)
+      where: { userId: parseInt(userId) }, // Filter bookmarks by userId
       include: {
-        story: true, // Optionally include the related story information
+        story: {
+          include: {
+            author: { select: { username: true } }, // Include author's username
+          },
+        },
       },
     });
 
-    // Return bookmarks in the response
+    // Return bookmarks with author information included
     res.json(bookmarks);
   } catch (err) {
-    next(err);
+    console.error("Error fetching bookmarks:", err);
+    res.status(500).json({ message: "Failed to fetch bookmarks." });
   }
 });
 
