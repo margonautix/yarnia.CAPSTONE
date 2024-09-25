@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchWithAuth, fetchBookmarkedStories } from "../API"; // Import necessary functions
-import { useNavigate, Link } from "react-router-dom";
+import { fetchBookmarkedStories } from "../API"; // Import necessary functions
+import { Link } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = () => {
