@@ -33,12 +33,12 @@ const Profile = () => {
       } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
-        navigate("/login"); // Optionally redirect to login
+        navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false); // Handle error as unauthenticated
-      navigate("/login"); // Optionally redirect to login
+      navigate("/login");
     } finally {
       setLoading(false); // Stop loading once user data is fetched
     }
