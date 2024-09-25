@@ -8,16 +8,29 @@ const AddStory = () => {
   const [title, setTitle] = useState(""); // State for story title
   const [summary, setSummary] = useState(""); // State for story summary
   const [content, setContent] = useState(""); // State for story content
+  const [genre, setGenre] = useState(""); // State for selected genre
   const [error, setError] = useState(null); // State to handle errors
   const navigate = useNavigate();
+
+  // Predefined genres for the dropdown
+  const genres = [
+    "Fantasy",
+    "Science Fiction",
+    "Romance",
+    "Thriller",
+    "Horror",
+    "Mystery",
+    "Drama",
+    "Comedy",
+  ];
 
   // Function to handle form submission and create a new story
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form from submitting the default way
 
     // Validate input fields
-    if (!title || !content) {
-      setError("Title and content are required.");
+    if (!title || !content || !genre) {
+      setError("Title, content, and genre are required.");
       return;
     }
 
@@ -34,6 +47,7 @@ const AddStory = () => {
             title, // Title should not be empty
             summary, // Optional
             content, // Content should not be empty
+            genre, // Genre should not be empty
           }), // Convert the body to JSON format
         }
       );
@@ -78,6 +92,22 @@ const AddStory = () => {
               onChange={(e) => setSummary(e.target.value)} // Update summary state
               placeholder="Write a short summary (optional)"
             />
+          </div>
+          <div className="form-group">
+            <label htmlFor="genre">Genre</label>
+            <select
+              id="genre"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)} // Update genre state
+              required
+            >
+              <option value="">Select a genre</option>
+              {genres.map((g) => (
+                <option key={g} value={g}>
+                  {g}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="form-group">
             <label htmlFor="content">Content</label>

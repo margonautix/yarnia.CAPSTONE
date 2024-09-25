@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const prisma = require("./prisma");
-
 const cors = require("cors");
 
 const PORT = 3000;
@@ -55,13 +54,13 @@ const authenticateUser = (req, res, next) => {
 // Middleware to check if the user is an admin
 const authenticateAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Extract token from header
-
   if (!token) {
     return res.status(401).json({ message: "Authorization header missing" });
   }
 
   try {
     const decoded = jwt.verify(token, JWT); // Verify token
+    console.log("Decoded token:", decoded); // Log decoded token for debugging
 
     if (!decoded.isAdmin) {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -118,33 +117,38 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
-app.delete("/api/stories/:storyId", async (req, res) => {
-  const { storyId } = req.params;
+app.delete(
+  "/api/stories/:storyId",
+  authenticateUser,
+  authenticateAdmin,
+  async (req, res) => {
+    const { storyId } = req.params;
 
-  try {
-    const deletedStory = await prisma.story.delete({
-      where: { storyId: parseInt(storyId) },
-    });
+    try {
+      const deletedStory = await prisma.story.delete({
+        where: { storyId: parseInt(storyId) },
+      });
 
-    res
-      .status(200)
-      .json({ message: "Story deleted successfully", deletedStory });
-  } catch (error) {
-    if (error.code === "P2025") {
-      // Handle "Record to delete does not exist" error
-      return res.status(404).json({ message: "Story not found." });
+      res
+        .status(200)
+        .json({ message: "Story deleted successfully", deletedStory });
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ message: "Story not found." });
+      }
+      console.error("Error deleting story:", error);
+      res.status(500).json({ message: "Server error." });
     }
-    console.error("Error deleting story:", error);
-    res.status(500).json({ message: "Server error." });
   }
-});
+);
 
-// POST (create) a new story
-app.post("/api/stories", authenticateUser, async (req, res) => {
-  const { title, summary, content } = req.body;
+app.post("/api/stories", async (req, res) => {
+  const { title, summary, content, genre, authorId } = req.body;
 
-  if (!title || !content) {
-    return res.status(400).json({ message: "Title and content are required." });
+  if (!title || !content || !genre) {
+    return res
+      .status(400)
+      .json({ error: "Title, content, and genre are required." });
   }
 
   try {
@@ -153,14 +157,14 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         title,
         summary,
         content,
-        authorId: req.user.id, // Assuming you're attaching the authenticated user's ID
+        genre, // Make sure to include genre
+        authorId,
+        createdAt: new Date(),
       },
     });
-
     res.status(201).json(newStory);
   } catch (error) {
-    console.error("Error creating story:", error);
-    res.status(500).json({ message: "Failed to create story." });
+    res.status(500).json({ error: "Failed to create story" });
   }
 });
 
@@ -269,13 +273,13 @@ app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
 });
 
 // GET all comments by specific user
-app.get("/api/users/:authorId/comments", async (req, res, next) => {
-  const { authorId } = req.params; // Extract authorId from the URL
+app.get("/api/users/:userId/comments", async (req, res, next) => {
+  const { userId } = req.params; // Extract authorId from the URL
   try {
     // Fetch comments where the authorId matches the specified user
     const comments = await prisma.comment.findMany({
       where: {
-        authorId: parseInt(authorId), // Filter comments by authorId
+        userId: parseInt(userId), // Filter comments by authorId
       },
     });
 
@@ -300,11 +304,16 @@ app.put("/api/users/me", authenticateUser, async (req, res, next) => {
   }
 });
 
-// GET all comments in database
+// GET all comments in the database with user information
 app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
   try {
-    // Fetch all comments from the database
-    const comments = await prisma.comment.findMany();
+    const comments = await prisma.comment.findMany({
+      include: {
+        user: {
+          select: { username: true }, // Include only the user's username
+        },
+      },
+    });
 
     res.status(200).json(comments);
   } catch (err) {
@@ -313,13 +322,13 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
 });
 
 // Route to get all bookmarks for a specific user
-app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
-  const { authorId } = req.params; // Extract authorId from request params
+app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
+  const { userId } = req.params; // Extract authorId from request params
 
   try {
     // Check if the author exists (optional but recommended)
     const author = await prisma.user.findUnique({
-      where: { id: parseInt(authorId) },
+      where: { id: parseInt(userId) },
     });
 
     if (!author) {
@@ -328,7 +337,7 @@ app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the author
     const bookmarks = await prisma.bookmark.findMany({
-      where: { authorId: parseInt(authorId) }, // Filter bookmarks by authorId (mapped to authorId)
+      where: { userId: parseInt(userId) }, // Filter bookmarks by authorId (mapped to authorId)
       include: {
         story: true, // Optionally include the related story information
       },
@@ -341,31 +350,31 @@ app.get("/api/users/:authorId/bookmarks", async (req, res, next) => {
   }
 });
 
-// Route to post a new bookmark to a story
-app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
-  const { authorId } = req.body;
-  const { storyId } = req.params;
+// // Route to post a new bookmark to a story
+// app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
+//   const { authorId } = req.body;
+//   const { storyId } = req.params;
 
-  try {
-    // Validate input
-    if (!authorId) {
-      return res.status(400).json({ message: "authorId is required." });
-    }
+//   try {
+//     // Validate input
+//     if (!authorId) {
+//       return res.status(400).json({ message: "authorId is required." });
+//     }
 
-    // Create a new bookmark
-    const bookmark = await prisma.bookmark.create({
-      data: {
-        userId: parseInt(authorId), // Assuming authorId maps to the user who created the bookmark
-        storyId: parseInt(storyId), // Use the storyId from the URL
-      },
-    });
+//     // Create a new bookmark
+//     const bookmark = await prisma.bookmark.create({
+//       data: {
+//         userId: parseInt(authorId), // Assuming authorId maps to the user who created the bookmark
+//         storyId: parseInt(storyId), // Use the storyId from the URL
+//       },
+//     });
 
-    // Return the created bookmark
-    res.status(201).json(bookmark);
-  } catch (err) {
-    next(err);
-  }
-});
+//     // Return the created bookmark
+//     res.status(201).json(bookmark);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 //Route to delete a bookmark from a story
 app.delete(
@@ -630,12 +639,13 @@ app.get("/api/user/bookmarks", async (req, res, next) => {
 // POST /api/stories/:storyId/bookmarks
 
 app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
-  const { bookmarkId, userId, storyId, createdAt } = req.body;
-
+  console.log("milk");
+  const { userId, storyId } = req.body;
+  console.log(userId, userId);
   try {
-    if (!userId || !storyId || !createdAt || !bookmarkId) {
+    if (!userId || !storyId) {
       return res.status(400).json({
-        message: "userId, storyId, createdAt, and bookmarkId are required",
+        message: "userId and storyId are required",
       });
     }
 
@@ -698,6 +708,8 @@ app.get("/api/user/:authorId/bookmarks", async (req, res, next) => {
   }
 });
 
+// GET (`${API_URL}/users/${userId}/bookmarks`, {
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
@@ -720,5 +732,18 @@ app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
   } catch (error) {
     console.error("Error fetching stories:", error);
     res.status(500).json({ message: "Failed to fetch stories." });
+  }
+});
+
+app.get("/api/users/:userId/comments", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { userId: Number(userId) },
+      include: { story: true }, // Include the related story
+    });
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user comments" });
   }
 });
