@@ -129,7 +129,7 @@ export default function SingleStory({ user }) {
         <ul>
           {comments.map((comment) => (
             <li key={comment.id}>
-              <strong>{comment.author?.username || "Anonymous"}:</strong>
+              <strong>{comment.userId?.username || "Anonymous"}:</strong>
               <p>{comment.content}</p>
             </li>
           ))}
