@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
-import Stories from "./Components/Stories";
+import Stories from "./components/Stories";
 import Bookmarks from "./components/Bookmarks";
 import NavBar from "./components/Navbar";
 import Register from "./components/Register";
@@ -71,7 +71,7 @@ function App() {
         <Route path="/stories" element={<StoryDetails />} />
         <Route path="/comment" element={<Comments />} />
         <Route path="/comments" element={<AdminCommentsFeed />} />
-        <Route path="/profile/:authorId" element={<UserProfile />} />
+        <Route path="/users/:authorId" element={<UserProfile />} />
       </Routes>
     </div>
   );

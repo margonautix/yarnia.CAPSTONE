@@ -126,7 +126,7 @@ const Stories = () => {
               <p>
                 <strong>Author:</strong>{" "}
                 {story?.author?.username ? (
-                  <Link to={`/profile/${story.authorId}`}>
+                  <Link to={`/users/${story.authorId}`}>
                     {story.author.username}
                   </Link>
                 ) : (
