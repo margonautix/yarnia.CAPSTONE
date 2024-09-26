@@ -178,7 +178,7 @@ export default function SingleStory({ user }) {
           <h4>
             Author:{" "}
             {story?.author?.username ? (
-              <Link to={`/profile/${story.authorId}`}>
+              <Link to={`/users/${story.authorId}`}>
                 {story.author.username}
               </Link>
             ) : (

@@ -71,7 +71,7 @@ function App() {
         <Route path="/stories" element={<StoryDetails />} />
         <Route path="/comment" element={<Comments />} />
         <Route path="/comments" element={<AdminCommentsFeed />} />
-        <Route path="/profile/:authorId" element={<UserProfile />} />
+        <Route path="/users/:authorId" element={<UserProfile />} />
       </Routes>
     </div>
   );
