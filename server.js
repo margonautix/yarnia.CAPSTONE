@@ -163,7 +163,8 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         summary,
         content,
         genre,
-        authorId: req.user.id, // Ensure this is set
+        authorId: req.user.id,
+        authorName, // Ensure this is set
         createdAt: new Date(),
       },
     });
@@ -457,11 +458,22 @@ app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the story
     const bookmarks = await prisma.bookmark.findMany({
-      where: { storyId: parseInt(storyId) }, // Filter bookmarks by storyId
+      where: { userId: parseInt(userId) },
       include: {
-        user: true, // Optionally include the user who bookmarked the story
+        story: {
+          include: {
+            author: { 
+              select: {
+                username: true, 
+              },
+            },
+          },
+        },
       },
     });
+    
+    // Return bookmarks with author info in the response
+    res.json(bookmarks);
 
     // Return bookmarks in the response
     res.json(bookmarks);
@@ -723,7 +735,7 @@ app.delete(
 
     try {
       await prisma.bookmark.delete({
-        where: { id: parseInt(bookmarkId) },
+        where: { bookmarkId: parseInt(bookmarkId) },
       });
       res.status(200).json({ message: "Bookmark deleted successfully." });
     } catch (err) {

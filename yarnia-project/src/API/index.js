@@ -262,10 +262,10 @@ export const bookmarkStory = async (storyId, userId, token) => {
   return result; // Assuming you want to return the response data
 };
 
-export const removeBookmark = async (storyId, userId, token) => {
+export const removeBookmark = async (storyId, userId, token, bookmarkId) => {
   try {
     const response = await fetch(
-      `${API_URL}/users/${userId}/bookmarks/${storyId}`,
+      `${API_URL}/stories/${storyId}/bookmarks/${bookmarkId}`,
       {
         method: "DELETE",
         headers: {
