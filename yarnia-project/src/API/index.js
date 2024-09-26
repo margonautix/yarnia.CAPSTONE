@@ -34,19 +34,25 @@ export async function fetchSingleStory(storyId) {
 
 export const deleteStory = async (storyId) => {
   const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+
   try {
-    const response = await fetch(`/api/stories/${storyId}`, {
+    const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`, // Ensure the correct authorization token is passed
+        Authorization: `Bearer ${token}`, // Ensure Bearer token is sent
       },
     });
+
     if (!response.ok) {
-      throw new Error("Failed to delete story: " + response.statusText);
+      throw new Error(`Failed to delete story: ${response.status}`);
     }
+
     return response.json();
   } catch (error) {
-    console.error("Error deleting story with ID", storyId, ":", error);
+    console.error("Error deleting story:", error);
     throw error;
   }
 };
