@@ -70,6 +70,7 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength="8"
             />
           </label>
           <br />
