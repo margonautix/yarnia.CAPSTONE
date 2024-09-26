@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
+
+
 const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,10 +11,9 @@ const Bookmarks = ({ user }) => {
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    console.log("HERE");
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(user?.id, token); // Fetch bookmarks from the API
+        const data = await fetchBookmarkedStories(user?.id, token);
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -48,8 +49,6 @@ const Bookmarks = ({ user }) => {
     return (
       <p>You have no bookmarks yet. Start saving your favorite stories!</p>
     );
-  }
-  console.log("bookmarks", bookmarks);
   return (
     <div className="bookmarks-list">
       {bookmarks.map((bookmark, index) => (
@@ -59,8 +58,7 @@ const Bookmarks = ({ user }) => {
             <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
           </p>
           <p>
-            <strong>Summary:</strong>{" "}
-            {bookmark?.story.summary || "No summary available"}
+            <strong>Summary:</strong> {bookmark?.story.summary || "No summary available"}
           </p>
           <button onClick={() => handleViewStory(bookmark?.storyId)}>
             View Story
