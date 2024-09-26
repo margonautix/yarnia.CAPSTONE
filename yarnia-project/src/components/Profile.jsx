@@ -126,7 +126,11 @@ const Profile = () => {
 
   // Handle navigation to the single story view
   const handleReadMore = (storyId) => {
-    navigate(`/stories/${storyId}`); // Navigate to the SingleStory component using storyId
+    if (!storyId) {
+      console.error("Story ID not provided for navigation");
+      return;
+    }
+    navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
   };
 
   if (loading) {
@@ -213,7 +217,7 @@ const Profile = () => {
                           {bookmark.story.summary || "No summary available"}
                         </p>
                         <button
-                          onClick={() => handleReadMore(bookmark.storyId)}
+                          onClick={() => handleReadMore(bookmark.story.id)} // Ensure the correct story ID
                           className="button"
                         >
                           Read more
@@ -263,6 +267,9 @@ const Profile = () => {
                     <strong>Story: {comment.story.title}</strong>
                     <p>{comment.content}</p>
                     <br />
+                    <Link to={`/stories/${comment.story.id}`}>
+                      <button>View Story</button>
+                    </Link>
                   </li>
                 ))}
               </ul>
