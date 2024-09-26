@@ -27,7 +27,6 @@ export default function SingleStory({ user }) {
   const [newComment, setNewComment] = useState(""); // Store new comment input
   const [bookmarked, setBookmarked] = useState(false); // Track bookmark status
 
-  // Fetch the story and comments from the server
   const fetchStoryAndComments = async (storyId) => {
     try {
       const storyResponse = await fetchSingleStory(storyId); // Fetch the story
@@ -37,8 +36,11 @@ export default function SingleStory({ user }) {
 
         // Fetch the comments related to the story
         const commentsResponse = await fetchComments(storyId); // Ensure this API call works
+        console.log(commentsResponse); // Log to check if comments are fetched
         if (commentsResponse) {
           setComments(commentsResponse); // Set the comments state
+        } else {
+          setComments([]); // Set to empty if no comments are found
         }
       } else {
         setError("Story not found.");
@@ -99,6 +101,57 @@ export default function SingleStory({ user }) {
     }
   };
 
+  // Handle submitting a new comment in SingleStory
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      alert("You must be logged in to comment.");
+      return;
+    }
+
+    try {
+      // Post the new comment
+      await postComment(storyId, currentUser.id, newComment);
+
+      // Fetch updated comments
+      const updatedComments = await fetchComments(storyId);
+      setComments(updatedComments); // Update the comments state
+      setNewComment(""); // Clear the input field
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+    }
+  };
+
+  // Render the comments and comment form
+  const renderComments = () => (
+    <div className="comments-section">
+      {comments.length > 0 ? (
+        <ul>
+          {comments.map((comment) => (
+            <li key={comment.id}>
+              <strong>{comment.author?.username || "Anonymous"}:</strong>
+              <p>{comment.content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No comments yet.</p>
+      )}
+
+      {currentUser && (
+        <form onSubmit={handleSubmitComment}>
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            required
+          />
+          <button type="submit">Submit Comment</button>
+        </form>
+      )}
+    </div>
+  );
+
   // Function to handle story deletion
   const handleDeleteStory = async () => {
     const confirmDelete = window.confirm(
@@ -136,9 +189,9 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+    setIsCommentsOpen(!isCommentsOpen);
+    console.log("Comments are", isCommentsOpen ? "closed" : "open");
   };
 
   return (
