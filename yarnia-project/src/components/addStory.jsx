@@ -45,20 +45,15 @@ const AddStory = () => {
             content,
             genre,
           }),
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
 
-      console.log("API response:", response); // Log response to verify
-
-      // Check if storyId is present
-      if (response && response.storyId) {
-        alert("🎉 Congrats! You've successfully added a new story!");
-        navigate(`/${response.storyId}`); // Redirect to the newly created story
-      } else {
-        console.error("No storyId in response.");
+      if (response.storyId) {
+        setShowPopup(true); // Show pop-up
+        setTimeout(() => {
+          setShowPopup(false); // Hide pop-up after 3 seconds
+          navigate(`/${response.storyId}`); // Redirect to the newly created story
+        }, 3000); // Pop-up duration: 3 seconds
       }
     } catch (error) {
       console.error("Error creating story:", error);
