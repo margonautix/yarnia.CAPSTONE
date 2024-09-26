@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
 
 const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     console.log("HERE");
@@ -18,15 +20,13 @@ const Bookmarks = ({ user }) => {
         setLoading(false);
       }
     };
-  
+
     getBookmarks();
   }, [user?.id, token]);
-
 
   const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
     try {
       await removeBookmark(storyId, userId, token, bookmarkId); // Remove bookmark from the API
-      // Pass the correct userId and token
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.storyId !== storyId)
@@ -34,6 +34,10 @@ const Bookmarks = ({ user }) => {
     } catch (error) {
       console.error("Failed to remove bookmark", error);
     }
+  };
+
+  const handleViewStory = (storyId) => {
+    navigate(`/stories/${storyId}`); // Navigate to the story details page
   };
 
   if (loading) {
@@ -45,7 +49,7 @@ const Bookmarks = ({ user }) => {
       <p>You have no bookmarks yet. Start saving your favorite stories!</p>
     );
   }
-console.log("bookmarks", bookmarks)
+  console.log("bookmarks", bookmarks);
   return (
     <div className="bookmarks-list">
       {bookmarks.map((bookmark, index) => (
@@ -58,10 +62,19 @@ console.log("bookmarks", bookmarks)
             <strong>Summary:</strong>{" "}
             {bookmark?.story.summary || "No summary available"}
           </p>
-          <button onClick={() => alert(`Open story: ${bookmark?.storyId}`)}>
+          <button onClick={() => handleViewStory(bookmark?.storyId)}>
             View Story
           </button>
-          <button onClick={() => handleRemoveBookmark(bookmark?.storyId, bookmark?.userId, token, bookmark?.bookmarkId)}>
+          <button
+            onClick={() =>
+              handleRemoveBookmark(
+                bookmark?.storyId,
+                bookmark?.userId,
+                token,
+                bookmark?.bookmarkId
+              )
+            }
+          >
             Remove Bookmark
           </button>
         </div>
