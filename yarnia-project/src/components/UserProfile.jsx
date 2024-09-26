@@ -4,7 +4,6 @@ import { fetchUserProfileById } from "../API";
 
 export default function UserProfile() {
   const { authorId } = useParams(); // Get the user ID from the URL
-  console.log("Author ID:", authorId); // Log to verify
 
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);

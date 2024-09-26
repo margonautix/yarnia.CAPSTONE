@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
-import Stories from "./Components/Stories";
+import Stories from "./components/Stories";
 import Bookmarks from "./components/Bookmarks";
 import NavBar from "./components/Navbar";
 import Register from "./components/Register";
