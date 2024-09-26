@@ -73,7 +73,15 @@ const authenticateAdmin = (req, res, next) => {
 // GET all stories
 app.get("/api/stories", async (req, res, next) => {
   try {
-    const stories = await prisma.story.findMany();
+    const stories = await prisma.story.findMany({
+      include: {
+        author: {
+          select: {
+            username: true
+          }
+        }
+      }
+    });
     res.json(stories);
   } catch (err) {
     next(err);
@@ -86,7 +94,14 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
 
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) }, // Convert to integer only if needed
+      where: { storyId: parseInt(storyId) },
+      include: {
+        author: {
+          select: {
+            username: true
+          }
+        }
+      } // Convert to integer only if needed
     });
 
     if (!story) {
@@ -184,6 +199,13 @@ app.get("/api/stories/:storyId/comments", async (req, res, next) => {
       where: {
         storyId: parseInt(storyId), // Filter comments by storyId
       },
+      include: {
+        user: {
+          select: {
+            username: true
+          }
+        }
+      }
     });
     res.json(comments);
   } catch (err) {

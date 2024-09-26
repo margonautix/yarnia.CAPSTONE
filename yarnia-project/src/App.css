@@ -535,3 +535,8 @@ p {
 p.email {
   color: #cccccc;
 }
+
+/* Comment section for single story */
+.commentsection {
+  color: #000;
+}
