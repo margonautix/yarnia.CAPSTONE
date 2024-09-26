@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchBookmarkedStories } from "../API"; // Import necessary functions
-import { Link } from "react-router-dom";
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = () => {
@@ -84,7 +83,6 @@ const Profile = () => {
       ); // Assuming this API endpoint returns all comments by the user
       if (response.ok) {
         const userComments = await response.json();
-        console.log("Fetched comments:", userComments); // Add console log for debugging
         setComments(userComments); // Set comments in state
       }
     } catch (error) {
@@ -206,6 +204,8 @@ const Profile = () => {
                 )}
                 {saveError && <p className="error-message">{saveError}</p>}
               </div>
+
+              {/* Bookmarks Section */}
               <div className="profile-container">
                 <h2>Your Bookmarks</h2>
                 {bookmarks.length > 0 ? (
@@ -217,7 +217,7 @@ const Profile = () => {
                           {bookmark.story.summary || "No summary available"}
                         </p>
                         <button
-                          onClick={() => handleReadMore(bookmark.story.id)} // Ensure the correct story ID
+                          onClick={() => handleReadMore(bookmark.storyId)}
                           className="button"
                         >
                           Read more
@@ -230,6 +230,8 @@ const Profile = () => {
                 )}
               </div>
             </div>
+
+            {/* Stories Section */}
             <div className="profile-container">
               <h2>Your Stories</h2>
               {error && <p className="error-message">{error}</p>}
@@ -258,6 +260,8 @@ const Profile = () => {
               )}
             </div>
           </div>
+
+          {/* Comment History Section */}
           <div className="profile-container">
             <h3 id="history">Comment History:</h3>
             {comments.length > 0 ? (
@@ -267,9 +271,12 @@ const Profile = () => {
                     <strong>Story: {comment.story.title}</strong>
                     <p>{comment.content}</p>
                     <br />
-                    <Link to={`/stories/${comment.story.id}`}>
-                      <button>View Story</button>
-                    </Link>
+                    <button
+                      onClick={() => handleReadMore(comment.storyId)}
+                      className="button"
+                    >
+                      View Story
+                    </button>
                   </li>
                 ))}
               </ul>
