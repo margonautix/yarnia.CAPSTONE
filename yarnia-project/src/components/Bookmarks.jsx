@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { fetchBookmarkedStories, removeBookmark } from "../API"; 
+
 
 const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    console.log("HERE");
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(user?.id, token); // Fetch bookmarks from the API
+        const data = await fetchBookmarkedStories(user?.id, token);
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -22,15 +24,10 @@ const Bookmarks = ({ user }) => {
     getBookmarks();
   }, [user?.id, token]);
 
-
   const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
     try {
-      await removeBookmark(storyId, userId, token, bookmarkId); // Remove bookmark from the API
-      // Pass the correct userId and token
-      // Update the bookmarks list locally by filtering out the removed bookmark
-      setBookmarks(
-        bookmarks.filter((bookmark) => bookmark.storyId !== storyId)
-      );
+      await removeBookmark(storyId, userId, token, bookmarkId);
+      setBookmarks(bookmarks.filter((bookmark) => bookmark.storyId !== storyId));
     } catch (error) {
       console.error("Failed to remove bookmark", error);
     }
@@ -41,11 +38,9 @@ const Bookmarks = ({ user }) => {
   }
 
   if (bookmarks.length === 0) {
-    return (
-      <p>You have no bookmarks yet. Start saving your favorite stories!</p>
-    );
+    return <p>You have no bookmarks yet. Start saving your favorite stories!</p>;
   }
-console.log("bookmarks", bookmarks)
+
   return (
     <div className="bookmarks-list">
       {bookmarks.map((bookmark, index) => (
@@ -55,10 +50,12 @@ console.log("bookmarks", bookmarks)
             <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
           </p>
           <p>
-            <strong>Summary:</strong>{" "}
-            {bookmark?.story.summary || "No summary available"}
+            <strong>Summary:</strong> {bookmark?.story.summary || "No summary available"}
           </p>
-          <button onClick={() => alert(`Open story: ${bookmark?.storyId}`)}>
+          <button onClick={() => {
+  console.log(`Navigating to /story/${bookmark?.storyId}`);
+  navigate(`/stories/${bookmark?.storyId}`);
+}}>
             View Story
           </button>
           <button onClick={() => handleRemoveBookmark(bookmark?.storyId, bookmark?.userId, token, bookmark?.bookmarkId)}>

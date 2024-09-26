@@ -68,7 +68,7 @@ function App() {
         <Route path="/stories/:storyId" element={<SingleStory user={user} />} />
         <Route path="/logout" element={<Logout setUser={setUser} />} />
         <Route path="/add-story" element={<AddStory />} />
-        <Route path="/stories" element={<StoryDetails />} />
+        <Route path="/story:id" element={<StoryDetails />} />
         <Route path="/comment" element={<Comments />} />
         <Route path="/comments" element={<AdminCommentsFeed />} />
         <Route path="/profile/:authorId" element={<UserProfile />} />
