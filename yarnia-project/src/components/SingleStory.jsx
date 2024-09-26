@@ -27,7 +27,6 @@ export default function SingleStory({ user }) {
   const [newComment, setNewComment] = useState(""); // Store new comment input
   const [bookmarked, setBookmarked] = useState(false); // Track bookmark status
 
-  // Fetch the story and comments from the server
   const fetchStoryAndComments = async (storyId) => {
     try {
       const storyResponse = await fetchSingleStory(storyId); // Fetch the story
@@ -37,8 +36,11 @@ export default function SingleStory({ user }) {
 
         // Fetch the comments related to the story
         const commentsResponse = await fetchComments(storyId); // Ensure this API call works
+        console.log(commentsResponse); // Log to check if comments are fetched
         if (commentsResponse) {
           setComments(commentsResponse); // Set the comments state
+        } else {
+          setComments([]); // Set to empty if no comments are found
         }
       } else {
         setError("Story not found.");
@@ -136,9 +138,27 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Toggle the comments dropdown
+  // Function to render the comments
+  const renderComments = () => {
+    if (comments.length === 0) {
+      return <p>No comments yet.</p>;
+    }
+
+    return (
+      <ul className="comments-list">
+        {comments.map((comment) => (
+          <li key={comment.id} className="comment-item">
+            <strong>{comment.author?.username || "Anonymous"}:</strong>
+            <p>{comment.content}</p>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+    setIsCommentsOpen(!isCommentsOpen);
+    console.log("Comments are", isCommentsOpen ? "closed" : "open");
   };
 
   return (
