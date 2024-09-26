@@ -117,30 +117,25 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
   }
 });
 
-app.delete(
-  "/api/stories/:storyId",
-  authenticateUser,
-  authenticateAdmin,
-  async (req, res) => {
-    const { storyId } = req.params;
+app.delete("/api/stories/:storyId", authenticateUser, async (req, res) => {
+  const { storyId } = req.params;
 
-    try {
-      const deletedStory = await prisma.story.delete({
-        where: { storyId: parseInt(storyId) },
-      });
+  try {
+    const deletedStory = await prisma.story.delete({
+      where: { storyId: parseInt(storyId) },
+    });
 
-      res
-        .status(200)
-        .json({ message: "Story deleted successfully", deletedStory });
-    } catch (error) {
-      if (error.code === "P2025") {
-        return res.status(404).json({ message: "Story not found." });
-      }
-      console.error("Error deleting story:", error);
-      res.status(500).json({ message: "Server error." });
+    res
+      .status(200)
+      .json({ message: "Story deleted successfully", deletedStory });
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Story not found." });
     }
+    console.error("Error deleting story:", error);
+    res.status(500).json({ message: "Server error." });
   }
-);
+});
 
 app.post("/api/stories", authenticateUser, async (req, res) => {
   const { title, summary, content, genre } = req.body;
@@ -163,8 +158,7 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         summary,
         content,
         genre,
-        authorId: req.user.id,
-        authorName, // Ensure this is set
+        authorId: req.user.id, // Ensure this is set
         createdAt: new Date(),
       },
     });
@@ -458,22 +452,11 @@ app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the story
     const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: parseInt(userId) },
+      where: { storyId: parseInt(storyId) }, // Filter bookmarks by storyId
       include: {
-        story: {
-          include: {
-            author: { 
-              select: {
-                username: true, 
-              },
-            },
-          },
-        },
+        user: true, // Optionally include the user who bookmarked the story
       },
     });
-    
-    // Return bookmarks with author info in the response
-    res.json(bookmarks);
 
     // Return bookmarks in the response
     res.json(bookmarks);
@@ -735,7 +718,7 @@ app.delete(
 
     try {
       await prisma.bookmark.delete({
-        where: { bookmarkId: parseInt(bookmarkId) },
+        where: { id: parseInt(bookmarkId) },
       });
       res.status(200).json({ message: "Bookmark deleted successfully." });
     } catch (err) {

@@ -120,17 +120,12 @@ export default function SingleStory({ user }) {
   const handleBookmark = async () => {
     if (!currentUser) {
       setError("You must be logged in to bookmark stories.");
-      console.log("hi");
       return;
     }
     const token = localStorage.getItem("token"); // Get the token
     try {
-      console.log(token);
-      console.log(user);
-      await bookmarkStory(storyId, user.id, token); // Pass the token correctly
-      console.log("anything");
-      setBookmarked(true);
-      console.log("bye");
+      await bookmarkStory(storyId, currentUser.id, token); // Pass the token correctly
+      setBookmarked(true); // Update bookmark status
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
@@ -139,6 +134,39 @@ export default function SingleStory({ user }) {
   // Toggle the comments dropdown
   const toggleComments = () => {
     setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+  };
+
+  // Render each comment correctly with author and content
+  const renderComments = () => {
+    if (comments.length > 0) {
+      return (
+        <ul className="comments-list">
+          {comments.map((comment) => (
+            <li key={comment.commentId} className="comment-item">
+              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
+              {comment.content || "No content available"}
+            </li>
+          ))}
+        </ul>
+      );
+    } else {
+      return <p>No comments yet.</p>;
+    }
+  };
+
+  // Handle new comment submission
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!newComment) return;
+
+    try {
+      await postComment(storyId, newComment); // Post the new comment to the API
+      setNewComment(""); // Clear the comment input
+      fetchStoryAndComments(storyId); // Refresh the comments
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+      setError("Failed to post comment.");
+    }
   };
 
   return (
@@ -199,7 +227,6 @@ export default function SingleStory({ user }) {
           <button onClick={handleBookmark} disabled={bookmarked}>
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </button>
-
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
