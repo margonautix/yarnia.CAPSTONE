@@ -47,37 +47,37 @@ const Bookmarks = ({ user }) => {
     return (
       <p>You have no bookmarks yet. Start saving your favorite stories!</p>
     );
+    return (
+      <div className="bookmarks-list">
+        {bookmarks.map((bookmark, index) => (
+          <div key={index} className="bookmark-card">
+            <h2>{bookmark?.title}</h2>
+            <p>
+              <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
+            </p>
+            <p>
+              <strong>Summary:</strong>{" "}
+              {bookmark?.story.summary || "No summary available"}
+            </p>
+            <button onClick={() => handleViewStory(bookmark?.storyId)}>
+              View Story
+            </button>
+            <button
+              onClick={() =>
+                handleRemoveBookmark(
+                  bookmark?.storyId,
+                  bookmark?.userId,
+                  token,
+                  bookmark?.bookmarkId
+                )
+              }
+            >
+              Remove Bookmark
+            </button>
+          </div>
+        ))}
+      </div>
+    );
   }
-  return (
-    <div className="bookmarks-list">
-      {bookmarks.map((bookmark, index) => (
-        <div key={index} className="bookmark-card">
-          <h2>{bookmark?.title}</h2>
-          <p>
-            <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
-          </p>
-          <p>
-            <strong>Summary:</strong>{" "}
-            {bookmark?.story.summary || "No summary available"}
-          </p>
-          <button onClick={() => handleViewStory(bookmark?.storyId)}>
-            View Story
-          </button>
-          <button
-            onClick={() =>
-              handleRemoveBookmark(
-                bookmark?.storyId,
-                bookmark?.userId,
-                token,
-                bookmark?.bookmarkId
-              )
-            }
-          >
-            Remove Bookmark
-          </button>
-        </div>
-      ))}
-    </div>
-  );
 };
 export default Bookmarks;
