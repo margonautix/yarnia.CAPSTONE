@@ -8,6 +8,8 @@ const Bookmarks = ({ user }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+  console.log("testing");
+
   useEffect(() => {
     const getBookmarks = async () => {
       try {
