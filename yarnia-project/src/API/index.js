@@ -360,3 +360,16 @@ export const updateUserProfile = async (username, bio) => {
     body: { username, bio },
   });
 };
+
+export async function fetchUserProfileById(authorId) {
+  try {
+    const response = await fetch(`${API_URL}/users/${authorId}`); // Use the base API URL
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user: ${response.statusText}`);
+    }
+    return await response.json(); // Ensure the response is JSON
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error;
+  }
+}
