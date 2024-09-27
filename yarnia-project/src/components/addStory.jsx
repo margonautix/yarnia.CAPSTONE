@@ -26,8 +26,6 @@ const AddStory = () => {
   ];
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     // Validate input fields
     if (!title || !content || !genre) {
       setError("Title, content, and genre are required.");
