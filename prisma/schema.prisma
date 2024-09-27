@@ -25,12 +25,11 @@ model User {
   // Relations
   bookmarks Bookmark[]
   comments  Comment[]
-  stories   Story[]    @relation("author") // No need to specify fields or references here
+  stories   Story[]    @relation("author") // Removed onDelete here
 }
 
 model Story {
   storyId   Int      @id @default(autoincrement())
-  authorName String
   title     String
   authorId  Int
   summary   String?
@@ -39,7 +38,7 @@ model Story {
   content   String
 
   // Relations
-  author    User       @relation("author", fields: [authorId], references: [id])
+  author    User       @relation("author", fields: [authorId], references: [id], onDelete: Cascade) // Keep onDelete here
   comments  Comment[]
   bookmarks Bookmark[]
 }
@@ -51,10 +50,10 @@ model Bookmark {
   createdAt  DateTime @default(now())
 
   // Relations
-  user  User  @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade) // Ensure bookmark is deleted if user is deleted
   story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 
-  @@unique([userId, storyId]) // Add this line to enforce unique bookmarks for each user-story pair
+  @@unique([userId, storyId])
 }
 
 model Comment {
@@ -65,6 +64,6 @@ model Comment {
   content   String
 
   // Relations
-  user  User  @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade) // Ensure comment is deleted if user is deleted
   story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 }

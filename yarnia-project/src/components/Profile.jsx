@@ -15,6 +15,7 @@ const Profile = () => {
   const [error, setError] = useState(null); // Error state
   const [saveError, setSaveError] = useState(null); // Error state for saving profile
   const [loading, setLoading] = useState(true); // Loading state for user data
+  const [deleteError, setDeleteError] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
 
   // Fetch user data and their stories when the component mounts
@@ -129,6 +130,43 @@ const Profile = () => {
       return;
     }
     navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmed) {
+      return; // Exit if the user cancels the action
+    }
+
+    try {
+      const response = await fetchWithAuth(
+        `http://localhost:3000/api/users/${user.id}`, // Use user.id here
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Clear local storage and reset state
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser(null);
+        setIsAuthenticated(false);
+        navigate("/login");
+      } else {
+        console.error("Failed to delete account");
+        setDeleteError("Failed to delete account. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      setDeleteError("Error deleting account. Please try again.");
+    }
   };
 
   if (loading) {
@@ -284,6 +322,14 @@ const Profile = () => {
               <p>No comments found</p>
             )}
           </div>
+        </div>
+        <div className="profile-container">
+          <h2>Danger Zone</h2>
+          <p>Deleting your account will remove all your data permanently.</p>
+          <button className="button delete" onClick={handleDeleteAccount}>
+            Delete Account
+          </button>
+          {deleteError && <p className="error-message">{deleteError}</p>}
         </div>
       </section>
     </>
