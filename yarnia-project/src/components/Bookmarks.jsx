@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { fetchBookmarkedStories, removeBookmark } from "../API"; // Assuming you have these API functions
+import { fetchBookmarkedStories, removeBookmark } from "../API";
+import { useNavigate } from "react-router-dom";
 
 const Bookmarks = ({ user }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(user?.id, token);
+        const data = await fetchBookmarkedStories(user.id, token); // Fetch bookmarks from the API
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -20,12 +20,14 @@ const Bookmarks = ({ user }) => {
       }
     };
 
-    getBookmarks();
-  }, [user?.id, token]);
+    if (user?.id) {
+      getBookmarks();
+    }
+  }, [user?.id, token]); // Add user.id and token as dependencies
 
-  const handleRemoveBookmark = async (storyId, userId, token, bookmarkId) => {
+  const handleRemoveBookmark = async (storyId) => {
     try {
-      await removeBookmark(storyId, userId, token, bookmarkId); // Remove bookmark from the API
+      await removeBookmark(storyId, user.id, token); // Pass the correct userId and token
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.storyId !== storyId)
@@ -48,31 +50,25 @@ const Bookmarks = ({ user }) => {
       <p>You have no bookmarks yet. Start saving your favorite stories!</p>
     );
   }
+
   return (
     <div className="bookmarks-list">
-      {bookmarks.map((bookmark, index) => (
-        <div key={index} className="bookmark-card">
-          <h2>{bookmark?.title}</h2>
+      {bookmarks.map((bookmark) => (
+        <div key={bookmark.storyId} className="bookmark-card">
+          <h2>{bookmark.story.title}</h2>
           <p>
-            <strong>Author:</strong> {bookmark?.story.authorId || "Unknown"}
+            <strong>Author:</strong>{" "}
+            {bookmark.story.author?.username || "Unknown"}{" "}
+            {/* Display author's username */}
           </p>
           <p>
             <strong>Summary:</strong>{" "}
-            {bookmark?.story.summary || "No summary available"}
+            {bookmark.story.summary || "No summary available"}
           </p>
           <button onClick={() => handleViewStory(bookmark?.storyId)}>
             View Story
           </button>
-          <button
-            onClick={() =>
-              handleRemoveBookmark(
-                bookmark?.storyId,
-                bookmark?.userId,
-                token,
-                bookmark?.bookmarkId
-              )
-            }
-          >
+          <button onClick={() => handleRemoveBookmark(bookmark.storyId)}>
             Remove Bookmark
           </button>
         </div>
@@ -80,4 +76,5 @@ const Bookmarks = ({ user }) => {
     </div>
   );
 };
+
 export default Bookmarks;

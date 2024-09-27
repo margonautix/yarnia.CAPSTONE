@@ -124,7 +124,14 @@ const Stories = () => {
             <div key={story.storyId} className="story-card">
               <h2>{story.title}</h2>
               <p>
-                <strong>Author:</strong> {story.author?.username || "Unknown"}
+                <strong>Author:</strong>{" "}
+                {story?.author?.username ? (
+                  <Link to={`/users/${story.authorId}`}>
+                    {story.author.username}
+                  </Link>
+                ) : (
+                  "Unknown Author"
+                )}
               </p>
               <p>
                 <strong>Published On:</strong>{" "}

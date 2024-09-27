@@ -42,8 +42,7 @@ const Login = ({ setUser }) => {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value) 
-            }
+            onChange={(e) => setEmail(e.target.value)}
           />
         </label>
         <br />
@@ -54,7 +53,6 @@ const Login = ({ setUser }) => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            minLength="8"
           />
         </label>
         <br />

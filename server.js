@@ -575,27 +575,26 @@ app.get("/api/users", authenticateAdmin, async (req, res, next) => {
 
 app.get("/api/users/:authorId", async (req, res, next) => {
   const { authorId } = req.params;
+  console.log(`Fetching user profile for ID: ${authorId}`); // Log the incoming request
 
   try {
-    // Find the user by ID
     const user = await prisma.user.findUnique({
       where: { id: parseInt(authorId, 10) },
       select: {
         id: true,
         username: true,
-        password: true,
-        email: true, // You can choose whether to expose the email or not
         bio: true,
       },
     });
 
     if (!user) {
+      console.log("User not found"); // Log if user is not found
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Respond with the user data
     res.json(user);
   } catch (err) {
+    console.error("Error fetching user data:", err); // Log any errors
     next(err);
   }
 });
