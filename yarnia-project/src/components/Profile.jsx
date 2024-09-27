@@ -131,6 +131,41 @@ const Profile = () => {
     navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
   };
 
+  // Handle delete action for both stories and comments
+  const handleDelete = async (commentId, type) => {
+    try {
+      let url = "";
+      if (type === "story") {
+        url = `http://localhost:3000/api/stories/${commentId}`;
+      } else if (type === "comment") {
+        url = `http://localhost:3000/api/comments/${commentId}`;
+      }
+
+      const response = await fetchWithAuth(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        if (type === "story") {
+          setStories((prevStories) =>
+            prevStories.filter((story) => story.storyId !== commentId)
+          );
+        } else if (type === "comment") {
+          setComments((prevComments) =>
+            prevComments.filter((comment) => comment.commentId !== commentId)
+          );
+        }
+      } else {
+        console.error("Failed to delete comment");
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   if (loading) {
     return <div>Loading user data...</div>; // Show loading spinner or message
   }
@@ -251,6 +286,12 @@ const Profile = () => {
                         >
                           Read more
                         </button>
+                        <button
+                          onClick={() => handleDelete(story.storyId, "story")}
+                          className="button"
+                        >
+                          Delete
+                        </button>
                       </li>
                     </div>
                   ))}
@@ -276,6 +317,12 @@ const Profile = () => {
                       className="button"
                     >
                       View Story
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.commentId, "comment")}
+                      className="button"
+                    >
+                      Delete
                     </button>
                   </li>
                 ))}

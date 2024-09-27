@@ -256,19 +256,17 @@ app.post(
   }
 );
 
-// DELETE a specific comment
-app.delete("/api/stories/:storyId/comments/:commentId", async (req, res) => {
+app.delete("/api/comments/:commentId", async (req, res) => {
   const { commentId } = req.params;
 
   try {
-    // Delete the comment
     const deletedComment = await prisma.comment.delete({
-      where: { commentId: parseInt(commentId) },
+      where: { id: parseInt(commentId) }, // Use `id` if that's the field in your Prisma schema
     });
 
     res.status(200).json(deletedComment);
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting comment:", error);
     res.status(500).json({ error: "Error deleting comment" });
   }
 });

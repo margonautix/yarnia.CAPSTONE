@@ -103,7 +103,6 @@ export async function postComment(storyId, content) {
   }
 }
 
-// Delete a specific comment by its ID
 export async function deleteComment(storyId, commentId) {
   const token = localStorage.getItem("token");
 
@@ -113,12 +112,11 @@ export async function deleteComment(storyId, commentId) {
 
   try {
     const response = await fetch(
-      `${API_URL}/stories/${storyId}/comments/${commentId}`,
+      `${API_URL}/comments/${commentId}`, // This should match the route defined in the backend
       {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
