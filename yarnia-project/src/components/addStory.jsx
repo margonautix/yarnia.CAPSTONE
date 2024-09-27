@@ -26,9 +26,6 @@ const AddStory = () => {
   ];
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate input fields
     if (!title || !content || !genre) {
       setError("Title, content, and genre are required.");
       return;
@@ -49,11 +46,14 @@ const AddStory = () => {
       );
 
       if (response.storyId) {
-        setShowPopup(true); // Show pop-up
-        setTimeout(() => {
-          setShowPopup(false); // Hide pop-up after 3 seconds
-          navigate(`/${response.storyId}`); // Redirect to the newly created story
-        }, 3000); // Pop-up duration: 3 seconds
+        // Reset form fields after successful submission
+        setTitle("");
+        setSummary("");
+        setContent("");
+        setGenre("");
+
+        // Navigate to the newly created story page
+        navigate(`/${response.storyId}`);
       }
     } catch (error) {
       console.error("Error creating story:", error);

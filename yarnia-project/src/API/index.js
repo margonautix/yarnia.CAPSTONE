@@ -50,7 +50,7 @@ export const deleteStory = async (storyId) => {
       throw new Error(`Failed to delete story: ${response.status}`);
     }
 
-    return response.json();
+    return response.json(); // Assuming you return the deleted story data or success response
   } catch (error) {
     console.error("Error deleting story:", error);
     throw error;
@@ -111,21 +111,18 @@ export async function deleteComment(storyId, commentId) {
   }
 
   try {
-    const response = await fetch(
-      `${API_URL}/comments/${commentId}`, // This should match the route defined in the backend
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/comments/${commentId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to delete comment with ID ${commentId}`);
     }
 
-    return await response.json();
+    return await response.json(); // Assuming you return success response
   } catch (error) {
     console.error(`Error deleting comment with ID ${commentId}:`, error);
     throw error;

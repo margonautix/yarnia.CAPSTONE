@@ -80,7 +80,7 @@ const Profile = () => {
     try {
       const response = await fetchWithAuth(
         `http://localhost:3000/api/users/${userId}/comments`
-      ); // Assuming this API endpoint returns all comments by the user
+      );
       if (response.ok) {
         const userComments = await response.json();
         setComments(userComments); // Set comments in state
@@ -131,16 +131,10 @@ const Profile = () => {
     navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
   };
 
-  // Handle delete action for both stories and comments
-  const handleDelete = async (commentId, type) => {
+  // Handle delete action for stories
+  const handleStoryDelete = async (storyId) => {
     try {
-      let url = "";
-      if (type === "story") {
-        url = `http://localhost:3000/api/stories/${commentId}`;
-      } else if (type === "comment") {
-        url = `http://localhost:3000/api/comments/${commentId}`;
-      }
-
+      const url = `http://localhost:3000/api/stories/${storyId}`;
       const response = await fetchWithAuth(url, {
         method: "DELETE",
         headers: {
@@ -149,20 +143,37 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        if (type === "story") {
-          setStories((prevStories) =>
-            prevStories.filter((story) => story.storyId !== commentId)
-          );
-        } else if (type === "comment") {
-          setComments((prevComments) =>
-            prevComments.filter((comment) => comment.commentId !== commentId)
-          );
-        }
+        setStories((prevStories) =>
+          prevStories.filter((story) => story.storyId !== storyId)
+        );
+      } else {
+        console.error("Failed to delete story");
+      }
+    } catch (error) {
+      console.error("Error deleting story:", error);
+    }
+  };
+
+  // Handle delete action for comments
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const url = `http://localhost:3000/api/comments/${commentId}`;
+      const response = await fetchWithAuth(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.commentId !== commentId)
+        );
       } else {
         console.error("Failed to delete comment");
       }
     } catch (error) {
-      console.error("Error deleting item:", error);
+      console.error("Error deleting comment:", error);
     }
   };
 
@@ -287,7 +298,7 @@ const Profile = () => {
                           Read more
                         </button>
                         <button
-                          onClick={() => handleDelete(story.storyId, "story")}
+                          onClick={() => handleStoryDelete(story.storyId)}
                           className="button"
                         >
                           Delete
@@ -319,7 +330,7 @@ const Profile = () => {
                       View Story
                     </button>
                     <button
-                      onClick={() => handleDelete(comment.commentId, "comment")}
+                      onClick={() => handleCommentDelete(comment.commentId)}
                       className="button"
                     >
                       Delete
