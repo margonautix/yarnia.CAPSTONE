@@ -80,7 +80,7 @@ const Profile = () => {
     try {
       const response = await fetchWithAuth(
         `http://localhost:3000/api/users/${userId}/comments`
-      ); // Assuming this API endpoint returns all comments by the user
+      );
       if (response.ok) {
         const userComments = await response.json();
         setComments(userComments); // Set comments in state
@@ -129,6 +129,52 @@ const Profile = () => {
       return;
     }
     navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
+  };
+
+  // Handle delete action for stories
+  const handleStoryDelete = async (storyId) => {
+    try {
+      const url = `http://localhost:3000/api/stories/${storyId}`;
+      const response = await fetchWithAuth(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        setStories((prevStories) =>
+          prevStories.filter((story) => story.storyId !== storyId)
+        );
+      } else {
+        console.error("Failed to delete story");
+      }
+    } catch (error) {
+      console.error("Error deleting story:", error);
+    }
+  };
+
+  // Handle delete action for comments
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const url = `http://localhost:3000/api/comments/${commentId}`;
+      const response = await fetchWithAuth(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.commentId !== commentId)
+        );
+      } else {
+        console.error("Failed to delete comment");
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
   };
 
   if (loading) {
@@ -251,6 +297,12 @@ const Profile = () => {
                         >
                           Read more
                         </button>
+                        <button
+                          onClick={() => handleStoryDelete(story.storyId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
                       </li>
                     </div>
                   ))}
@@ -276,6 +328,12 @@ const Profile = () => {
                       className="button"
                     >
                       View Story
+                    </button>
+                    <button
+                      onClick={() => handleCommentDelete(comment.commentId)}
+                      className="button"
+                    >
+                      Delete
                     </button>
                   </li>
                 ))}
