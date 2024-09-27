@@ -712,13 +712,21 @@ app.delete(
   "/api/stories/:storyId/bookmarks/:bookmarkId",
   async (req, res, next) => {
     const { storyId, bookmarkId } = req.params;
+    console.log(
+      "Attempting to delete bookmark with storyId:",
+      storyId,
+      "and bookmarkId:",
+      bookmarkId
+    );
 
     try {
-      await prisma.bookmark.delete({
-        where: { id: parseInt(bookmarkId) },
+      const deletedBookmark = await prisma.bookmark.delete({
+        where: { bookmarkId: parseInt(bookmarkId) }, // Correctly referencing 'bookmarkId'
       });
+      console.log("Deleted Bookmark:", deletedBookmark);
       res.status(200).json({ message: "Bookmark deleted successfully." });
     } catch (err) {
+      console.error("Error deleting bookmark:", err);
       if (err.code === "P2025") {
         return res.status(404).json({ message: "Bookmark not found." });
       }
