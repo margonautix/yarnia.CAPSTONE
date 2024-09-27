@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../API";
+import { loginUser } from "../API"; // Assuming this is a function to handle your login logic
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
@@ -21,7 +21,7 @@ const Login = ({ setUser }) => {
 
         setUser(response.user); // Update the user state in the App component
 
-        navigate("/profile");
+        navigate("/profile"); // Redirect to profile page after successful login
       } else {
         setError("Invalid login credentials");
       }
