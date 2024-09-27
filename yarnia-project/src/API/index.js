@@ -114,15 +114,23 @@ export async function deleteComment(storyId, commentId) {
     const response = await fetch(`${API_URL}/comments/${commentId}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to delete comment with ID ${commentId}`);
+      // Fetch the response text for a more descriptive error
+      const errorMessage = await response.text();
+      console.error(
+        `Failed to delete comment with ID ${commentId}: ${errorMessage}`
+      );
+      throw new Error(
+        `Failed to delete comment with ID ${commentId}: ${errorMessage}`
+      );
     }
 
-    return await response.json(); // Assuming you return success response
+    // Return null for 204 No Content response
+    return response.status === 204 ? null : await response.json();
   } catch (error) {
     console.error(`Error deleting comment with ID ${commentId}:`, error);
     throw error;
