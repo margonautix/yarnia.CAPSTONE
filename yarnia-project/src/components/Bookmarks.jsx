@@ -11,6 +11,10 @@ const Bookmarks = ({ user }) => {
   console.log("testing");
 
   useEffect(() => {
+    console.log("Bookmarks data:", bookmarks); // Add this to check the structure of the bookmarks
+  }, [bookmarks]);
+
+  useEffect(() => {
     const getBookmarks = async () => {
       try {
         const data = await fetchBookmarkedStories(user.id, token); // Fetch bookmarks from the API
@@ -27,12 +31,18 @@ const Bookmarks = ({ user }) => {
     }
   }, [user?.id, token]); // Add user.id and token as dependencies
 
-  const handleRemoveBookmark = async (storyId) => {
+  const handleRemoveBookmark = async (storyId, bookmarkId) => {
+    console.log(
+      "Deleting bookmark with storyId:",
+      storyId,
+      "and bookmarkId:",
+      bookmarkId
+    );
     try {
-      await removeBookmark(storyId, user.id, token); // Pass the correct userId and token
+      await removeBookmark(storyId, user.id, token, bookmarkId);
       // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
-        bookmarks.filter((bookmark) => bookmark.storyId !== storyId)
+        bookmarks.filter((bookmark) => bookmark.bookmarkId !== bookmarkId)
       );
     } catch (error) {
       console.error("Failed to remove bookmark", error);
@@ -70,7 +80,11 @@ const Bookmarks = ({ user }) => {
           <button onClick={() => handleViewStory(bookmark?.storyId)}>
             View Story
           </button>
-          <button onClick={() => handleRemoveBookmark(bookmark.storyId)}>
+          <button
+            onClick={() =>
+              handleRemoveBookmark(bookmark.storyId, bookmark.bookmarkId)
+            }
+          >
             Remove Bookmark
           </button>
         </div>
