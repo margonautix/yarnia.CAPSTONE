@@ -7,7 +7,8 @@ import {
   deleteStory, // Ensure this import is correct
   fetchComments,
   postComment,
-  checkBookmarkStatus, // Import your new API function
+  checkBookmarkStatus,
+  deleteComment, // Import your new API function
 } from "../API"; // Adjust the API import path as necessary
 import jwt_decode from "jwt-decode"; // To decode JWT
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
@@ -116,6 +117,22 @@ export default function SingleStory({ user }) {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(storyId, commentId); // Call the API to delete the comment
+
+      // Update the comments state by removing the deleted comment
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentId)
+      );
+
+      alert("Comment deleted successfully!"); // Optional: You can remove this alert if you'd prefer no prompt
+    } catch (error) {
+      console.error("Failed to delete the comment:", error);
+      setError("Failed to delete the comment.");
+    }
+  };
+
   // Handle bookmarking the story
   const handleBookmark = async () => {
     if (!currentUser) {
@@ -136,24 +153,6 @@ export default function SingleStory({ user }) {
     setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
   };
 
-  // Render each comment correctly with author and content
-  const renderComments = () => {
-    if (comments.length > 0) {
-      return (
-        <ul className="comments-list">
-          {comments.map((comment) => (
-            <li key={comment.commentId} className="comment-item">
-              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
-              {comment.content || "No content available"}
-            </li>
-          ))}
-        </ul>
-      );
-    } else {
-      return <p>No comments yet.</p>;
-    }
-  };
-
   // Handle new comment submission
   const handleSubmitComment = async (e) => {
     e.preventDefault();
@@ -166,6 +165,31 @@ export default function SingleStory({ user }) {
     } catch (error) {
       console.error("Failed to post comment:", error);
       setError("Failed to post comment.");
+    }
+  };
+
+  const renderComments = () => {
+    if (comments.length > 0) {
+      return (
+        <ul className="comments-list">
+          {comments.map((comment) => (
+            <li key={comment.commentId} className="comment-item">
+              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
+              {comment.content || "No content available"}
+              {(currentUser?.id === comment.userId || currentUser?.isAdmin) && (
+                <button
+                  onClick={() => handleDeleteComment(comment.commentId)}
+                  className="delete-button"
+                >
+                  Delete
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      );
+    } else {
+      return <p>No comments yet.</p>;
     }
   };
 

@@ -260,14 +260,27 @@ app.delete("/api/comments/:commentId", async (req, res) => {
   const { commentId } = req.params;
 
   try {
+    // Ensure commentId is parsed correctly
+    const commentIdInt = parseInt(commentId, 10);
+    if (isNaN(commentIdInt)) {
+      return res.status(400).json({ error: "Invalid comment ID format" });
+    }
+
     const deletedComment = await prisma.comment.delete({
-      where: { id: parseInt(commentId) }, // Use `id` if that's the field in your Prisma schema
+      where: { id: commentIdInt }, // Ensure the ID matches your database schema type
     });
 
     res.status(200).json(deletedComment);
   } catch (error) {
-    console.error("Error deleting comment:", error);
-    res.status(500).json({ error: "Error deleting comment" });
+    if (error.code === "P2025") {
+      // Prisma-specific error code for "Record not found"
+      res.status(404).json({ error: "Comment not found" });
+    } else {
+      console.error("Error deleting comment:", error);
+      res
+        .status(500)
+        .json({ error: "Error deleting comment", details: error.message });
+    }
   }
 });
 
