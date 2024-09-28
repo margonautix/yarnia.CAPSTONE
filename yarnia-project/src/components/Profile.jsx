@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchBookmarkedStories } from "../API"; // Import necessary functions
-import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
+import { fetchBookmarkedStories, fetchWithAuth } from "../API"; // Import necessary functions
 
 const Profile = () => {
-  const [user, setUser] = useState(null); // Store the user's profile data
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if the user is authenticated
-  const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
-  const [username, setUsername] = useState(""); // State for editing username
-  const [bio, setBio] = useState(""); // State for editing bio
-  const [stories, setStories] = useState([]); // State to store user's stories
-  const [bookmarks, setBookmarks] = useState([]); // State to store user's bookmarks
-  const [comments, setComments] = useState([]); // State to store user's comments
-  const [error, setError] = useState(null); // Error state
-  const [saveError, setSaveError] = useState(null); // Error state for saving profile
-  const [loading, setLoading] = useState(true); // Loading state for user data
-  const navigate = useNavigate(); // Initialize navigate
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [username, setUsername] = useState("");
+  const [image, setImage] = useState(null); // Updated state for image
+  const [imagePreview, setImagePreview] = useState(null); // Preview state
+  const [bio, setBio] = useState("");
+  const [stories, setStories] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [error, setError] = useState(null);
+  const [saveError, setSaveError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch user data and their stories when the component mounts
   const fetchUserData = async () => {
@@ -24,30 +25,29 @@ const Profile = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData); // Set user data in state
-        setUsername(userData.username); // Initialize editing fields
+        setUser(userData);
+        setUsername(userData.username);
         setBio(userData.bio);
-        setIsAuthenticated(true); // User is authenticated
-
+        setIsAuthenticated(true);
+        
         // Fetch the user's stories, bookmarks, and comments after fetching user data
         await fetchUserStories(userData.id);
-        await fetchUserBookmarks(userData.id); // Fetch user's bookmarks
-        await fetchUserComments(userData.id); // Fetch comments posted by the user
+        await fetchUserBookmarks(userData.id);
+        await fetchUserComments(userData.id);
       } else {
         console.error("Failed to fetch user data");
-        setIsAuthenticated(false); // Not authenticated
+        setIsAuthenticated(false);
         navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      setIsAuthenticated(false); // Handle error as unauthenticated
+      setIsAuthenticated(false);
       navigate("/login");
     } finally {
-      setLoading(false); // Stop loading once user data is fetched
+      setLoading(false);
     }
   };
 
-  // Fetch stories written by the user
   const fetchUserStories = async (userId) => {
     try {
       const response = await fetchWithAuth(
@@ -55,7 +55,7 @@ const Profile = () => {
       );
       if (response.ok) {
         const userStories = await response.json();
-        setStories(userStories); // Set stories in state
+        setStories(userStories);
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
@@ -63,19 +63,17 @@ const Profile = () => {
     }
   };
 
-  // Fetch user's bookmarked stories
   const fetchUserBookmarks = async (userId) => {
     try {
       const token = localStorage.getItem("token");
       const bookmarkedStories = await fetchBookmarkedStories(userId, token);
-      setBookmarks(bookmarkedStories); // Set bookmarks in state
+      setBookmarks(bookmarkedStories);
     } catch (error) {
       console.error("Error fetching user bookmarks:", error);
       setError("An error occurred while fetching bookmarks.");
     }
   };
 
-  // Fetch all comments made by the user
   const fetchUserComments = async (userId) => {
     try {
       const response = await fetchWithAuth(
@@ -83,7 +81,7 @@ const Profile = () => {
       );
       if (response.ok) {
         const userComments = await response.json();
-        setComments(userComments); // Set comments in state
+        setComments(userComments);
       }
     } catch (error) {
       console.error("Error fetching user comments:", error);
@@ -92,28 +90,33 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchUserData(); // Fetch user data once when the component mounts
+    fetchUserData();
   }, []);
 
-  // Handle save action for editing profile
   const handleSave = async () => {
     try {
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("bio", bio);
+      if (image) {
+        formData.append("profilePicture", image); // Append image if available
+      }
+
       const response = await fetchWithAuth(
         "http://localhost:3000/api/users/me",
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ username, bio }), // Include updated username and bio
+          body: formData, // Send FormData with image
         }
       );
 
       if (response.ok) {
-        await fetchUserData(); // Fetch updated data again after saving
-        setIsEditing(false); // Exit edit mode after saving
-        setSaveError(null); // Reset any previous save error
+        await fetchUserData();
+        setIsEditing(false);
+        setSaveError(null);
       } else {
         setSaveError("Failed to update profile");
       }
@@ -122,16 +125,14 @@ const Profile = () => {
     }
   };
 
-  // Handle navigation to the single story view
   const handleReadMore = (storyId) => {
     if (!storyId) {
       console.error("Story ID not provided for navigation");
       return;
     }
-    navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
+    navigate(`/stories/${storyId}`);
   };
 
-  // Handle delete action for stories
   const handleStoryDelete = async (storyId) => {
     try {
       const url = `http://localhost:3000/api/stories/${storyId}`;
@@ -154,7 +155,6 @@ const Profile = () => {
     }
   };
 
-  // Handle delete action for comments
   const handleCommentDelete = async (commentId) => {
     try {
       const url = `http://localhost:3000/api/comments/${commentId}`;
@@ -177,12 +177,28 @@ const Profile = () => {
     }
   };
 
+  // Handle image upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set the preview
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImage(null);
+      setImagePreview(null);
+    }
+  };
+
   if (loading) {
-    return <div>Loading user data...</div>; // Show loading spinner or message
+    return <div>Loading user data...</div>;
   }
 
   if (!isAuthenticated || !user) {
-    return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
+    return <div>Redirecting to login...</div>;
   }
 
   return (
@@ -193,10 +209,28 @@ const Profile = () => {
           <div className="stories-container">
             <div className="profile-stories-wrapper">
               <div className="profile-container">
+                {/* Profile Picture */}
                 <div className='profile_img text-center p-4'>
-                <div className="flex flex-column justify-content-center align-items-center">
-                  
-                </div>
+                  <div className="flex flex-column justify-content-center align-items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange} // Handle image change
+                    />
+                    {imagePreview && (
+                      <img
+                        src={imagePreview}
+                        alt="Profile Preview"
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          border: "4px solid green",
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
                 <h1>
                   Welcome,{" "}
@@ -215,7 +249,7 @@ const Profile = () => {
                   !
                 </h1>
                 <div className="info">
-                  <h4 id="label"> Email:</h4>
+                  <h4 id="label">Email:</h4>
                   <p>{user.email}</p>
 
                   <br />
@@ -297,7 +331,7 @@ const Profile = () => {
                           <p>{story.summary || "No summary available"}</p>
                         </div>
                         <button
-                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                          onClick={() => handleReadMore(story.storyId)}
                           className="button"
                         >
                           Read more
