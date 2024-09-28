@@ -118,6 +118,11 @@ export default function SingleStory({ user }) {
   };
 
   const handleDeleteComment = async (commentId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this comment?"
+    );
+    if (!confirmDelete) return; // If the user cancels, exit the function
+
     try {
       await deleteComment(storyId, commentId); // Call the API to delete the comment
 
