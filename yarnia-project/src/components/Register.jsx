@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { createNewUser } from "../API"; // Assuming the API file is set up like this
 
 const Register = () => {
@@ -6,20 +7,25 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // To display error messages
-  const [success, setSuccess] = useState(""); // To display success message
+
+  const navigate = useNavigate(); // Initialize navigate
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Clear any previous errors
-    setSuccess(""); // Clear any previous success messages
 
     try {
       // Call the API function to create a new user
       const result = await createNewUser(username, email, password);
 
-      if (result.status === 201) {
-        setSuccess("User registered successfully!");
+      if (result && result.token) {
+        // Store the token and any other necessary user data
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("user", JSON.stringify({ username, email }));
+
+        // Navigate to the profile page after successful registration and login
+        navigate("/profile");
       }
     } catch (error) {
       // Handle errors such as duplicate emails or other registration failures
@@ -35,7 +41,6 @@ const Register = () => {
     <div>
       <h2>Register New Account</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
       <div>
         <form onSubmit={handleSubmit}>
           <label>
@@ -70,7 +75,6 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength="8"
             />
           </label>
           <br />

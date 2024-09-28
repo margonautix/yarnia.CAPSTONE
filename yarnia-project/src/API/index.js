@@ -4,6 +4,49 @@ export const clearLocalStorage = () => {
   localStorage.clear();
 };
 
+export async function fetchAllUsers() {
+  try {
+    const response = await fetch(`${API_URL}/users`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token for authentication
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    throw error;
+  }
+}
+
+export async function deleteUsers(userId) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete user: ${response.status}`);
+    }
+
+    // Assuming no content (204) response on successful delete
+    return response.status === 204 ? null : await response.json();
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+}
+
 // Fetch all stories from the API
 export async function fetchAllStories() {
   try {

@@ -1367,3 +1367,253 @@ form button:hover {
     margin-top: 10px;
   }
 }
+
+/* Admin Users Container */
+.admin-users-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #333; /* Dark background to match theme */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+  color: #e5e5e5; /* Light text color */
+}
+
+/* Users List */
+.users-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* User Item */
+.user-item {
+  background-color: #444; /* Darker background for each user item */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for more depth */
+  color: #e5e5e5; /* Light text color */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+/* User Item Hover Effect */
+.user-item:hover {
+  background-color: #555; /* Slight hover effect for user items */
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+/* User Details */
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-details .user-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00ff88; /* Green accent for username */
+}
+
+.user-details .user-email {
+  font-size: 1.2rem;
+  color: #cccccc; /* Softer color for email */
+}
+
+.user-details .user-role {
+  font-size: 1rem;
+  color: #888; /* Gray for role information */
+  font-style: italic;
+}
+
+/* Delete Button */
+.delete-button {
+  background-color: #ff4b4b; /* Red button for delete */
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #cc3838; /* Darker red on hover */
+  transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+/* Avatar Section */
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #666; /* Placeholder dark background for avatar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Flex Layout for Avatar and Details */
+.user-content {
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .admin-users-container {
+    padding: 20px;
+  }
+
+  .user-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 15px;
+  }
+
+  .delete-button {
+    width: 100%; /* Full width button on smaller screens */
+    margin-top: 15px;
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Admin Comments Container */
+.admin-comments-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #333; /* Dark background to match theme */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+  color: #e5e5e5; /* Light text color */
+}
+
+/* Comments List */
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Comment Item */
+.comment-item {
+  background-color: #444; /* Darker background for each comment item */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for more depth */
+  color: #e5e5e5; /* Light text color */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+/* Comment Item Hover Effect */
+.comment-item:hover {
+  background-color: #555; /* Slight hover effect for comment items */
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+/* Avatar Section */
+.comment-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #666; /* Placeholder dark background for avatar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Comment Content */
+.comment-content {
+  display: flex;
+  align-items: center;
+}
+
+/* Comment Details */
+.comment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.comment-username {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #00ff88; /* Green accent for username */
+}
+
+.comment-text {
+  font-size: 1rem;
+  color: #cccccc; /* Softer color for comment text */
+}
+
+/* Delete Button */
+.delete-button {
+  background-color: #ff4b4b; /* Red button for delete */
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #cc3838; /* Darker red on hover */
+  transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .admin-comments-container {
+    padding: 20px;
+  }
+
+  .comment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 15px;
+  }
+
+  .delete-button {
+    width: 100%; /* Full width button on smaller screens */
+    margin-top: 15px;
+  }
+
+  .comment-avatar {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 15px;
+  }
+}

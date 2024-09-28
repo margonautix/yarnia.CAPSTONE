@@ -193,6 +193,11 @@ const Profile = () => {
           <div className="stories-container">
             <div className="profile-stories-wrapper">
               <div className="profile-container">
+                <div className='profile_img text-center p-4'>
+                <div className="flex flex-column justify-content-center align-items-center">
+                  
+                </div>
+                </div>
                 <h1>
                   Welcome,{" "}
                   {isEditing ? (

@@ -13,7 +13,7 @@ export default function AdminCommentsFeed() {
         console.log(allComments); // Log comments to verify structure
         setComments(allComments);
       } catch (err) {
-        setError("Failed to fetch comments.", err);
+        setError("Failed to fetch comments.");
       }
     };
 
@@ -34,15 +34,31 @@ export default function AdminCommentsFeed() {
   };
 
   return (
-    <div className="admin-comments-feed">
+    <div className="admin-comments-container">
       <h2>All Comments</h2>
       {error && <p className="error">{error}</p>}
-      <ul>
+      <ul className="comments-list">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <li key={comment.commentId}>
-              <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
-              {comment.content || "No content available"}
+            <li key={comment.commentId} className="comment-item">
+              <div className="comment-content">
+                {/* Placeholder Avatar with Initials */}
+                <div className="comment-avatar">
+                  {comment.user?.username
+                    ? comment.user.username.charAt(0).toUpperCase()
+                    : "U"}
+                </div>
+                {/* Comment Details Section */}
+                <div className="comment-details">
+                  <span className="comment-username">
+                    {comment.user?.username || "Unknown User"}
+                  </span>
+                  <p className="comment-text">
+                    {comment.content || "No content available"}
+                  </p>
+                </div>
+              </div>
+              {/* Delete Button */}
               <button
                 onClick={() => handleDeleteComment(comment.commentId)}
                 className="delete-button"

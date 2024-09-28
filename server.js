@@ -267,7 +267,7 @@ app.delete("/api/comments/:commentId", async (req, res) => {
     }
 
     const deletedComment = await prisma.comment.delete({
-      where: { id: commentIdInt }, // Ensure the ID matches your database schema type
+      where: { commentId: commentIdInt }, // Ensure the ID matches your database schema type
     });
 
     res.status(200).json(deletedComment);
