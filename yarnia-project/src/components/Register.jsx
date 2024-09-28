@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { createNewUser } from "../API"; // Assuming the API file is set up like this
 
 const Register = () => {
@@ -7,6 +8,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // To display error messages
   const [success, setSuccess] = useState(""); // To display success message
+
+  const navigate = useNavigate(); // Initialize navigate
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -18,8 +21,12 @@ const Register = () => {
       // Call the API function to create a new user
       const result = await createNewUser(username, email, password);
 
-      if (result.status === 201) {
+      if (result && result.token) {
         setSuccess("User registered successfully!");
+        // Navigate to the login page after successful registration
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000); // Optional: Delay navigation for a brief moment
       }
     } catch (error) {
       // Handle errors such as duplicate emails or other registration failures
@@ -70,7 +77,7 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength="8"
+              // minLength="8"
             />
           </label>
           <br />
