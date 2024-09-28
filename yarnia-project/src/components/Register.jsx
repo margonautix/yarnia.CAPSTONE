@@ -7,7 +7,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // To display error messages
-  const [success, setSuccess] = useState(""); // To display success message
 
   const navigate = useNavigate(); // Initialize navigate
 
@@ -15,18 +14,18 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Clear any previous errors
-    setSuccess(""); // Clear any previous success messages
 
     try {
       // Call the API function to create a new user
       const result = await createNewUser(username, email, password);
 
       if (result && result.token) {
-        setSuccess("User registered successfully!");
-        // Navigate to the login page after successful registration
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000); // Optional: Delay navigation for a brief moment
+        // Store the token and any other necessary user data
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("user", JSON.stringify({ username, email }));
+
+        // Navigate to the profile page after successful registration and login
+        navigate("/profile");
       }
     } catch (error) {
       // Handle errors such as duplicate emails or other registration failures
@@ -42,7 +41,6 @@ const Register = () => {
     <div>
       <h2>Register New Account</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
       <div>
         <form onSubmit={handleSubmit}>
           <label>
@@ -77,7 +75,6 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              // minLength="8"
             />
           </label>
           <br />
