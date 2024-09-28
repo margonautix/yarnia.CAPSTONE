@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchBookmarkedStories } from "../API"; // Import necessary functions
+import { fetchBookmarkedStories, fetchAllStories } from "../API"; // Import fetchAllStories to get all available stories
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = () => {
@@ -10,6 +10,7 @@ const Profile = () => {
   const [username, setUsername] = useState(""); // State for editing username
   const [bio, setBio] = useState(""); // State for editing bio
   const [stories, setStories] = useState([]); // State to store user's stories
+  const [allStories, setAllStories] = useState([]); // State to store all available stories
   const [bookmarks, setBookmarks] = useState([]); // State to store user's bookmarks
   const [comments, setComments] = useState([]); // State to store user's comments
   const [error, setError] = useState(null); // Error state
@@ -33,6 +34,7 @@ const Profile = () => {
         await fetchUserStories(userData.id);
         await fetchUserBookmarks(userData.id); // Fetch user's bookmarks
         await fetchUserComments(userData.id); // Fetch comments posted by the user
+        await fetchAllAvailableStories(); // Fetch all available stories
       } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false); // Not authenticated
@@ -60,6 +62,17 @@ const Profile = () => {
     } catch (error) {
       console.error("Error fetching user stories:", error);
       setError("An error occurred while fetching stories.");
+    }
+  };
+
+  // Fetch all available stories
+  const fetchAllAvailableStories = async () => {
+    try {
+      const allStoriesData = await fetchAllStories(); // Call the fetchAllStories API function
+      setAllStories(allStoriesData); // Set all available stories in state
+    } catch (error) {
+      console.error("Error fetching all available stories:", error);
+      setError("An error occurred while fetching available stories.");
     }
   };
 
@@ -95,88 +108,6 @@ const Profile = () => {
     fetchUserData(); // Fetch user data once when the component mounts
   }, []);
 
-  // Handle save action for editing profile
-  const handleSave = async () => {
-    try {
-      const response = await fetchWithAuth(
-        "http://localhost:3000/api/users/me",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent
-          },
-          body: JSON.stringify({ username, bio }), // Include updated username and bio
-        }
-      );
-
-      if (response.ok) {
-        await fetchUserData(); // Fetch updated data again after saving
-        setIsEditing(false); // Exit edit mode after saving
-        setSaveError(null); // Reset any previous save error
-      } else {
-        setSaveError("Failed to update profile");
-      }
-    } catch (error) {
-      setSaveError("Error while updating profile.", error);
-    }
-  };
-
-  // Handle navigation to the single story view
-  const handleReadMore = (storyId) => {
-    if (!storyId) {
-      console.error("Story ID not provided for navigation");
-      return;
-    }
-    navigate(`/stories/${storyId}`); // Ensure you're passing the correct story ID
-  };
-
-  // Handle delete action for stories
-  const handleStoryDelete = async (storyId) => {
-    try {
-      const url = `http://localhost:3000/api/stories/${storyId}`;
-      const response = await fetchWithAuth(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        setStories((prevStories) =>
-          prevStories.filter((story) => story.storyId !== storyId)
-        );
-      } else {
-        console.error("Failed to delete story");
-      }
-    } catch (error) {
-      console.error("Error deleting story:", error);
-    }
-  };
-
-  // Handle delete action for comments
-  const handleCommentDelete = async (commentId) => {
-    try {
-      const url = `http://localhost:3000/api/comments/${commentId}`;
-      const response = await fetchWithAuth(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        setComments((prevComments) =>
-          prevComments.filter((comment) => comment.commentId !== commentId)
-        );
-      } else {
-        console.error("Failed to delete comment");
-      }
-    } catch (error) {
-      console.error("Error deleting comment:", error);
-    }
-  };
-
   if (loading) {
     return <div>Loading user data...</div>; // Show loading spinner or message
   }
@@ -187,104 +118,28 @@ const Profile = () => {
 
   return (
     <>
-      <br />
       <section id="whole-profile">
         <div className="profile">
-          <div className="stories-container">
-            <div className="profile-stories-wrapper">
-              <div className="profile-container">
-                <div className="profile_img text-center p-4">
-                  <div className="flex flex-column justify-content-center align-items-center"></div>
-                </div>
-                <h1>
-                  Welcome,{" "}
-                  {isEditing ? (
-                    <div className="group">
-                      <input
-                        id="username"
-                        className="input"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    user.username
-                  )}
-                  !
-                </h1>
-                <div className="info">
-                  <h4 id="label"> Email:</h4>
-                  <p>{user.email}</p>
-
-                  <br />
-                  <br />
-                  <h4 id="label">Bio:</h4>
-                  <p>
-                    {isEditing ? (
-                      <div className="group">
-                        <textarea
-                          id="bio"
-                          className="form-textarea"
-                          value={bio}
-                          onChange={(e) => setBio(e.target.value)}
-                        />
-                      </div>
-                    ) : (
-                      user.bio
-                    )}
-                  </p>
-                </div>
-                {isEditing ? (
-                  <div className="group">
-                    <button className="button" onClick={handleSave}>
-                      Save
-                    </button>
-                    <button
-                      className="button"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button className="button" onClick={() => setIsEditing(true)}>
-                    Edit Profile
-                  </button>
-                )}
-                {saveError && <p className="error-message">{saveError}</p>}
-              </div>
-
-              {/* Bookmarks Section */}
-              <div className="profile-container">
-                <h2>Your Bookmarks</h2>
-                {bookmarks.length > 0 ? (
-                  <ul className="bookmark-list">
-                    {bookmarks.map((bookmark) => (
-                      <li key={bookmark.bookmarkId} className="bookmark-item">
-                        <h3>{bookmark.story.title}</h3>
-                        <p>
-                          {bookmark.story.summary || "No summary available"}
-                        </p>
-                        <button
-                          onClick={() => handleReadMore(bookmark.storyId)}
-                          className="button"
-                        >
-                          Read more
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No bookmarks found.</p>
-                )}
-              </div>
-            </div>
+          <div className="profile-container">
+            {/* User Profile Section */}
+            <h1>
+              Welcome,{" "}
+              {isEditing ? (
+                <input
+                  id="username"
+                  className="input"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              ) : (
+                user.username
+              )}
+              !
+            </h1>
 
             {/* Stories Section */}
             <div className="profile-container">
               <h2>Your Stories</h2>
-              {error && <p className="error-message">{error}</p>}
-
               {stories.length > 0 ? (
                 <ul className="story-list">
                   {stories.map((story) => (
@@ -295,16 +150,10 @@ const Profile = () => {
                           <p>{story.summary || "No summary available"}</p>
                         </div>
                         <button
-                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                          onClick={() => navigate(`/stories/${story.storyId}`)}
                           className="button"
                         >
                           Read more
-                        </button>
-                        <button
-                          onClick={() => handleStoryDelete(story.storyId)}
-                          className="button"
-                        >
-                          Delete
                         </button>
                       </li>
                     </div>
@@ -314,36 +163,33 @@ const Profile = () => {
                 <p>Nothing to find here...</p>
               )}
             </div>
-          </div>
 
-          {/* Comment History Section */}
-          <div className="profile-container">
-            <h3 id="history">Comment History:</h3>
-            {comments.length > 0 ? (
-              <ul className="comment-list">
-                {comments.map((comment) => (
-                  <li className="commenting" key={comment.commentId}>
-                    <strong>Story: {comment.story.title}</strong>
-                    <p>{comment.content}</p>
-                    <br />
-                    <button
-                      onClick={() => handleReadMore(comment.storyId)}
-                      className="button"
-                    >
-                      View Story
-                    </button>
-                    <button
-                      onClick={() => handleCommentDelete(comment.commentId)}
-                      className="button"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No comments found</p>
-            )}
+            {/* All Available Stories Section */}
+            <div className="profile-container">
+              <h2>All Available Stories</h2>
+              {allStories.length > 0 ? (
+                <ul className="story-list">
+                  {allStories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => navigate(`/stories/${story.storyId}`)}
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p>No available stories.</p>
+              )}
+            </div>
           </div>
         </div>
       </section>
