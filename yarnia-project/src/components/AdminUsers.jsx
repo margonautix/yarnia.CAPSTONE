@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchAllUsers, deleteUsers } from "../API"; // Assuming you have these functions defined in your API file
+import { fetchAllUsers, deleteUsers } from "../API";
+import { Link } from "react-router-dom";
 
 export default function AdminUsersFeed() {
   const [users, setUsers] = useState([]);
@@ -44,10 +45,13 @@ export default function AdminUsersFeed() {
                 <div className="user-avatar">
                   {user.username ? user.username.charAt(0).toUpperCase() : "U"}
                 </div>
+
                 {/* User Details Section */}
                 <div className="user-details">
                   <span className="user-name">
-                    {user.username || "Unknown User"}
+                    <Link to={`/users/${user.id}`}>
+                      {user.username || "Unknown User"}
+                    </Link>
                   </span>
                   <span className="user-email">
                     {user.email || "No email available"}

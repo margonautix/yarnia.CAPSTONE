@@ -3,6 +3,8 @@ import { fetchAllComments, deleteComment } from "../API"; // Adjust the path to 
 
 export default function AdminCommentsFeed() {
   const [comments, setComments] = useState([]);
+  const [filteredComments, setFilteredComments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
 
   // Fetch all comments when the component mounts
@@ -12,6 +14,7 @@ export default function AdminCommentsFeed() {
         const allComments = await fetchAllComments();
         console.log(allComments); // Log comments to verify structure
         setComments(allComments);
+        setFilteredComments(allComments);
       } catch (err) {
         setError("Failed to fetch comments.");
       }
@@ -27,9 +30,30 @@ export default function AdminCommentsFeed() {
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.commentId !== commentId)
       );
+      setFilteredComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentId)
+      );
     } catch (error) {
       console.error("Failed to delete the comment:", error);
       setError("Failed to delete the comment.");
+    }
+  };
+
+  // Handle search bar input changes
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    if (query === "") {
+      setFilteredComments(comments);
+    } else {
+      setFilteredComments(
+        comments.filter(
+          (comment) =>
+            comment.user?.username?.toLowerCase().includes(query) ||
+            comment.content?.toLowerCase().includes(query)
+        )
+      );
     }
   };
 
@@ -37,9 +61,17 @@ export default function AdminCommentsFeed() {
     <div className="admin-comments-container">
       <h2>All Comments</h2>
       {error && <p className="error">{error}</p>}
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search comments..."
+        value={searchQuery}
+        onChange={handleSearch}
+        className="search-bar"
+      />
       <ul className="comments-list">
-        {comments.length > 0 ? (
-          comments.map((comment) => (
+        {filteredComments.length > 0 ? (
+          filteredComments.map((comment) => (
             <li key={comment.commentId} className="comment-item">
               <div className="comment-content">
                 {/* Placeholder Avatar with Initials */}
