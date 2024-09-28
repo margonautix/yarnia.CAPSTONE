@@ -176,7 +176,9 @@ export default function SingleStory({ user }) {
             <li key={comment.commentId} className="comment-item">
               <strong>{comment.user?.username || "Unknown User"}</strong>:{" "}
               {comment.content || "No content available"}
-              {(currentUser?.id === comment.userId || currentUser?.isAdmin) && (
+              {(currentUser?.id === comment.userId ||
+                currentUser?.isAdmin ||
+                currentUser?.id === story?.authorId) && (
                 <button
                   onClick={() => handleDeleteComment(comment.commentId)}
                   className="delete-button"
