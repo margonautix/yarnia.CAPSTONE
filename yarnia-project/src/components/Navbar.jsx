@@ -60,9 +60,15 @@ const NavBar = ({ user, setUser }) => {
             </li>
             {/* Admin-only link to comments feed */}
             {user.isAdmin && (
-              <li>
-                <Link to="/comments">All Comments</Link>
-              </li>
+              <>
+                <li>
+                  <Link to="/comments">All Comments</Link>
+                </li>
+                {/* Admin-only link to All Users */}
+                <li>
+                  <Link to="/users">All Users</Link>
+                </li>
+              </>
             )}
             <li>
               <Link

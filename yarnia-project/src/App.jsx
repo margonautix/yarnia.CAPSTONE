@@ -12,6 +12,7 @@ import AddStory from "./components/addStory";
 import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
+import AdminUsers from "./components/AdminUsers";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
 import jwt_decode from "jwt-decode";
@@ -71,6 +72,7 @@ function App() {
         <Route path="/stories" element={<StoryDetails />} />
         <Route path="/comment" element={<Comments />} />
         <Route path="/comments" element={<AdminCommentsFeed />} />
+        <Route path="/users" element={<AdminUsers />} />
         <Route path="/users/:authorId" element={<UserProfile />} />
       </Routes>
     </div>
