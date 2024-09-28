@@ -46,6 +46,7 @@ const Comments = ({ storyId, refreshComments }) => {
   // Handle deleting a comment
   const handleDeleteComment = async (commentId) => {
     try {
+      console.log("delete")
       await deleteComment(storyId, commentId); // Delete the comment using the API
       refreshComments(); // Refresh the comment list after deletion
     } catch (error) {
@@ -74,7 +75,7 @@ const Comments = ({ storyId, refreshComments }) => {
                   className="delete-button"
                 >
                   Delete
-                </button>
+                </button>  
               )}
             </li>
           ))}
