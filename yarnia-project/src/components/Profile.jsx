@@ -1,22 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchBookmarkedStories, fetchWithAuth } from "../API"; // Import necessary functions
+import { fetchBookmarkedStories } from "../API"; // Import necessary functions
+import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState("");
-  const [image, setImage] = useState(null); // Updated state for image
-  const [imagePreview, setImagePreview] = useState(null); // Preview state
-  const [bio, setBio] = useState("");
-  const [stories, setStories] = useState([]);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [error, setError] = useState(null);
-  const [saveError, setSaveError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null); // Store the user's profile data
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if the user is authenticated
+  const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
+  const [username, setUsername] = useState(""); // State for editing username
+  const [bio, setBio] = useState(""); // State for editing bio
+  const [stories, setStories] = useState([]); // State to store user's stories
+  const [bookmarks, setBookmarks] = useState([]); // State to store user's bookmarks
+  const [comments, setComments] = useState([]); // State to store user's comments
+  const [error, setError] = useState(null); // Error state
+  const [saveError, setSaveError] = useState(null); // Error state for saving profile
+  const [loading, setLoading] = useState(true); // Loading state for user data
+  const navigate = useNavigate(); // Initialize navigate
+  const [image, setImage] = useState(null);
+  const hiddenFileInput = useRef(null);
 
   // Fetch user data and their stories when the component mounts
   const fetchUserData = async () => {
@@ -25,29 +26,30 @@ const Profile = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
-        setUsername(userData.username);
+        setUser(userData); // Set user data in state
+        setUsername(userData.username); // Initialize editing fields
         setBio(userData.bio);
-        setIsAuthenticated(true);
-        
+        setIsAuthenticated(true); // User is authenticated
+
         // Fetch the user's stories, bookmarks, and comments after fetching user data
         await fetchUserStories(userData.id);
-        await fetchUserBookmarks(userData.id);
-        await fetchUserComments(userData.id);
+        await fetchUserBookmarks(userData.id); // Fetch user's bookmarks
+        await fetchUserComments(userData.id); // Fetch comments posted by the user
       } else {
         console.error("Failed to fetch user data");
-        setIsAuthenticated(false);
+        setIsAuthenticated(false); // Not authenticated
         navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      setIsAuthenticated(false);
+      setIsAuthenticated(false); // Handle error as unauthenticated
       navigate("/login");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading once user data is fetched
     }
   };
 
+  // Fetch stories written by the user
   const fetchUserStories = async (userId) => {
     try {
       const response = await fetchWithAuth(
@@ -55,7 +57,7 @@ const Profile = () => {
       );
       if (response.ok) {
         const userStories = await response.json();
-        setStories(userStories);
+        setStories(userStories); // Set stories in state
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
@@ -63,17 +65,19 @@ const Profile = () => {
     }
   };
 
+  // Fetch user's bookmarked stories
   const fetchUserBookmarks = async (userId) => {
     try {
       const token = localStorage.getItem("token");
       const bookmarkedStories = await fetchBookmarkedStories(userId, token);
-      setBookmarks(bookmarkedStories);
+      setBookmarks(bookmarkedStories); // Set bookmarks in state
     } catch (error) {
       console.error("Error fetching user bookmarks:", error);
       setError("An error occurred while fetching bookmarks.");
     }
   };
 
+  // Fetch all comments made by the user
   const fetchUserComments = async (userId) => {
     try {
       const response = await fetchWithAuth(
@@ -81,7 +85,7 @@ const Profile = () => {
       );
       if (response.ok) {
         const userComments = await response.json();
-        setComments(userComments);
+        setComments(userComments); // Set comments in state
       }
     } catch (error) {
       console.error("Error fetching user comments:", error);
@@ -90,71 +94,110 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserData(); // Fetch user data once when the component mounts
   }, []);
 
+  // Handle save action for editing profile
   const handleSave = async () => {
     try {
-      const formData = new FormData();
-      formData.append("username", username);
-      formData.append("bio", bio);
-      if (image) {
-        formData.append("profilePicture", image); // Append image if available
-      }
-
       const response = await fetchWithAuth(
         "http://localhost:3000/api/users/me",
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent
           },
-          body: formData, // Send FormData with image
+          body: JSON.stringify({ username, bio }), // Include updated username and bio
         }
       );
 
       if (response.ok) {
-        await fetchUserData();
-        setIsEditing(false);
-        setSaveError(null);
+        await fetchUserData(); // Fetch updated data again after saving
+        setIsEditing(false); // Exit edit mode after saving
+        setSaveError(null); // Reset any previous save error
       } else {
         setSaveError("Failed to update profile");
       }
     } catch (error) {
-      setSaveError("Error while updating profile.", error);
+      setSaveError("Error while updating profile.");
     }
   };
 
-  const handleReadMore = (storyId) => {
-    if (!storyId) {
-      console.error("Story ID not provided for navigation");
-      return;
-    }
-    navigate(`/stories/${storyId}`);
-  };
-
-  const handleStoryDelete = async (storyId) => {
-    try {
-      const url = `http://localhost:3000/api/stories/${storyId}`;
-      const response = await fetchWithAuth(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        setStories((prevStories) =>
-          prevStories.filter((story) => story.storyId !== storyId)
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    const imgname = event.target.files[0].name;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxSize = Math.max(img.width, img.height);
+        canvas.width = maxSize;
+        canvas.height = maxSize;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+          img,
+          (maxSize - img.width) / 2,
+          (maxSize - img.height) / 2
         );
-      } else {
-        console.error("Failed to delete story");
-      }
-    } catch (error) {
-      console.error("Error deleting story:", error);
-    }
+        canvas.toBlob(
+          (blob) => {
+            const file = new File([blob], imgname, {
+              type: "image/png",
+              lastModified: Date.now(),
+            });
+
+            console.log(file);
+            setImage(file);
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+    };
   };
 
+  const handleUploadButtonClick = (file) => {
+    if (!file) {
+      console.error("No file selected for upload.");
+      return; // Exit if no file
+    }
+
+    console.log("Uploading file:", file); // Debug log
+
+    const myHeaders = new Headers();
+    const token = localStorage.getItem("token"); // Use the actual token from localStorage
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const formdata = new FormData();
+    formdata.append("file", file);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    // Change this URL to your new upload endpoint
+    fetch("https://your-new-upload-url.com/upload/profile_pic", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        const profileurl = JSON.parse(result);
+        console.log("Upload result:", profileurl);
+        setImage(profileurl.img_url);
+      })
+      .catch((error) => console.error("Error uploading file:", error));
+  };
+
+  const handleClick = (event) => {
+    hiddenFileInput.current.click();
+  };
+
+  // Handle delete action for comments
   const handleCommentDelete = async (commentId) => {
     try {
       const url = `http://localhost:3000/api/comments/${commentId}`;
@@ -177,28 +220,12 @@ const Profile = () => {
     }
   };
 
-  // Handle image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result); // Set the preview
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImage(null);
-      setImagePreview(null);
-    }
-  };
-
   if (loading) {
-    return <div>Loading user data...</div>;
+    return <div>Loading user data...</div>; // Show loading spinner or message
   }
 
   if (!isAuthenticated || !user) {
-    return <div>Redirecting to login...</div>;
+    return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
 
   return (
@@ -209,27 +236,44 @@ const Profile = () => {
           <div className="stories-container">
             <div className="profile-stories-wrapper">
               <div className="profile-container">
-                {/* Profile Picture */}
-                <div className='profile_img text-center p-4'>
-                  <div className="flex flex-column justify-content-center align-items-center">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange} // Handle image change
-                    />
-                    {imagePreview && (
-                      <img
-                        src={imagePreview}
-                        alt="Profile Preview"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          border: "4px solid green",
-                        }}
+                <div className="image-upload-container">
+                  <div className="box-decoration">
+                    <label
+                      htmlFor="image-upload-input"
+                      className="image-upload-label"
+                    >
+                      {image ? image.name : "Choose an image"}
+                    </label>
+                    <div onClick={handleClick} style={{ cursor: "pointer" }}>
+                      {image ? (
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="upload image"
+                          className="img-display-after"
+                        />
+                      ) : (
+                        <img
+                          src="./photo.png"
+                          alt="upload image"
+                          className="img-display-before"
+                        />
+                      )}
+
+                      <input
+                        id="image-upload-input"
+                        type="file"
+                        onChange={handleImageChange}
+                        ref={hiddenFileInput}
+                        style={{ display: "none" }}
                       />
-                    )}
+                    </div>
+
+                    <button
+                      className="image-upload-button"
+                      onClick={() => handleUploadButtonClick(image)} // Pass the image file to the upload function
+                    >
+                      Upload
+                    </button>
                   </div>
                 </div>
                 <h1>
@@ -249,7 +293,7 @@ const Profile = () => {
                   !
                 </h1>
                 <div className="info">
-                  <h4 id="label">Email:</h4>
+                  <h4 id="label"> Email:</h4>
                   <p>{user.email}</p>
 
                   <br />
@@ -331,7 +375,7 @@ const Profile = () => {
                           <p>{story.summary || "No summary available"}</p>
                         </div>
                         <button
-                          onClick={() => handleReadMore(story.storyId)}
+                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
                           className="button"
                         >
                           Read more
