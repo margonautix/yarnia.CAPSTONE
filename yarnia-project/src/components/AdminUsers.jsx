@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchAllUsers, deleteUsers } from "../API";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminUsersFeed() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch all users when the component mounts
   useEffect(() => {
