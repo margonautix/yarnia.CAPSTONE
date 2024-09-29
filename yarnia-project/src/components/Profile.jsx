@@ -150,7 +150,6 @@ const Profile = () => {
               lastModified: Date.now(),
             });
 
-            console.log(file);
             setImage(file);
           },
           "image/jpeg",
@@ -160,38 +159,66 @@ const Profile = () => {
     };
   };
 
-  const handleUploadButtonClick = (file) => {
+  const updateUserProfileWithImage = async (profileUrl) => {
+    try {
+      const response = await fetchWithAuth(
+        "http://localhost:3000/api/users/me",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ profilePicture: profileUrl }),
+        }
+      );
+
+      if (response.ok) {
+        await fetchUserData(); // Refresh user data to include the new profile picture
+      } else {
+        console.error("Failed to update profile picture");
+      }
+    } catch (error) {
+      console.error("Error while updating profile picture:", error);
+    }
+  };
+
+  const handleUploadButtonClick = async (file) => {
     if (!file) {
       console.error("No file selected for upload.");
       return; // Exit if no file
     }
 
-    console.log("Uploading file:", file); // Debug log
+    try {
+      const myHeaders = new Headers();
+      const token = localStorage.getItem("token");
+      myHeaders.append("Authorization", `Bearer ${token}`);
 
-    const myHeaders = new Headers();
-    const token = localStorage.getItem("token"); // Use the actual token from localStorage
-    myHeaders.append("Authorization", `Bearer ${token}`);
+      const formdata = new FormData();
+      formdata.append("file", file);
 
-    const formdata = new FormData();
-    formdata.append("file", file);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    // Change this URL to your new upload endpoint
-    fetch("https://your-new-upload-url.com/upload/profile_pic", requestOptions)
-      .then((response) => response.json()) // Parse response as JSON
-      .then((result) => {
-        const profileurl = result.img_url; // Get image URL from response
-        console.log("Upload result:", profileurl);
-        setImage(profileurl); // Update the image in state
-        updateUserProfileWithImage(profileurl); // Update user profile with the new image URL
-      })
-      .catch((error) => console.error("Error uploading file:", error));
+      const response = await fetch(
+        "http://localhost:3000/api/upload/profile_pic",
+        requestOptions
+      );
+      if (response.ok) {
+        const result = await response.json();
+        const profileUrl = result.img_url; // Assuming backend returns { img_url: 'URL' }
+        setImage(profileUrl); // Update the image in state
+        await updateUserProfileWithImage(profileUrl); // Update user profile with the new image URL
+      } else {
+        console.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
   const handleClick = (event) => {
@@ -237,46 +264,6 @@ const Profile = () => {
           <div className="stories-container">
             <div className="profile-stories-wrapper">
               <div className="profile-container">
-                <div className="image-upload-container">
-                  <div className="box-decoration">
-                    <label
-                      htmlFor="image-upload-input"
-                      className="image-upload-label"
-                    >
-                      {image ? image.name : "Choose an image"}
-                    </label>
-                    <div onClick={handleClick} style={{ cursor: "pointer" }}>
-                      {image ? (
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt="upload image"
-                          className="img-display-after"
-                        />
-                      ) : (
-                        <img
-                          src="./photo.png"
-                          alt="upload image"
-                          className="img-display-before"
-                        />
-                      )}
-
-                      <input
-                        id="image-upload-input"
-                        type="file"
-                        onChange={handleImageChange}
-                        ref={hiddenFileInput}
-                        style={{ display: "none" }}
-                      />
-                    </div>
-
-                    <button
-                      className="image-upload-button"
-                      onClick={() => handleUploadButtonClick(image)} // Pass the image file to the upload function
-                    >
-                      Upload
-                    </button>
-                  </div>
-                </div>
                 <h1>
                   Welcome,{" "}
                   {isEditing ? (
@@ -294,6 +281,59 @@ const Profile = () => {
                   !
                 </h1>
                 <div className="info">
+                  <div className="image-upload-container">
+                    <div className="box-decoration">
+                      {isEditing ? (
+                        <>
+                          <label
+                            htmlFor="image-upload-input"
+                            className="image-upload-label"
+                          >
+                            {image ? image.name : "Choose an image"}
+                          </label>
+                          <div
+                            onClick={handleClick}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {image ? (
+                              <img
+                                src={URL.createObjectURL(image)}
+                                alt="upload image"
+                                className="img-display-after"
+                              />
+                            ) : (
+                              <img
+                                src={user.profilePicture || "./photo.png"}
+                                alt="upload image"
+                                className="img-display-before"
+                              />
+                            )}
+                          </div>
+                          <input
+                            id="image-upload-input"
+                            type="file"
+                            onChange={handleImageChange}
+                            ref={hiddenFileInput}
+                            style={{ display: "none" }}
+                          />
+                          <button
+                            className="button"
+                            onClick={() => handleUploadButtonClick(image)}
+                          >
+                            Upload Image
+                          </button>
+                        </>
+                      ) : (
+                        <img
+                          src={user.profilePicture || "./photo.png"}
+                          alt="Profile"
+                          className="img-display"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <br />
+                  <br />
                   <h4 id="label"> Email:</h4>
                   <p>{user.email}</p>
 
