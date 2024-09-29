@@ -6,6 +6,8 @@ export default function AdminCommentsFeed() {
   const [filteredComments, setFilteredComments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+  const itemsPerPage = 80; // Number of comments per page
 
   // Fetch all comments when the component mounts
   useEffect(() => {
@@ -57,10 +59,30 @@ export default function AdminCommentsFeed() {
     }
   };
 
+  // Calculate the current comments to display based on pagination
+  const indexOfLastComment = currentPage * itemsPerPage;
+  const indexOfFirstComment = indexOfLastComment - itemsPerPage;
+  const currentComments = filteredComments.slice(
+    indexOfFirstComment,
+    indexOfLastComment
+  );
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredComments.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <div className="admin-comments-container">
       <h2>All Comments</h2>
       {error && <p className="error">{error}</p>}
+
       {/* Search Bar */}
       <input
         type="text"
@@ -69,9 +91,23 @@ export default function AdminCommentsFeed() {
         onChange={handleSearch}
         className="search-bar"
       />
+      <br />
+      <br />
+      {/* Pagination Controls */}
+      <div className="pagination">
+        {pageNumbers.map((number) => (
+          <button
+            key={number}
+            onClick={() => handlePageChange(number)}
+            className={number === currentPage ? "active-page" : ""}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
       <ul className="comments-list">
-        {filteredComments.length > 0 ? (
-          filteredComments.map((comment) => (
+        {currentComments.length > 0 ? (
+          currentComments.map((comment) => (
             <li key={comment.commentId} className="comment-item">
               <div className="comment-content">
                 {/* Placeholder Avatar with Initials */}
