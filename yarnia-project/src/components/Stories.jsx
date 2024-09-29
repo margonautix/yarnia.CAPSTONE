@@ -12,7 +12,7 @@ const Stories = () => {
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
 
   const navigate = useNavigate();
-  const storiesPerPage = 21; // Number of stories per page
+  const storiesPerPage = 20; // Number of stories per page
 
   // Fetch all stories on component mount
   useEffect(() => {
@@ -131,23 +131,22 @@ const Stories = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-bar"
           />
-          <br />
-          <br />
-          {/* Pagination Controls */}
-          <div className="pagination">
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={currentPage === page ? "active" : ""}
-                >
-                  {page}
-                </button>
-              )
-            )}
-          </div>
         </aside>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+          (page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={currentPage === page ? "active" : ""}
+            >
+              {page}
+            </button>
+          )
+        )}
       </div>
 
       {/* Main Story Content */}
