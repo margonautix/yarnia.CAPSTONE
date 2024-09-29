@@ -8,7 +8,8 @@
   overflow: auto;
   width: 100%;
   margin: 0 auto;
-  font-family: "Arial, sans-serif";
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: #333;
   font-size: 16px;
 }
@@ -22,8 +23,6 @@
 
 /* Navbar */
 /* General Styles for Navbar */
-/* Navbar */
-/* General Styles for Navbar */
 .navbar {
   position: sticky; /* Makes the navbar stick to the top while scrolling */
   top: 0; /* Sticks to the top of the viewport */
@@ -33,7 +32,7 @@
     #fbebc1,
     #fefcee
   ); /* Linear gradient background */
-  padding: 20px;
+  padding: px;
   display: flex;
   align-items: center;
 }
@@ -126,7 +125,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 250px;
+  width: 300px;
   background: #ccd5ae;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -229,6 +228,14 @@ body {
 
 .story-card p {
   margin: 8px 0;
+}
+
+.story-card a {
+  color: #ae7f28;
+}
+
+.story-card a:hover {
+  color: #606c38;
 }
 
 .story-card button {
