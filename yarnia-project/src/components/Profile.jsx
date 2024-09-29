@@ -19,6 +19,37 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const hiddenFileInput = useRef(null);
 
+  const handleReadMore = (storyId) => {
+    navigate(`/stories/${storyId}`);
+  };
+
+  const handleStoryDelete = async (storyId) => {
+    try {
+      const response = await fetchWithAuth(
+        `http://localhost:3000/api/stories/${storyId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent for authentication
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted story from the state
+        setStories((prevStories) =>
+          prevStories.filter((story) => story.storyId !== storyId)
+        );
+      } else {
+        console.error("Failed to delete story");
+        setError("An error occurred while deleting the story.");
+      }
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      setError("An error occurred while deleting the story.");
+    }
+  };
+
   // Fetch user data and their stories when the component mounts
   const fetchUserData = async () => {
     try {
