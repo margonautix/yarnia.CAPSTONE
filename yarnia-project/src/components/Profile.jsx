@@ -163,33 +163,6 @@ const Profile = () => {
                 <p>Nothing to find here...</p>
               )}
             </div>
-
-            {/* All Available Stories Section */}
-            <div className="profile-container">
-              <h2>All Available Stories</h2>
-              {allStories.length > 0 ? (
-                <ul className="story-list">
-                  {allStories.map((story) => (
-                    <div className="story-item" key={story.storyId}>
-                      <li>
-                        <div id="story-card">
-                          <h3>{story.title}</h3>
-                          <p>{story.summary || "No summary available"}</p>
-                        </div>
-                        <button
-                          onClick={() => navigate(`/stories/${story.storyId}`)}
-                          className="button"
-                        >
-                          Read more
-                        </button>
-                      </li>
-                    </div>
-                  ))}
-                </ul>
-              ) : (
-                <p>No available stories.</p>
-              )}
-            </div>
           </div>
         </div>
       </section>

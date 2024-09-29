@@ -22,9 +22,19 @@ export default function AdminUsersFeed() {
   }, []);
 
   // Handle delete action for users
+  // Handle delete action for users
   const handleDeleteUser = async (userId) => {
+    // Ask for confirmation before deleting the user
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
+
+    if (!confirmDelete) {
+      return; // Exit the function if the user cancels
+    }
+
     try {
-      await deleteUsers(userId); // Assuming deleteUsers takes only userId as a parameter
+      await deleteUsers(userId);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); // Remove the deleted user from state
     } catch (error) {
       console.error("Failed to delete the user:", error);
