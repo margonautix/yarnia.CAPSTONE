@@ -181,23 +181,20 @@ export default function SingleStory({ user }) {
             <li key={comment.commentId} className="comment-item">
               <strong>
                 {comment.user?.username ? (
-                  <Link to={`/users/${comment.userId}`}>
-                    {comment.user.username}
-                  </Link>
+                  currentUser?.id === comment.userId ? (
+                    // Link to the current user's profile
+                    <Link to="/profile">{comment.user.username}</Link>
+                  ) : (
+                    // Link to other users' profiles
+                    <Link to={`/users/${comment.userId}`}>
+                      {comment.user.username}
+                    </Link>
+                  )
                 ) : (
                   "Unknown User"
                 )}
               </strong>
               : {comment.content || "No content available"}
-              {/* Add link for current user's comments */}
-              {currentUser?.id === comment.userId && (
-                <Link
-                  to={`/users/${currentUser.id}/comments`}
-                  className="view-my-comments-link"
-                >
-                  View My Comments
-                </Link>
-              )}
               {/* Show delete button for user, admin, or story author */}
               {(currentUser?.id === comment.userId ||
                 currentUser?.isAdmin ||
