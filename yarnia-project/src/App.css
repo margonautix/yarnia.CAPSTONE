@@ -714,3 +714,378 @@ html {
 }
 
 /* All Comments Admin Page */
+/* General Styles for Admin Comments Feed */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Soft gradient background */
+  color: #283618; /* Dark green for text */
+  line-height: 1.6;
+}
+
+/* Container for Admin Comments Feed */
+.admin-comments-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Heading */
+.admin-comments-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error {
+  color: #bc6c25; /* Rich brown-orange for error messages */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border: 1px solid #ccd5ae; /* Light olive border */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream background */
+  color: #283618;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background: #ccd5ae; /* Light olive green */
+  color: #283618;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.pagination-button:hover {
+  background: #e9edc9; /* Softer shade on hover */
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background: #faedcd; /* Pale peach for disabled state */
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #606c38; /* Deep green for active page */
+  color: #fefae0; /* Light cream */
+  font-weight: bold;
+}
+
+/* Comments List */
+.comments-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comment-item {
+  background: #faedcd; /* Pale peach */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Comment Content Section */
+.comment-content {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+}
+
+/* Placeholder Avatar with Initials */
+.comment-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #606c38; /* Deep green */
+  color: #fefae0; /* Light cream */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* Comment Details */
+.comment-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-username {
+  font-weight: bold;
+  color: #283618; /* Dark green */
+  margin-bottom: 5px;
+}
+
+.comment-text {
+  color: #333; /* Standard dark gray */
+}
+
+/* Delete Button */
+.delete-button {
+  padding: 8px 16px;
+  background: #bc6c25; /* Rich brown-orange */
+  color: #fefae0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.delete-button:hover {
+  background: #dda15e; /* Softer brown-orange on hover */
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-comments-container {
+    padding: 20px;
+  }
+
+  .comment-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comment-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
+  }
+
+  .pagination-button {
+    width: 100%;
+  }
+}
+
+/* All Users Admin Page */
+/* General Styles for Admin Users Feed */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Full page gradient */
+  color: #283618;
+  line-height: 1.6;
+}
+
+/* Container for Admin Users Feed */
+.admin-users-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Heading */
+.admin-users-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error {
+  color: #bc6c25;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border: 1px solid #ccd5ae;
+  border-radius: 5px;
+  background-color: #fefae0;
+  color: #283618;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background: #ccd5ae;
+  color: #283618;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.pagination-button:hover {
+  background: #e9edc9;
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background: #faedcd;
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #606c38;
+  color: #fefae0;
+  font-weight: bold;
+}
+
+/* Users List */
+.users-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-item {
+  background: #faedcd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* User Content Section */
+.user-content {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+}
+
+/* Placeholder Avatar with Initials */
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #606c38;
+  color: #fefae0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* User Details */
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #283618;
+  margin-bottom: 5px;
+}
+
+.user-email {
+  color: #333;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.user-role {
+  font-size: 0.9em;
+  color: #bc6c25;
+}
+
+/* Delete Button */
+.delete-button {
+  padding: 8px 16px;
+  background: #bc6c25;
+  color: #fefae0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.delete-button:hover {
+  background: #dda15e;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-users-container {
+    padding: 20px;
+  }
+
+  .user-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
+  }
+
+  .pagination-button {
+    width: 100%;
+  }
+}
