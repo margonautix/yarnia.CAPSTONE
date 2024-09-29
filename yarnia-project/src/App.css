@@ -1049,6 +1049,15 @@ p.email {
   border: 1px solid #555; /* Subtle border */
 }
 
+.comments-item {
+  background-color: #444; /* Slightly darker background */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add some depth with shadow */
+  color: #e5e5e5; /* Light text color */
+  border: 1px solid #555; /* Subtle border */
+}
+
 /* Username Styling */
 .comment-item strong {
   color: #00ff88; /* Green accent for username */
