@@ -7,8 +7,6 @@ export default function AdminUsersFeed() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page state
-  const itemsPerPage = 6; // Number of users per page
 
   // Fetch all users when the component mounts
   useEffect(() => {
@@ -58,22 +56,6 @@ export default function AdminUsersFeed() {
     }
   };
 
-  // Calculate the current users to display based on pagination
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredUsers.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
   return (
     <div className="admin-users-container">
       <h2>All Users</h2>
@@ -87,24 +69,10 @@ export default function AdminUsersFeed() {
         onChange={handleSearchChange}
         className="search-bar"
       />
-      <br />
-      <br />
-      {/* Pagination Controls */}
-      <div className="pagination">
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            onClick={() => handlePageChange(number)}
-            className={number === currentPage ? "active-page" : ""}
-          >
-            {number}
-          </button>
-        ))}
-      </div>
 
       <ul className="users-list">
-        {currentUsers.length > 0 ? (
-          currentUsers.map((user) => (
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
             <li key={user.id} className="user-item">
               <div className="user-content">
                 {/* Placeholder Avatar with Initials */}
