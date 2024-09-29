@@ -9,8 +9,10 @@ const Stories = () => {
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [selectedCategory, setSelectedCategory] = useState(""); // Selected genre filter
+  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
 
   const navigate = useNavigate();
+  const storiesPerPage = 20; // Number of stories per page
 
   // Fetch all stories on component mount
   useEffect(() => {
@@ -55,6 +57,20 @@ const Stories = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+  // Pagination calculation
+  const totalPages = Math.ceil(filteredStories.length / storiesPerPage);
+  const indexOfLastStory = currentPage * storiesPerPage;
+  const indexOfFirstStory = indexOfLastStory - storiesPerPage;
+  const currentStories = filteredStories.slice(
+    indexOfFirstStory,
+    indexOfLastStory
+  );
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   // Categories (Genres) for the sidebar
   const genres = [
     "Fantasy",
@@ -70,6 +86,7 @@ const Stories = () => {
   // Handle category selection for filtering stories by genre
   const handleCategorySelect = (genre) => {
     setSelectedCategory(genre);
+    setCurrentPage(1); // Reset to the first page when changing category
   };
 
   // Conditional rendering for loading state
@@ -114,13 +131,67 @@ const Stories = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-bar"
           />
+
+          <br />
+          <br />
+          {/* Pagination Controls */}
+          <div className="pagination">
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                {/* Previous Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="pagination-button"
+                >
+                  Previous
+                </button>
+
+                {/* Page Numbers Logic */}
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const pageNumber = index + 1;
+
+                  // Show the page if it meets the conditions: current page, previous two, next two
+                  if (
+                    pageNumber === currentPage ||
+                    (pageNumber >= currentPage - 2 &&
+                      pageNumber <= currentPage + 2)
+                  ) {
+                    return (
+                      <button
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`pagination-button ${
+                          currentPage === pageNumber ? "active" : ""
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    );
+                  }
+
+                  return null;
+                })}
+
+                {/* Next Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="pagination-button"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
         </aside>
       </div>
 
       {/* Main Story Content */}
       <div className="stories-list">
-        {filteredStories.length > 0 ? (
-          filteredStories.map((story) => (
+        {currentStories.length > 0 ? (
+          currentStories.map((story) => (
             <div key={story.storyId} className="story-card">
               <h2>{story.title}</h2>
               <p>

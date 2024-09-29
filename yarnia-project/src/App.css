@@ -1,6 +1,6 @@
 /* Root and General Styling */
 #root {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -1136,16 +1136,15 @@ p.email {
 }
 
 .sidebar {
-  top: 0;
+  position: sticky;
+  top: 0; /* Keeps the sidebar in view as you scroll */
   left: 0;
-  height: 100vh;
-  max-width: 250px; /* Fixed width for the sidebar */
+  width: 250px;
   padding: 20px;
-  background-color: #82a77f; /* Soft green background for the sidebar */
-  border-right: 1px solid #000000; /* Subtle border on the right */
-  box-shadow: 2px 2px 10px black; /* Shadow for depth */
-  padding-top: 100px; /* Space for any fixed navbar at the top */
-  position: fixed;
+  background-color: #82a77f;
+  border-right: 1px solid #000000;
+  box-shadow: 2px 2px 10px black;
+  padding-top: 100px;
 }
 
 .sidebar-toggle {
@@ -1745,5 +1744,63 @@ form button:hover {
   .view-button,
   .remove-button {
     width: 100%; /* Full width buttons on smaller screens */
+  }
+}
+
+/* Pagination Container */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px; /* Increased spacing for better clickability */
+  padding: 10px 0;
+}
+
+/* Pagination Button Styles */
+.pagination-button {
+  padding: 10px 15px; /* Added padding for larger touch targets */
+  border: 1px solid #00ff88; /* Green border to match the theme */
+  border-radius: 8px; /* Smoother rounded corners */
+  background-color: transparent;
+  color: #00ff88; /* Green text color */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover Effect */
+.pagination-button:hover {
+  background-color: #00ff88; /* Fill green background on hover */
+  color: #1e1e1e; /* Dark text on hover */
+  transform: translateY(-2px); /* Lift effect for better interactivity */
+}
+
+/* Active Page Button */
+.active-page {
+  background-color: #00cc6a; /* Darker green for active page */
+  color: #ffffff; /* White text for contrast */
+  border: 1px solid #00cc6a;
+  transform: scale(1.05); /* Slightly larger for emphasis */
+}
+
+/* Disabled State */
+.pagination-button:disabled {
+  background-color: #555555; /* Gray background for disabled button */
+  color: #999999; /* Light text for disabled state */
+  cursor: not-allowed;
+  border: 1px solid #444444; /* Darker border to indicate disabled */
+}
+
+/* Responsive Pagination for Mobile */
+@media (max-width: 600px) {
+  .pagination {
+    gap: 8px; /* Reduce spacing for smaller screens */
+  }
+
+  .pagination-button {
+    padding: 8px 12px; /* Smaller padding for mobile */
+    font-size: 0.9rem; /* Reduce font size for smaller screens */
   }
 }

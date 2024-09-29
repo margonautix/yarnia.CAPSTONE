@@ -9,9 +9,6 @@ export default function UserProfile() {
   const [userError, setUserError] = useState(null);
   const [storiesError, setStoriesError] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state for user data
-  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
-  const itemsPerPage = 5; // Number of stories per page
-
   const navigate = useNavigate(); // Initialize navigate
 
   // Fetch user data
@@ -56,22 +53,6 @@ export default function UserProfile() {
     }
   }, [authorId]);
 
-  // Calculate the current stories to display based on pagination
-  const indexOfLastStory = currentPage * itemsPerPage;
-  const indexOfFirstStory = indexOfLastStory - itemsPerPage;
-  const currentStories = userStories.slice(indexOfFirstStory, indexOfLastStory);
-
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(userStories.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
   if (loading) {
     return <div>Loading user data...</div>; // Show loading spinner or message
   }
@@ -94,25 +75,11 @@ export default function UserProfile() {
                 {/* Stories Section */}
                 <div className="profile-stories-wrapper">
                   <h2>{user.username}'s Stories</h2>
-
-                  {/* Pagination Controls Below Search Bar */}
-                  <div className="pagination">
-                    {pageNumbers.map((number) => (
-                      <button
-                        key={number}
-                        onClick={() => handlePageChange(number)}
-                        className={number === currentPage ? "active-page" : ""}
-                      >
-                        {number}
-                      </button>
-                    ))}
-                  </div>
-
                   {storiesError ? (
                     <p>{storiesError}</p> // Display error if there's an issue fetching stories
-                  ) : currentStories.length > 0 ? (
+                  ) : userStories.length > 0 ? (
                     <ul className="story-list">
-                      {currentStories.map((story) => (
+                      {userStories.map((story) => (
                         <div className="story-item" key={story.id}>
                           <li>
                             <div id="story-card">

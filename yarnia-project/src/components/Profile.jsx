@@ -467,7 +467,6 @@ const Profile = () => {
               )}
             </div>
           </div>
-
           {/* Comment History Section */}
           <div className="profile-container">
             <h3 id="history">Comment History:</h3>
@@ -499,6 +498,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
+      <button>Delete Account</button>
     </>
   );
 };

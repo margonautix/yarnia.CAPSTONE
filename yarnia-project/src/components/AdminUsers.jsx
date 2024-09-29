@@ -7,8 +7,8 @@ export default function AdminUsersFeed() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page state
-  const itemsPerPage = 6; // Number of users per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 20;
 
   // Fetch all users when the component mounts
   useEffect(() => {
@@ -56,23 +56,19 @@ export default function AdminUsersFeed() {
       );
       setFilteredUsers(filtered);
     }
+    setCurrentPage(1); // Reset to the first page whenever the search changes
   };
 
-  // Calculate the current users to display based on pagination
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredUsers.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
 
   return (
     <div className="admin-users-container">
@@ -89,18 +85,55 @@ export default function AdminUsersFeed() {
       />
       <br />
       <br />
+
       {/* Pagination Controls */}
-      <div className="pagination">
-        {pageNumbers.map((number) => (
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          {/* Previous Button */}
           <button
-            key={number}
-            onClick={() => handlePageChange(number)}
-            className={number === currentPage ? "active-page" : ""}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
           >
-            {number}
+            Previous
           </button>
-        ))}
-      </div>
+
+          {/* Page Numbers Logic */}
+          {Array.from({ length: totalPages }, (_, index) => {
+            const pageNumber = index + 1;
+
+            // Show the page if it meets the conditions: current page, previous two, next two
+            if (
+              pageNumber === currentPage ||
+              (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+            ) {
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`pagination-button ${
+                    currentPage === pageNumber ? "active-page" : ""
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            }
+
+            return null;
+          })}
+
+          {/* Next Button */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <ul className="users-list">
         {currentUsers.length > 0 ? (
