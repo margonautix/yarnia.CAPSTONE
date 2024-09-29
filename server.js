@@ -805,3 +805,15 @@ app.get("/api/users/:userId/comments", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user comments" });
   }
 });
+
+app.post("/api/upload/profile_pic", (req, res) => {
+  const file = req.files.file; // Assuming you're using an npm package like express-fileupload or multer
+  const filePath = `uploads/${file.name}`;
+  file.mv(filePath, (err) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    // Assume the server serves files from the "uploads" directory
+    res.json({ img_url: `http://localhost:3000/${filePath}` });
+  });
+});
