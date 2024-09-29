@@ -22,16 +22,14 @@
 
 /* Navbar */
 /* General Styles for Navbar */
-/* Navbar */
-/* General Styles for Navbar */
 .navbar {
   position: sticky; /* Makes the navbar stick to the top while scrolling */
   top: 0; /* Sticks to the top of the viewport */
   z-index: 1000; /* Ensures the navbar stays on top of other elements */
   background: linear-gradient(
     to bottom,
-    #fbebc1,
-    #fefcee
+    #fefcee,
+    #fbebc1
   ); /* Linear gradient background */
   padding: 20px;
   display: flex;
