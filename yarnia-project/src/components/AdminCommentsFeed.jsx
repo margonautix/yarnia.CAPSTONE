@@ -6,6 +6,8 @@ export default function AdminCommentsFeed() {
   const [filteredComments, setFilteredComments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const commentsPerPage = 100;
 
   // Fetch all comments when the component mounts
   useEffect(() => {
@@ -55,6 +57,21 @@ export default function AdminCommentsFeed() {
         )
       );
     }
+    setCurrentPage(1); // Reset to the first page whenever the search changes
+  };
+
+  // Pagination logic
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = filteredComments.slice(
+    indexOfFirstComment,
+    indexOfLastComment
+  );
+  const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -69,9 +86,58 @@ export default function AdminCommentsFeed() {
         onChange={handleSearch}
         className="search-bar"
       />
+      <br />
+      <br />
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: totalPages }, (_, index) => {
+            const pageNumber = index + 1;
+
+            // Determine whether to show the page button
+            if (
+              pageNumber === currentPage ||
+              (pageNumber >= currentPage - 2 &&
+                pageNumber <= currentPage + 2) ||
+              pageNumber === 1 || // Optionally, show the first page
+              pageNumber === totalPages // Optionally, show the last page
+            ) {
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`pagination-button ${
+                    currentPage === pageNumber ? "active-page" : ""
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            }
+
+            return null;
+          })}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
+            Next
+          </button>
+        </div>
+      )}
       <ul className="comments-list">
-        {filteredComments.length > 0 ? (
-          filteredComments.map((comment) => (
+        {currentComments.length > 0 ? (
+          currentComments.map((comment) => (
             <li key={comment.commentId} className="comment-item">
               <div className="comment-content">
                 {/* Placeholder Avatar with Initials */}

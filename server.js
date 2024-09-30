@@ -612,24 +612,19 @@ app.get("/api/users/:authorId", async (req, res, next) => {
   }
 });
 
-app.delete(
-  "/api/users/:authorId",
-  authenticateUser,
-  authenticateAdmin,
-  async (req, res, next) => {
-    const { authorId } = req.params;
+app.delete("/api/users/:authorId", authenticateUser, async (req, res, next) => {
+  const { authorId } = req.params;
 
-    try {
-      await prisma.user.delete({
-        where: { id: parseInt(authorId, 10) },
-      });
+  try {
+    await prisma.user.delete({
+      where: { id: parseInt(authorId, 10) },
+    });
 
-      res.status(204).json({ message: "User deleted successfully." });
-    } catch (err) {
-      next(err);
-    }
+    res.status(204).json({ message: "User deleted successfully." });
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 // POST /api/auth/login - Login a user
 app.post("/api/auth/login", async (req, res, next) => {
@@ -772,7 +767,7 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
+app.get("/api/users/:userId/stories", async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -804,4 +799,16 @@ app.get("/api/users/:userId/comments", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch user comments" });
   }
+});
+
+app.post("/api/upload/profile_pic", (req, res) => {
+  const file = req.files.file; // Assuming you're using an npm package like express-fileupload or multer
+  const filePath = `uploads/${file.name}`;
+  file.mv(filePath, (err) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    // Assume the server serves files from the "uploads" directory
+    res.json({ img_url: `http://localhost:3000/${filePath}` });
+  });
 });

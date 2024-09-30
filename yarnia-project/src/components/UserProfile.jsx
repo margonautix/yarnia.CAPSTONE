@@ -6,7 +6,8 @@ export default function UserProfile() {
   const { authorId } = useParams(); // Get the user ID from the URL
   const [user, setUser] = useState(null);
   const [userStories, setUserStories] = useState([]);
-  const [error, setError] = useState(null);
+  const [userError, setUserError] = useState(null);
+  const [storiesError, setStoriesError] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state for user data
   const navigate = useNavigate(); // Initialize navigate
 
@@ -18,11 +19,11 @@ export default function UserProfile() {
         if (userData) {
           setUser(userData); // Set the user state
         } else {
-          setError("User not found.");
+          setUserError("User not found.");
         }
       } catch (error) {
         console.error("Failed to fetch user data:", error);
-        setError("Failed to fetch user data.");
+        setUserError("Failed to fetch user data.");
       } finally {
         setLoading(false); // Stop loading once user data is fetched
       }
@@ -42,8 +43,8 @@ export default function UserProfile() {
           setUserStories([]); // No stories found
         }
       } catch (error) {
-        console.error("Failed to fetch user stories:", error);
-        setError("Failed to fetch user stories.");
+        console.error("No stories found:", error);
+        setStoriesError("No stories found.");
       }
     };
 
@@ -56,7 +57,7 @@ export default function UserProfile() {
     return <div>Loading user data...</div>; // Show loading spinner or message
   }
 
-  if (error) return <p>{error}</p>;
+  if (userError) return <p>{userError}</p>;
 
   return (
     <>
@@ -74,7 +75,9 @@ export default function UserProfile() {
                 {/* Stories Section */}
                 <div className="profile-stories-wrapper">
                   <h2>{user.username}'s Stories</h2>
-                  {userStories.length > 0 ? (
+                  {storiesError ? (
+                    <p>{storiesError}</p> // Display error if there's an issue fetching stories
+                  ) : userStories.length > 0 ? (
                     <ul className="story-list">
                       {userStories.map((story) => (
                         <div className="story-item" key={story.id}>
@@ -94,7 +97,7 @@ export default function UserProfile() {
                       ))}
                     </ul>
                   ) : (
-                    <p>No stories available.</p>
+                    <p>No stories available.</p> // Display message if there are no stories
                   )}
                 </div>
               </>

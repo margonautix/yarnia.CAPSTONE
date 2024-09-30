@@ -1,34 +1,35 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { createNewUser } from "../API"; // Assuming the API file is set up like this
+import { useNavigate } from "react-router-dom";
+import { createNewUser } from "../API";
 
-const Register = () => {
+const Register = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // To display error messages
+  const [error, setError] = useState("");
 
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear any previous errors
+    setError("");
 
     try {
-      // Call the API function to create a new user
       const result = await createNewUser(username, email, password);
 
       if (result && result.token) {
-        // Store the token and any other necessary user data
+        // Store the token and user data in localStorage
+        const userData = { username, email };
         localStorage.setItem("token", result.token);
-        localStorage.setItem("user", JSON.stringify({ username, email }));
+        localStorage.setItem("user", JSON.stringify(userData));
 
-        // Navigate to the profile page after successful registration and login
+        // Update the parent component's user state
+        setUser(userData);
+
+        // Navigate to the profile page after successful registration
         navigate("/profile");
       }
     } catch (error) {
-      // Handle errors such as duplicate emails or other registration failures
       if (error.response && error.response.status === 409) {
         setError("User already exists with this email or username");
       } else {
@@ -38,11 +39,11 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register New Account</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
       <div>
-        <form onSubmit={handleSubmit}>
+        <form className="register-form" onSubmit={handleSubmit}>
           <label>
             Username:
             <input
@@ -53,8 +54,6 @@ const Register = () => {
               required
             />
           </label>
-          <br />
-          <br />
           <label>
             Email:
             <input
@@ -65,8 +64,6 @@ const Register = () => {
               required
             />
           </label>
-          <br />
-          <br />
           <label>
             Password:
             <input
@@ -77,8 +74,6 @@ const Register = () => {
               required
             />
           </label>
-          <br />
-          <br />
           <button className="login-button" type="submit">
             Submit
           </button>

@@ -58,7 +58,7 @@ const seed = async () => {
           summary: faker.lorem.sentence(10),
           genre: randomGenre, // Assign a random genre to each story
           authorId: user.id, // The story's author
-          authorName: user.username,
+          // authorName: user.username,
           createdAt: faker.date.past(),
         },
       });
