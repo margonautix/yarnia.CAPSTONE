@@ -39,13 +39,12 @@ const Register = ({ setUser }) => {
   };
 
   return (
-    <div className="register-container">
+    <div class="login">
       <h2>Register New Account</h2>
       {error && <p className="error-message">{error}</p>}
       <div>
         <form className="register-form" onSubmit={handleSubmit}>
           <label>
-            Username:
             <input
               placeholder="Username"
               type="text"
@@ -55,7 +54,6 @@ const Register = ({ setUser }) => {
             />
           </label>
           <label>
-            Email:
             <input
               placeholder="Email"
               type="email"
@@ -65,7 +63,6 @@ const Register = ({ setUser }) => {
             />
           </label>
           <label>
-            Password:
             <input
               placeholder="Password"
               type="password"

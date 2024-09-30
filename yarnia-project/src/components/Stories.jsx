@@ -14,7 +14,7 @@ const Stories = () => {
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
 
   const navigate = useNavigate();
-  const storiesPerPage = 20; // Number of stories per page
+  const storiesPerPage = 10; // Number of stories per page
 
   // Fetch all stories on component mount
   useEffect(() => {
@@ -136,57 +136,6 @@ const Stories = () => {
 
           <br />
           <br />
-          {/* Pagination Controls */}
-          <div className="pagination">
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                {/* Previous Button */}
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="pagination-button"
-                >
-                  Previous
-                </button>
-
-                {/* Page Numbers Logic */}
-                {Array.from({ length: totalPages }, (_, index) => {
-                  const pageNumber = index + 1;
-
-                  // Show the page if it meets the conditions: current page, previous two, next two
-                  if (
-                    pageNumber === currentPage ||
-                    (pageNumber >= currentPage - 2 &&
-                      pageNumber <= currentPage + 2)
-                  ) {
-                    return (
-                      <button
-                        key={pageNumber}
-                        onClick={() => handlePageChange(pageNumber)}
-                        className={`pagination-button ${
-                          currentPage === pageNumber ? "active" : ""
-                        }`}
-                      >
-                        {pageNumber}
-                      </button>
-                    );
-                  }
-
-                  return null;
-                })}
-
-                {/* Next Button */}
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="pagination-button"
-                >
-                  Next
-                </button>
-              </div>
-            )}
-          </div>
         </aside>
       </div>
 
@@ -263,6 +212,57 @@ const Stories = () => {
             </div>
           </div>
         )}
+        {/* Pagination Controls */}
+        <div className="pagination">
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              {/* Previous Button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="pagination-button"
+              >
+                Previous
+              </button>
+
+              {/* Page Numbers Logic */}
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+
+                // Show the page if it meets the conditions: current page, previous two, next two
+                if (
+                  pageNumber === currentPage ||
+                  (pageNumber >= currentPage - 2 &&
+                    pageNumber <= currentPage + 2)
+                ) {
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`pagination-button ${
+                        currentPage === pageNumber ? "active" : ""
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                }
+
+                return null;
+              })}
+
+              {/* Next Button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
