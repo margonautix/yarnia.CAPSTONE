@@ -201,7 +201,7 @@ export default function SingleStory({ user }) {
                 currentUser?.id === story?.authorId) && (
                 <button
                   onClick={() => handleDeleteComment(comment.commentId)}
-                  className="delete-button"
+                  className="button"
                 >
                   Delete
                 </button>
@@ -239,7 +239,35 @@ export default function SingleStory({ user }) {
               <ReactQuill
                 value={content}
                 onChange={setContent} // Update content state
-                theme="snow" // Quill theme
+                modules={{
+                  toolbar: [
+                    [{ header: "1" }, { header: "2" }, { font: [] }], // Headers and font styles
+                    [{ size: [] }], // Font sizes
+                    ["bold", "italic", "underline", "strike", "blockquote"], // Formatting options
+                    [
+                      { list: "ordered" },
+                      { list: "bullet" },
+                      { indent: "-1" },
+                      { indent: "+1" },
+                    ], // Lists and indentation
+                    [{ align: "justify" }], // Alignment options
+                    ["clean"], // Clear formatting
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "font",
+                  "size",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strike",
+                  "blockquote",
+                  "list",
+                  "bullet",
+                  "indent",
+                  "align", // Add text alignment formats
+                ]}
               />
             ) : (
               <div
@@ -254,25 +282,27 @@ export default function SingleStory({ user }) {
           {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
               {isEditing ? (
-                <button onClick={handleSaveContent} className="save-button">
+                <button onClick={handleSaveContent} className="button">
                   Save
                 </button>
               ) : (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="edit-button"
-                >
+                <button onClick={() => setIsEditing(true)} className="button">
                   Edit
                 </button>
               )}
-              <button onClick={handleDeleteStory} className="cancel-button">
+              <button onClick={handleDeleteStory} className="button">
                 Delete
+              </button>
+              <button
+                className="button"
+                onClick={handleBookmark}
+                disabled={bookmarked}
+              >
+                {bookmarked ? "Bookmarked" : "Bookmark"}
               </button>
             </div>
           )}
-          <button onClick={handleBookmark} disabled={bookmarked}>
-            {bookmarked ? "Bookmarked" : "Bookmark"}
-          </button>
+
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
@@ -291,7 +321,9 @@ export default function SingleStory({ user }) {
                 placeholder="Write a comment..."
                 required
               />
-              <button type="submit">Submit Comment</button>
+              <button type="submit" className="button">
+                Submit Comment
+              </button>
             </form>
           )}
 

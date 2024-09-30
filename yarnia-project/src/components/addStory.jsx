@@ -110,17 +110,17 @@ const AddStory = () => {
               onChange={setContent} // Update content state using ReactQuill
               modules={{
                 toolbar: [
-                  [{ header: "1" }, { header: "2" }, { font: [] }],
-                  [{ size: [] }],
-                  ["bold", "italic", "underline", "strike", "blockquote"],
+                  [{ header: "1" }, { header: "2" }, { font: [] }], // Headers and font styles
+                  [{ size: [] }], // Font sizes
+                  ["bold", "italic", "underline", "strike", "blockquote"], // Formatting options
                   [
                     { list: "ordered" },
                     { list: "bullet" },
                     { indent: "-1" },
                     { indent: "+1" },
-                  ],
-                  ["link", "image", "video"],
-                  ["clean"],
+                  ], // Lists and indentation
+                  [{ align: "justify" }], // Alignment options
+                  ["clean"], // Clear formatting
                 ],
               }}
               formats={[
@@ -135,14 +135,11 @@ const AddStory = () => {
                 "list",
                 "bullet",
                 "indent",
-                "link",
-                "image",
-                "video",
+                "align", // Add text alignment formats
               ]}
               placeholder="Write your story here..."
-              theme="snow" // Use the "snow" theme for styling
               required
-              style={{ height: "200px" }} // Adjust the height as needed
+              style={{ height: "500px" }} // Adjust the height as needed
             />
           </div>
           <br />

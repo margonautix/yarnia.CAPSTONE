@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchBookmarkedStories } from "../API"; // Import necessary functions
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
-const Profile = () => {
-  const [user, setUser] = useState(null); // Store the user's profile data
+const Profile = ({ user, setUser }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if the user is authenticated
   const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
   const [username, setUsername] = useState(""); // State for editing username
@@ -18,6 +17,7 @@ const Profile = () => {
   const navigate = useNavigate(); // Initialize navigate
   const [image, setImage] = useState(null);
   const hiddenFileInput = useRef(null);
+  const authorId = user?.id;
 
   const handleReadMore = (storyId) => {
     navigate(`/stories/${storyId}`);
@@ -152,6 +152,50 @@ const Profile = () => {
       }
     } catch (error) {
       setSaveError("Error while updating profile.");
+    }
+  };
+
+  const deleteUserAccount = async (authorId) => {
+    const token = localStorage.getItem("token");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account and all your stories? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return; // Exit the function if the user cancels
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/${authorId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        console.log("User account deleted successfully.");
+
+        // Clear the localStorage
+        localStorage.removeItem("token");
+        // localStorage.removeItem("user");
+
+        // Reset user state
+        setUser(null);
+
+        // Redirect to the homepage
+        navigate("/"); // Call navigate here for redirection
+      } else {
+        const textResponse = await response.text();
+        const responseData = JSON.parse(textResponse);
+        console.error("Error deleting account:", responseData.message);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
     }
   };
 
@@ -404,7 +448,6 @@ const Profile = () => {
                     Edit Profile
                   </button>
                 )}
-                <button className="button">Delete Account</button>
                 {saveError && <p className="error-message">{saveError}</p>}
               </div>
 
@@ -430,6 +473,35 @@ const Profile = () => {
                   </ul>
                 ) : (
                   <p>No bookmarks found.</p>
+                )}
+              </div>
+              {/* Comment History Section */}
+              <div className="profile-container">
+                <h3 id="history">Comment History:</h3>
+                {comments.length > 0 ? (
+                  <ul className="comment-list">
+                    {comments.map((comment) => (
+                      <li className="comments-item" key={comment.commentId}>
+                        <strong>Story: {comment.story.title}</strong>
+                        <p>{comment.content}</p>
+                        <br />
+                        <button
+                          onClick={() => handleReadMore(comment.storyId)}
+                          className="button"
+                        >
+                          View Story
+                        </button>
+                        <button
+                          onClick={() => handleCommentDelete(comment.commentId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No comments found</p>
                 )}
               </div>
             </div>
@@ -469,37 +541,11 @@ const Profile = () => {
               )}
             </div>
           </div>
-          {/* Comment History Section */}
-          <div className="profile-container">
-            <h3 id="history">Comment History:</h3>
-            {comments.length > 0 ? (
-              <ul className="comment-list">
-                {comments.map((comment) => (
-                  <li className="comments-item" key={comment.commentId}>
-                    <strong>Story: {comment.story.title}</strong>
-                    <p>{comment.content}</p>
-                    <br />
-                    <button
-                      onClick={() => handleReadMore(comment.storyId)}
-                      className="button"
-                    >
-                      View Story
-                    </button>
-                    <button
-                      onClick={() => handleCommentDelete(comment.commentId)}
-                      className="button"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No comments found</p>
-            )}
-          </div>
         </div>
       </section>
+      <button onClick={() => deleteUserAccount(authorId)}>
+        Delete Account
+      </button>
     </>
   );
 };

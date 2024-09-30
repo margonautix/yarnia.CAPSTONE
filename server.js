@@ -31,7 +31,7 @@ const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, isAdmin: user.isAdmin }, // Include isAdmin in the token
     JWT,
-    { expiresIn: "1h" }
+    { expiresIn: "6h" }
   );
 };
 
@@ -616,13 +616,20 @@ app.delete("/api/users/:authorId", authenticateUser, async (req, res, next) => {
   const { authorId } = req.params;
 
   try {
-    await prisma.user.delete({
+    const user = await prisma.user.delete({
       where: { id: parseInt(authorId, 10) },
     });
 
-    res.status(204).json({ message: "User deleted successfully." });
+    if (user) {
+      // User deleted successfully
+      res.status(204).send(); // Explicitly send no content
+    } else {
+      res.status(404).json({ message: "User not found." });
+    }
   } catch (err) {
-    next(err);
+    // Log the error for debugging and send an appropriate error response
+    console.error("Error deleting user:", err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 

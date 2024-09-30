@@ -15,6 +15,7 @@ import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
+// import "./NEWapp.css";
 import jwt_decode from "jwt-decode";
 import Comments from "./components/Comments";
 
@@ -64,7 +65,10 @@ function App() {
         <Route path="/" element={<Stories />} />
         <Route path="/bookmarks" element={<Bookmarks user={user} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/profile" element={<Profile user={user} />} />
+        <Route
+          path="/profile"
+          element={<Profile user={user} setUser={setUser} />}
+        />
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/stories/:storyId" element={<SingleStory user={user} />} />
         <Route path="/logout" element={<Logout setUser={setUser} />} />
