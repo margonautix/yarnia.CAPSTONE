@@ -543,6 +543,9 @@ html {
   border-radius: 8px;
   border: 1px solid #d4a373;
   transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bookmark-card:hover {
@@ -565,9 +568,6 @@ html {
 .bookmark-card .button-container {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-  align-items: center;
 }
 
 .bookmark-card button {
@@ -578,7 +578,7 @@ html {
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
-  margin-left: 25%;
+  margin: 5px;
 }
 
 .bookmark-card button:hover {
