@@ -54,7 +54,6 @@ const Register = ({ setUser }) => {
             />
           </label>
           <br />
-          <br />
           <label>
             <input
               placeholder="Email"
@@ -65,7 +64,6 @@ const Register = ({ setUser }) => {
             />
           </label>
           <br />
-          <br />
           <label>
             <input
               placeholder="Password"
@@ -75,7 +73,6 @@ const Register = ({ setUser }) => {
               required
             />
           </label>
-          <br />
           <br />
           <button className="login-button" type="submit">
             Submit
