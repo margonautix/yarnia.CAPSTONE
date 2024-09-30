@@ -244,6 +244,7 @@ body {
   transition: transform 0.3s;
   display: flex;
   flex-direction: column;
+  min-width: 1000px;
 }
 
 .story-card:hover {
@@ -458,7 +459,7 @@ body {
   background-color: #e9edc9;
   padding: 15px;
   margin-bottom: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 #story-card {
@@ -720,7 +721,7 @@ html {
 
 /* ReactQuill Editor */
 .ql-container {
-  height: 200px !important; /* Set the height of the editor */
+  height: 500px !important; /* Set the height of the editor */
   border-radius: 5px;
   background-color: #fefae0; /* Light cream for the editor background */
   color: #283618;

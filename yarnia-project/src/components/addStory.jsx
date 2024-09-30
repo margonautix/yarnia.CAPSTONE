@@ -139,7 +139,7 @@ const AddStory = () => {
               ]}
               placeholder="Write your story here..."
               required
-              style={{ height: "200px" }} // Adjust the height as needed
+              style={{ height: "500px" }} // Adjust the height as needed
             />
           </div>
           <br />
