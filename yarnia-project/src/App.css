@@ -15,7 +15,7 @@
 }
 
 .navbar {
-  background-color: #333;
+  background-color: #301c11;
   padding: 10px 20px;
   display: flex;
   justify-content: flex-start;
@@ -51,8 +51,8 @@
 
 .navbar a,
 .navbar button {
-  color: white;
-  background-color: #484848;
+  color: rgb(252, 238, 226);
+  background-color: #1d633a;
   padding: 10px 15px;
   text-decoration: none;
   font-size: 18px;
@@ -64,6 +64,7 @@
 
 .navbar a:hover,
 .navbar button:hover {
+  /* doesnt work for some reason */
   background-color: #575757;
 }
 
@@ -84,7 +85,7 @@
 }
 
 .navbar button:hover {
-  background-color: #178800;
+  background-color: #000000;
 }
 
 @media (max-width: 600px) {
@@ -101,7 +102,7 @@
 
 .navbar a:hover,
 .navbar button:hover {
-  background-color: #575757;
+  background-color: #00000088;
   transition: background-color 0.3s ease;
 }
 
@@ -123,7 +124,8 @@
 
 /* Story Card */
 .story-card {
-  background-color: #f9f9f9;
+  /* doesnt work  */
+  background-color: #fefae0;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -142,18 +144,18 @@
 
 .story-card h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: #000000;
   margin-bottom: 10px;
 }
 
 .story-card p {
   font-size: 1rem;
-  color: #666;
+  color: #000000;
   margin-bottom: 10px;
 }
 
 .story-card strong {
-  color: #333;
+  color: #000000;
 }
 
 .story-card button {
@@ -168,7 +170,7 @@
 }
 
 .story-card button:hover {
-  background-color: #45a049;
+  background-color: #3a5a40;
 }
 
 /* Responsive Stories Container */
@@ -184,7 +186,7 @@
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -275,7 +277,7 @@ input[type="password"]:focus {
 
 .modal-content {
   position: relative; /* Add relative positioning to the modal content */
-  background-color: #fff8dd;
+  background-color: #ffe49f;
   color: black;
   padding: 20px;
   border-radius: 8px;
@@ -292,7 +294,7 @@ input[type="password"]:focus {
 .modal-content button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #0d9900;
+  background-color: #287a21;
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -300,7 +302,7 @@ input[type="password"]:focus {
 }
 
 .modal-content button:hover {
-  background-color: #067800;
+  background-color: #054b00;
 }
 
 /* Align #X in the Top Right Corner of the Modal */
@@ -312,7 +314,7 @@ input[type="password"]:focus {
   font-size: 24px; /* You can adjust the size if needed */
   background: none;
   border: none;
-  color: #333; /* Set color to make the X visible */
+  color: #000000; /* Set color to make the X visible */
   margin-top: 0px;
 }
 
@@ -345,7 +347,7 @@ input[type="password"]:focus {
 /* Story Single Styling */
 .story-single {
   list-style-type: none;
-  background-color: #444; /* Darker background for the story card */
+  background-color: #ffcfa2; /* Darker background for the story card */
   padding: 20px;
   max-width: 600px;
   border-radius: 10px;
@@ -362,7 +364,7 @@ input[type="password"]:focus {
 
 .story-single h4 {
   font-size: 1.2rem;
-  color: #00c368; /* Green accent for subheadings */
+  color: #007a41; /* Green accent for subheadings */
   margin-bottom: 10px;
 }
 
@@ -758,10 +760,10 @@ p.email {
 /* Ensure both containers take up equal width */
 .profile-container {
   flex: 1; /* This makes both containers the same size */
-  background-color: #585858; /* Dark gray background */
+  background-color: #414141; /* Dark gray background */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Box shadow for depth */
-  color: #e5e5e5; /* Light text color */
+  color: #000000; /* Light text color */
   min-height: 400px; /* Adjust min-height if needed */
   display: flex;
   flex-direction: column;
@@ -979,7 +981,7 @@ p.email {
 
 .comments-container button {
   background-color: #00ff88; /* Green accent button */
-  color: #1e1e1e; /* Dark text on green button */
+  color: #000000; /* Dark text on green button */
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -994,7 +996,7 @@ p.email {
 }
 
 .comments-container button:disabled {
-  background-color: #555555; /* Disabled button background */
+  background-color: #000000; /* Disabled button background */
   color: #999999; /* Disabled button text */
   cursor: not-allowed;
 }
@@ -1114,12 +1116,12 @@ p.email {
   display: block;
   margin: 20px auto;
   padding: 10px;
-  background-color: #333;
+  background-color: #8d4716;
   border-radius: 5px;
 }
 
 .toggle-comments-btn:hover {
-  background-color: #444;
+  background-color: #432818;
 }
 
 .stories-page {
@@ -1132,7 +1134,7 @@ p.email {
   height: 100vh;
   max-width: 250px; /* Fixed width for the sidebar */
   padding: 20px;
-  background-color: #82a77f; /* Soft green background for the sidebar */
+  background-color: #052c0e; /* Soft green background for the sidebar */
   border-right: 1px solid #000000; /* Subtle border on the right */
   box-shadow: 2px 2px 10px black; /* Shadow for depth */
   padding-top: 100px; /* Space for any fixed navbar at the top */
@@ -1168,13 +1170,14 @@ p.email {
 }
 
 .sidebar-menu li.active {
-  background-color: #575757; /* Active state background */
+  background-color: #5bbb58; /* Active state background */
+  border-radius: 29%;
   color: white;
 }
 
 .sidebar-menu li a {
   text-decoration: none;
-  color: #fffced;
+  color: #ffffff;
   text-shadow: 2px 2px 2px black;
 }
 
@@ -1219,7 +1222,7 @@ p.email {
 }
 
 .story-card {
-  background-color: #fff9da;
+  background-color: #fce2b0;
   padding: 15px;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -1300,7 +1303,7 @@ form button:hover {
 
 /* Bookmark Item */
 .bookmark-item {
-  background-color: #444;
+  background-color: #395e2f;
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -1315,7 +1318,7 @@ form button:hover {
 
 /* Bookmark Hover Effect */
 .bookmark-item:hover {
-  background-color: #555; /* Slight hover effect for bookmarks */
+  background-color: #555555; /* Slight hover effect for bookmarks */
 }
 
 /* Bookmark Title */
@@ -1519,11 +1522,11 @@ form button:hover {
 
 /* Comment Item */
 .comment-item {
-  background-color: #444; /* Darker background for each comment item */
+  background-color: #002e177e; /* Darker background for each comment item */
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for more depth */
-  color: #e5e5e5; /* Light text color */
+  color: #ffffff; /* Light text color */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -1534,7 +1537,7 @@ form button:hover {
 
 /* Comment Item Hover Effect */
 .comment-item:hover {
-  background-color: #555; /* Slight hover effect for comment items */
+  background-color: #002c21b2; /* Slight hover effect for comment items */
   transform: translateY(-5px); /* Slight lift on hover */
 }
 
@@ -1570,7 +1573,7 @@ form button:hover {
 .comment-username {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #00ff88; /* Green accent for username */
+  color: #00ff95; /* Green accent for username */
 }
 
 .comment-text {
@@ -1648,7 +1651,7 @@ form button:hover {
 
 /* Bookmark Card */
 .bookmark-card {
-  background-color: #444; /* Darker background for each bookmark card */
+  background-color: #50944e; /* Darker background for each bookmark card */
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
@@ -1659,7 +1662,7 @@ form button:hover {
 
 /* Bookmark Card Hover Effect */
 .bookmark-card:hover {
-  background-color: #555; /* Slight hover effect for card */
+  background-color: #375737d2; /* Slight hover effect for card */
   transform: translateY(-5px); /* Slight lift on hover */
 }
 
