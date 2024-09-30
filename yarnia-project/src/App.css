@@ -94,7 +94,8 @@
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    position: static;
   }
 
   .navbar ul {
@@ -102,9 +103,9 @@
     gap: 10px;
   }
 
-  .navbar img.navbar-gif {
+  /* .navbar img.navbar-gif {
     margin-bottom: 15px;
-  }
+  } */
 }
 
 .login {

@@ -20,12 +20,12 @@ model User {
   password String
   joinedOn DateTime @default(now())
   bio      String?
-  isAdmin  Boolean  @default(false) // Admin status
+  isAdmin  Boolean  @default(false)
 
   // Relations
   bookmarks Bookmark[]
   comments  Comment[]
-  stories   Story[]    @relation("author") // No need to specify fields or references here
+  stories   Story[]    @relation("author")
 }
 
 model Story {
@@ -53,7 +53,7 @@ model Bookmark {
   user  User  @relation(fields: [userId], references: [id])
   story Story @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
 
-  @@unique([userId, storyId]) // Add this line to enforce unique bookmarks for each user-story pair
+  @@unique([userId, storyId]) // enforce unique bookmarks for each user-story pair
 }
 
 model Comment {
