@@ -1,6 +1,11 @@
 /* background */
 #root {
-  background-color: rgb(255, 252, 248);
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Full page gradient */
+  color: #283618;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -115,7 +120,6 @@
 .login h2 {
   margin-top: 5px;
   margin-bottom: 0px;
-  text-emphasis: 5;
 }
 
 .login input {
