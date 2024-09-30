@@ -39,11 +39,11 @@ const Register = ({ setUser }) => {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register New Account</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
       <div>
-        <form onSubmit={handleSubmit}>
+        <form className="register-form" onSubmit={handleSubmit}>
           <label>
             Username:
             <input
@@ -54,8 +54,6 @@ const Register = ({ setUser }) => {
               required
             />
           </label>
-          <br />
-          <br />
           <label>
             Email:
             <input
@@ -66,8 +64,6 @@ const Register = ({ setUser }) => {
               required
             />
           </label>
-          <br />
-          <br />
           <label>
             Password:
             <input
@@ -78,8 +74,6 @@ const Register = ({ setUser }) => {
               required
             />
           </label>
-          <br />
-          <br />
           <button className="login-button" type="submit">
             Submit
           </button>

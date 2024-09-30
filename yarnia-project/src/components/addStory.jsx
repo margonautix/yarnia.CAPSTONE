@@ -145,6 +145,8 @@ const AddStory = () => {
               style={{ height: "200px" }} // Adjust the height as needed
             />
           </div>
+          <br />
+          <br />
           <button type="submit" className="submit-button">
             Submit Story
           </button>{" "}

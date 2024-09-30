@@ -177,7 +177,7 @@ const Profile = () => {
         canvas.toBlob(
           (blob) => {
             const file = new File([blob], imgname, {
-              type: "image/png",
+              type: "image/*",
               lastModified: Date.now(),
             });
 
@@ -343,6 +343,7 @@ const Profile = () => {
                           <input
                             id="image-upload-input"
                             type="file"
+                            accept="image/*"
                             onChange={handleImageChange}
                             ref={hiddenFileInput}
                             style={{ display: "none" }}
@@ -403,6 +404,7 @@ const Profile = () => {
                     Edit Profile
                   </button>
                 )}
+                <button className="button">Delete Account</button>
                 {saveError && <p className="error-message">{saveError}</p>}
               </div>
 
@@ -498,7 +500,6 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <button>Delete Account</button>
     </>
   );
 };

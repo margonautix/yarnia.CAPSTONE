@@ -1,1608 +1,924 @@
-/* Root and General Styling */
+/* background */
 #root {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-/* Navbar Styling */
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.navbar {
-  background-color: #333;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  max-height: 70px;
-  z-index: 1000;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.854);
-  font-family: Arial, sans-serif;
-}
-
-.navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  z-index: 2; /* Keep higher than the GIF */
-  position: relative;
-}
-
-.navbar li {
-  display: inline;
-}
-
-.navbar li:last-child {
-  margin-left: auto;
-}
-
-.navbar a,
-.navbar button {
-  color: white;
-  background-color: #484848;
-  padding: 10px 15px;
-  text-decoration: none;
-  font-size: 18px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-  z-index: 2; /* Ensure it stays above the GIF */
-  position: relative;
-}
-
-.navbar a:hover,
-.navbar button:hover {
-  background-color: #575757;
-}
-
-.navbar button {
-  background-color: #0f5a00;
-  border: none;
-  cursor: pointer;
-  z-index: 2; /* Higher than the GIF */
-  position: relative;
-}
-
-.navbar-gif {
-  margin-top: 30px;
-  margin-left: -20px;
-  z-index: 1; /* Lower than the text and buttons */
-  max-width: 80px;
-  position: relative; /* Required for z-index to work */
-}
-
-.navbar button:hover {
-  background-color: #178800;
-}
-
-@media (max-width: 600px) {
-  .navbar ul {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .navbar li {
-    margin-bottom: 10px;
-  }
-}
-
-.navbar a:hover,
-.navbar button:hover {
-  background-color: #575757;
-  transition: background-color 0.3s ease;
-}
-
-.navbar button:focus {
-  outline: none;
-}
-
-/* Stories Container */
-.stories-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 120px 20px 20px; /* Adjust padding to account for fixed navbar */
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-top: 60px;
-}
-
-/* Story Card */
-.story-card {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-top: 50px;
-  width: 300px;
+  background-color: rgb(255, 252, 248);
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  width: 100%;
+  margin: 0 auto;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #333;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 10px;
+    flex-direction: column;
+  }
+}
+
+/* Navbar */
+/* General Styles for Navbar */
+.navbar {
+  position: sticky; /* Makes the navbar stick to the top while scrolling */
+  top: 0; /* Sticks to the top of the viewport */
+  z-index: 1000; /* Ensures the navbar stays on top of other elements */
+  background: linear-gradient(
+    to bottom,
+    #fefcee,
+    #fbebc1
+  ); /* Linear gradient background */
+  padding: px;
+  display: flex;
+  align-items: center;
+}
+
+/* Navbar Image */
+.navbar img.navbar-gif {
+  height: 50px;
+  margin-right: 15px;
+  border-radius: 8px;
+}
+
+/* Navbar Links */
+.navbar ul {
+  list-style-type: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  align-items: center; /* Align items vertically with the image */
+}
+
+.navbar ul li {
+  position: relative;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #283618; /* Dark green */
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: color 0.3s, background 0.3s;
+  border-radius: 8px;
+}
+
+.navbar ul li a:hover {
+  background-color: #ccd5ae; /* Light olive on hover */
+  color: #fefae0; /* Off-white for contrast */
+}
+
+/* Logout Link */
+.navbar ul li a[style*="marginLeft: auto"] {
+  margin-left: auto;
+  background-color: #bc6c25; /* Rich brown-orange */
+  color: #fefae0;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.navbar ul li a[style*="marginLeft: auto"]:hover {
+  background-color: #dda15e; /* Softer brown-orange on hover */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar img.navbar-gif {
+    margin-bottom: 15px;
+  }
+}
+
+.login {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  margin: 5%;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ccd5ae;
+}
+
+.login h2 {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  text-emphasis: 5;
+}
+
+.login input {
+  background-color: #606c38;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  min-width: 250px;
+}
+.login input::placeholder {
+  color: #ccd5ae;
+}
+
+/* Home Page/All Stories */
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefae0;
+  color: #283618;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Stories Page Wrapper */
+.stories-page {
+  display: flex;
+  gap: 20px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #e9edc9;
+  border-radius: 10px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 300px;
+  background: #ccd5ae;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #606c38;
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background: #d4a373;
+  color: #283618;
+}
+
+.sidebar-menu li.active {
+  font-weight: bold;
+  color: #283618;
+}
+
+.search-bar {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #606c38;
+  border-radius: 4px;
+  background-color: #fefae0;
+}
+
+/* Pagination Styles */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background: #bc6c25;
+  color: #fefae0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.pagination-button:hover {
+  background: #dda15e;
+}
+
+.pagination-button:disabled {
+  background: #faedcd;
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  background: #606c38;
+  font-weight: bold;
+}
+
+/* Stories List Styles */
+.stories-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.story-card {
+  background: #faedcd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
 }
 
 .story-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
 }
 
 .story-card h2 {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.4em;
   margin-bottom: 10px;
+  color: #283618;
 }
 
 .story-card p {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 10px;
+  margin: 8px 0;
 }
 
-.story-card strong {
-  color: #333;
+.story-card a {
+  color: #ae7f28;
+}
+
+.story-card a:hover {
+  color: #606c38;
 }
 
 .story-card button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  background: #606c38;
+  color: #fefae0;
   border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .story-card button:hover {
-  background-color: #45a049;
+  background: #283618;
 }
 
-/* Responsive Stories Container */
-@media (max-width: 768px) {
-  .stories-container {
-    flex-direction: column;
-    align-items: center;
-  }
+.story-single a {
+  color: #ae7f28;
 }
 
-/* Register Component */
-.register-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.story-single a:hover {
+  color: #606c38;
 }
 
-h2 {
-  text-align: center;
-  color: #ffffff;
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-}
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-  background-color: #45a0498d;
-  color: rgb(0, 0, 0);
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #000;
-  outline: none;
-  background-color: #45a049;
-}
-.group input {
-  font-size: 2rem;
-}
-
-.btn {
-  background-color: #1f9900;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: #166d00;
-}
-
-.error {
-  color: red;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* Responsive Register Form */
-@media (max-width: 500px) {
-  .register-container {
-    padding: 15px;
-  }
-
-  .btn {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    padding: 8px;
-    font-size: 14px;
-  }
-}
-
-/* Modal Styling */
+/* Modal Styles */
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(40, 54, 24, 0.8);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
 .modal-content {
-  position: relative; /* Add relative positioning to the modal content */
-  background-color: #fff8dd;
-  color: black;
-  padding: 20px;
+  background: #fefae0;
+  padding: 30px;
   border-radius: 8px;
-  width: 80%;
-  max-width: 600px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  position: relative;
 }
 
 .modal-content h2 {
-  margin-top: 0;
-  color: #000;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #606c38;
 }
 
-.modal-content button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #0d9900;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.modal-content p {
+  margin: 15px 0;
+  color: #283618;
 }
 
-.modal-content button:hover {
-  background-color: #067800;
-}
-
-/* Align #X in the Top Right Corner of the Modal */
 #X {
   position: absolute;
   top: 10px;
   right: 10px;
-  cursor: pointer;
-  font-size: 24px; /* You can adjust the size if needed */
-  background: none;
+  background: #d4a373;
   border: none;
-  color: #333; /* Set color to make the X visible */
-  margin-top: 0px;
+  border-radius: 50%;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 #X:hover {
-  color: #0d3317;
+  background: #bc6c25;
 }
 
-/* Form Styling Inside Modal */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: 10px;
-}
-
-/* Single Story Container */
-.story-container {
-  width: 900px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; /* Ensure the content is centered horizontally */
-  padding: 40px 20px;
-  background-color: #151515; /* Darker background color */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow for depth */
-  color: #000000; /* Light text color for contrast */
-}
-
-/* Story Single Styling */
-.story-single {
-  list-style-type: none;
-  background-color: #444; /* Darker background for the story card */
-  padding: 20px;
-  max-width: 600px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-  color: #000000; /* Light text color for contrast */
-}
-
-/* Headings */
-.story-single h2 {
-  font-size: 2rem;
-  color: #000000; /* Green accent for heading */
-  margin-bottom: 10px;
-}
-
-.story-single h4 {
-  font-size: 1.2rem;
-  color: #00c368; /* Green accent for subheadings */
-  margin-bottom: 10px;
-}
-
-/* Paragraph and text content */
-.story-single p {
-  font-size: 1.2rem;
-  color: #000000; /* Softer contrast for text */
-  margin-bottom: 10px;
-}
-
-/* Input and Textarea Styling */
-.story-single p input,
-.story-single p textarea {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  width: 100%; /* Full width */
-  height: 300px; /* Increased height */
-  padding: 10px; /* Padding for better readability */
-  background-color: #555; /* Darker background for input fields */
-  color: #000000; /* Light text color */
-  border: 1px solid #00ff88; /* Green border for input */
-  border-radius: 5px;
-  box-sizing: border-box; /* Ensures padding is included in width/height */
-  resize: vertical; /* Allows the user to manually resize the height if needed */
-  white-space: pre-wrap; /* Ensure text wraps properly */
-  overflow-wrap: break-word; /* Ensure long words break properly */
-}
-
-/* Input and Textarea Focus State */
-.story-single p input:focus,
-.story-single p textarea:focus {
-  outline: none;
-  border-color: #00ff88; /* Green border on focus */
-}
-
-/* Button Styling (optional if needed) */
-.story-single button {
-  background-color: #00ff88; /* Green background for buttons */
-  color: #1e1e1e; /* Dark text color for buttons */
+.modal-content button {
   padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  background: #606c38;
+  color: #fefae0;
   border: none;
-}
-
-.story-single button:hover {
-  background-color: #00cc6a; /* Darker green on hover */
-  transform: translateY(-3px); /* Slight lift on hover */
-}
-
-textarea {
-  min-height: 150px;
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-/* Add Story Button */
-.AddStory {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s;
 }
 
-.AddStory:hover {
-  background-color: #0056b3;
-  transform: translateY(-3px);
+.modal-content button:hover {
+  background: #283618;
 }
 
-/* Responsive Styling */
-@media (max-width: 768px) {
-  .story-container {
-    padding: 20px;
-  }
-
-  .story-single {
-    padding: 15px;
-  }
-
-  .story-single h2 {
-    font-size: 1.8rem;
-  }
-
-  .story-single h4 {
-    font-size: 1.1rem;
-  }
-
-  .AddStory {
-    width: 100%;
-    font-size: 1.2rem;
-  }
-}
-
-.profile-container {
-  width: fit-content;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ensure both containers take up equal width */
-.stories-container {
-  flex: 1; /* This makes both containers the same size */
-  padding: 40px;
-  background-color: #585858; /* Dark gray background */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Box shadow for depth */
-  color: #e5e5e5; /* Light text color */
-  min-height: 400px; /* Adjust min-height if needed */
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.profile {
-  display: flex;
-  flex-direction: row;
-  margin-top: 30px;
-}
-
-/* Optional: Adjust heading and text for better layout */
-h1,
-h2 {
-  text-align: center;
-}
-
-.stories-container h1 {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-}
-
-.stories-container h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-.stories-container h3 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-.stories-container p {
-  font-size: 2rem;
-  gap: 30px;
-}
-
-.stories-container p {
-  font-size: 1.5rem;
-  gap: 30px;
-}
-
-.stories-container .stories-container li button {
-  max-width: 50px;
-}
-.info {
-  background-color: #0000008e;
-  padding: 100px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-}
-#label {
-  font-size: 1.8rem;
-  text-shadow: 3px 3px 2px black;
-}
-/* Responsive Layout for Smaller Screens */
-@media (max-width: 768px) {
-  .stories-stories-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stories-container {
-    width: 100%; /* Full width on smaller screens */
-    margin-bottom: 20px; /* Add spacing between sections */
-  }
-}
-/* Form group for inputs and textareas */
-.form-group {
-  margin-bottom: 20px;
-}
-
-/* Form label with green accent */
-.form-label {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  display: block;
-  font-weight: bold;
-  color: #00ff88; /* Green accent for labels */
-}
-
-/* Input fields with dark background and light text */
-.form-input,
-.form-textarea {
-  width: 100%;
-  padding: 15px 20px;
-  margin-top: 5px;
-  background-color: #333333; /* Dark input background */
-  color: #e5e5e5; /* Light text for inputs */
-  border: 1px solid #555555; /* Subtle border */
-  border-radius: 8px;
-  font-size: 1.2rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.3s ease;
-}
-
-/* Focus state with green border for inputs and textareas */
-.form-input:focus,
-.form-textarea:focus {
-  border-color: #00ff88;
-  outline: none;
-}
-
-/* Textarea styling */
-.form-textarea {
-  height: 160px;
-  resize: vertical;
-}
-
-/* Button group for better layout */
-.button-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 25px;
-}
-
-/* Button styling with green accents */
-.button {
-  background-color: #00ff88; /* Green button background */
-  color: #1e1e1e; /* Dark text for contrast on green */
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover effect for buttons */
-.button:hover {
-  background-color: #00cc6a; /* Darker green on hover */
-}
-
-/* Disabled button state */
-.button:disabled {
-  background-color: #555555;
-  color: #999999;
-  cursor: not-allowed;
-}
-
-/* Cancel button with a red accent */
-.cancel-button {
-  background-color: #ff4b4b; /* Red for cancel button */
-}
-
-.cancel-button:hover {
-  background-color: #cc3838; /* Darker red on hover */
-}
-
-/* Email text color */
-p.email {
-  color: #cccccc;
-}
-
-.add-story-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.add-story-form .form-group {
-  margin-bottom: 20px;
-}
-
-.add-story-form label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.add-story-form input,
-.add-story-form textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.submit-button {
-  margin-top: 70px;
-}
-
-.error-message {
-  color: red;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.form-input,
-.form-textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.form-textarea {
-  min-height: 100px;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-}
-
-.button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.save-button {
-  background-color: #4caf50;
-  color: white;
-}
-
-.cancel-button {
-  background-color: #f44336;
-  color: white;
-}
-
-.edit-button {
-  background-color: #008cba;
-  color: white;
-}
-
-.story-list {
-  list-style-type: none;
+/* Profile Page */
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefae0;
+  color: #283618;
+  line-height: 1.6;
+  margin: 0;
   padding: 0;
 }
 
-.story-item {
-  background-color: #000000a7;
-  margin-bottom: 20px;
+/* Profile Section Wrapper */
+#whole-profile {
+  background: linear-gradient(to bottom, #e9edc9, #fffaef);
+  padding: 30px;
+  border-radius: 10px;
+  margin: 20px auto;
+}
+
+/* Profile Header */
+.profile h1 {
+  font-size: 2em;
+  margin-bottom: 15px;
+  color: #606c38;
+}
+
+/* Profile Container Styles */
+.profile-container {
+  background-color: #faedcd;
   padding: 20px;
-  border-radius: 20px;
-}
-
-#story-card {
-  background-color: #ffffff2b;
   margin-bottom: 20px;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
-.story-link {
-  color: #008cba;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.error-message {
-  color: red;
-}
-
-.story-single button {
-  margin-right: 10px;
-}
-
-/* Profile and Stories Containers Wrapper */
 .profile-stories-wrapper {
   display: flex;
-  justify-content: space-between;
-  gap: 30px; /* Space between the containers */ /* Adjust the max width as needed */
-  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-/* Ensure both containers take up equal width */
-.profile-container {
-  flex: 1; /* This makes both containers the same size */
-  background-color: #585858; /* Dark gray background */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Box shadow for depth */
-  color: #e5e5e5; /* Light text color */
-  min-height: 400px; /* Adjust min-height if needed */
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-}
-.stories-container {
-  background-color: transparent;
-  box-shadow: none;
-  width: fit-content;
-}
-
-#whole-profile {
-  display: flex;
-  flex-direction: row;
-  margin-left: 0px;
-  width: 100%;
-}
-
-#search {
-  color: white;
-  background-color: #00254d00;
-  text-decoration: none;
-  font-size: 18px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-  z-index: 2; /* Ensure it stays above the GIF */
-  position: relative;
-  width: 100%;
-}
-/* Optional: Adjust heading and text for better layout */
-h1,
-h2 {
-  text-align: center;
-}
-
-.profile-container h1 {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-}
-
-.stories-container h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
-.stories-container h3 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-.profile-container p {
-  font-size: 2rem;
-  gap: 30px;
-}
-
-.stories-container p {
-  font-size: 1.5rem;
-  gap: 30px;
-}
-
-/* Info Section */
+/* Information and Upload Section */
 .info {
-  padding: 100px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-#label {
-  font-size: 1.8rem;
-  text-shadow: 3px 3px 2px black;
-}
-#history {
-  font-size: 2rem;
-  margin-top: 30px;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #ffffff;
-}
-
-/* Responsive Layout for Smaller Screens */
-@media (max-width: 768px) {
-  .profile-stories-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-container,
-  .stories-container {
-    width: 100%; /* Full width on smaller screens */
-    margin-bottom: 20px; /* Add spacing between sections */
-  }
-}
-
-/* Form group for inputs and textareas */
-.form-group {
-  margin-bottom: 20px;
-}
-
-/* Form label with green accent */
-.form-label {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  display: block;
-  font-weight: bold;
-  color: #00ff88; /* Green accent for labels */
-}
-
-/* Input fields with dark background and light text */
-.form-input,
-.form-textarea {
-  padding: 15px 20px;
-  margin-top: 5px;
-  background-color: #333333; /* Dark input background */
-  color: #e5e5e5; /* Light text for inputs */
-  border: 1px solid #555555; /* Subtle border */
-  border-radius: 8px;
-  font-size: 1.2rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.3s ease;
-}
-
-/* Focus state with green border for inputs and textareas */
-.form-input:focus,
-.form-textarea:focus {
-  border-color: #00ff88;
-  outline: none;
-}
-
-/* Textarea styling */
-.form-textarea {
-  height: 160px;
-  resize: vertical;
-}
-
-/* Button group for better layout */
-.button-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 25px;
-}
-
-/* Button styling with green accents */
-.button {
-  background-color: #00ff88; /* Green button background */
-  color: #1e1e1e; /* Dark text for contrast on green */
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover effect for buttons */
-.button:hover {
-  background-color: #00cc6a; /* Darker green on hover */
-}
-
-/* Disabled button state */
-.button:disabled {
-  background-color: #555555;
-  color: #999999;
-  cursor: not-allowed;
-}
-
-/* Cancel button with a red accent */
-.cancel-button {
-  background-color: #ff4b4b; /* Red for cancel button */
-}
-
-.cancel-button:hover {
-  background-color: #cc3838; /* Darker red on hover */
-}
-
-/* Email text color */
-p.email {
-  color: #cccccc;
-}
-
-.error-message {
-  color: red;
-}
-
-.comments-container {
-  background-color: #333; /* Dark background to blend with the theme */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-  max-width: 600px;
-  margin: 20px auto;
-  color: #e5e5e5; /* Light text color */
-}
-
-.comments-container textarea {
-  width: 100%;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: #444; /* Dark background for textarea */
-  color: #e5e5e5; /* Light text color */
-  border: 1px solid #00ff88; /* Green border for accent */
-  font-size: 1rem;
-  margin-bottom: 10px;
-  resize: vertical;
-  min-height: 120px; /* Ensure minimum height */
-}
-
-.comments-container textarea:focus {
-  border-color: #00cc6a; /* Darker green on focus */
-  outline: none;
-}
-
-.comments-container button {
-  background-color: #00ff88; /* Green accent button */
-  color: #1e1e1e; /* Dark text on green button */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.comments-container button:hover {
-  background-color: #00cc6a; /* Darker green on hover */
-  transform: translateY(-3px); /* Slight lift effect on hover */
-}
-
-.comments-container button:disabled {
-  background-color: #555555; /* Disabled button background */
-  color: #999999; /* Disabled button text */
-  cursor: not-allowed;
-}
-
-/* Add responsiveness */
-@media (max-width: 600px) {
-  .comments-container {
-    padding: 15px;
-  }
-
-  .comments-container button {
-    width: 100%; /* Full width button on smaller screens */
-    padding: 12px;
-  }
-}
-
-/* Comment Section Container */
-.comments-container {
   margin-top: 20px;
-  padding: 20px;
-  background-color: #333; /* Dark background to match theme */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  color: #e5e5e5; /* Light text color */
 }
 
-/* Comment List */
-.comments-list {
-  list-style-type: none;
-  padding-left: 0;
-  margin-bottom: 20px;
+.image-upload-container {
+  display: flex;
+  align-items: center;
 }
 
+.img-display,
+.img-display-before,
+.img-display-after {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #606c38;
+  color: #fefae0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.button:hover {
+  background-color: #283618;
+}
+
+/* Editing Input Fields */
+.input,
+.form-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccd5ae;
+  border-radius: 5px;
+  background-color: #fefae0;
+  color: #283618;
+}
+
+/* Bookmarks and Stories List */
+.bookmark-list,
+.story-list,
 .comment-list {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
-.comment-item {
-  background-color: #444; /* Slightly darker background */
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add some depth with shadow */
-  color: #e5e5e5; /* Light text color */
-  border: 1px solid #555; /* Subtle border */
-}
-
+.bookmark-item,
+.story-item,
 .comments-item {
-  background-color: #444; /* Slightly darker background */
-  border-radius: 8px;
+  background-color: #e9edc9;
   padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add some depth with shadow */
-  color: #e5e5e5; /* Light text color */
-  border: 1px solid #555; /* Subtle border */
-}
-
-/* Username Styling */
-.comment-item strong {
-  color: #00ff88; /* Green accent for username */
-  font-weight: bold;
-}
-
-/* Comment Content */
-.comment-item p {
-  margin-top: 5px;
-  color: #ccc; /* Slightly softer contrast for the comment text */
-}
-
-/* Textarea for Adding a Comment */
-.comments-container textarea {
-  width: 100%;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: #444; /* Dark background for textarea */
-  color: #e5e5e5; /* Light text color */
-  border: 1px solid #00ff88; /* Green border for accent */
-  font-size: 1rem;
   margin-bottom: 10px;
-  resize: vertical;
-  min-height: 120px;
-}
-
-/* Textarea Focus State */
-.comments-container textarea:focus {
-  border-color: #00cc6a; /* Darker green on focus */
-  outline: none;
-}
-
-/* Button for Posting Comment */
-.comments-container button {
-  background-color: #00ff88; /* Green button */
-  color: #1e1e1e; /* Dark text on green button */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.comments-container button:hover {
-  background-color: #00cc6a; /* Darker green on hover */
-  transform: translateY(-3px); /* Slight lift effect on hover */
-}
-
-/* Disabled Button State */
-.comments-container button:disabled {
-  background-color: #555555; /* Disabled button background */
-  color: #999999; /* Disabled button text */
-  cursor: not-allowed;
-}
-
-/* Show/Hide Comments Toggle Button */
-.toggle-comments-btn {
-  cursor: pointer;
-  color: #00ff88; /* Green accent */
-  font-weight: bold;
-  text-align: center;
-  display: block;
-  margin: 20px auto;
-  padding: 10px;
-  background-color: #333;
   border-radius: 5px;
 }
 
-.toggle-comments-btn:hover {
-  background-color: #444;
+#story-card {
+  margin-bottom: 15px;
 }
 
-.stories-page {
-  display: flex;
-}
-
-.sidebar {
-  position: sticky;
-  top: 0; /* Keeps the sidebar in view as you scroll */
-  left: 0;
-  width: 250px;
-  padding: 20px;
-  background-color: #82a77f;
-  border-right: 1px solid #000000;
-  box-shadow: 2px 2px 10px black;
-  padding-top: 100px;
-}
-
-.sidebar-toggle {
-  cursor: pointer;
-  color: #000000; /* Dark text color */
-  font-size: 1.5rem; /* Larger text size for the toggle */
-  text-decoration: underline;
-  margin-bottom: 20px;
-}
-
-.sidebar-menu {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0;
+.bookmark-item h3,
+.story-item h3 {
   margin: 0;
+  font-size: 1.5em;
 }
 
-.sidebar-menu li {
-  padding: 10px 0; /* Spacing between list items */
-  font-size: 1.2rem; /* Slightly larger text for better readability */
-  color: #fffced; /* Light text color */
-  text-shadow: 2px 2px 2px black; /* Text shadow for contrast */
-  cursor: pointer;
+.error-message {
+  color: #bc6c25;
+  margin-top: 10px;
 }
 
-.sidebar-menu li:hover {
-  background-color: #6d8c6f; /* Darker green background on hover */
-  border-radius: 5px; /* Rounded corners on hover */
-  padding-left: 10px; /* Subtle indent on hover */
+/* Comment History Section */
+#history {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #606c38;
 }
 
-.sidebar-menu li.active {
-  background-color: #575757; /* Active state background */
-  color: white;
-}
-
-.sidebar-menu li a {
-  text-decoration: none;
-  color: #fffced;
-  text-shadow: 2px 2px 2px black;
-}
-
-.sidebar-menu li a:hover {
-  text-decoration: underline;
-}
-
-.search-bar {
-  width: 100%; /* Full width of the sidebar */
-  padding: 10px;
-  margin-top: 20px; /* Space above the search bar */
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-/* Responsive Sidebar */
+/* Responsive Design */
 @media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    width: 100%; /* Full width for mobile view */
-    height: auto; /* Auto height for better responsiveness */
-    padding-top: 60px; /* Reduced padding for mobile */
+  #whole-profile {
+    padding: 20px;
   }
 
-  .sidebar-menu li {
-    padding: 15px; /* Larger tap targets for mobile */
-  }
-}
-
-.stories-list {
-  flex-grow: 1; /* This ensures the list takes the remaining space */
-  padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(300px, 1fr)
-  ); /* Responsive grid layout */
-  gap: 20px; /* Space between story cards */
-  background-color: #1e1e1e00; /* Adjust background as needed */
-}
-
-.story-card {
-  background-color: #fff9da;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%; /* Ensure full width within the grid cell */
-}
-
-.comments-section {
-  margin-top: 20px;
-}
-
-.comments-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.comments-list li {
-  margin-bottom: 10px;
-}
-
-.error {
-  color: red;
-}
-
-form textarea {
-  width: 100%;
-  min-height: 50px;
-  margin-bottom: 10px;
-}
-
-form button {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: #0056b3;
-}
-
-.admin-comments-feed {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  padding: 40px 20px;
-  margin: 25px;
-}
-
-.admin-comments-feed ul {
-  list-style: none;
-  text-align: left;
-  border: solid;
-  border-radius: 15px;
-  padding: 25px;
-}
-
-.admin-comments-feed li {
-  border: solid;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 5px;
-}
-
-/* Bookmarks Section */
-
-/* Bookmark List */
-.bookmark-list {
-  list-style: none;
-  padding-left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* Bookmark Item */
-.bookmark-item {
-  background-color: #444;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  color: #e5e5e5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  transition: background-color 0.3s ease;
-  width: 300px;
-}
-
-/* Bookmark Hover Effect */
-.bookmark-item:hover {
-  background-color: #555; /* Slight hover effect for bookmarks */
-}
-
-/* Bookmark Title */
-.bookmark-item h3 {
-  font-size: 1.5rem;
-  color: #fff;
-}
-
-/* Bookmark Summary */
-.bookmark-item p {
-  font-size: 1rem;
-  color: #ccc;
-  margin: 0 15px;
-  flex-grow: 1;
-}
-
-/* Read More Button */
-.bookmark-item button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  border: none;
-}
-
-/* Read More Button Hover Effect */
-.bookmark-item button:hover {
-  background-color: #45a049;
-  transform: translateY(-3px);
-}
-
-/* Responsive Bookmark List */
-@media (max-width: 768px) {
-  .bookmark-item {
+  .profile-stories-wrapper {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 10px;
   }
 
-  .bookmark-item p {
-    margin: 10px 0;
+  .profile-container {
+    padding: 15px;
   }
 
-  .bookmark-item button {
-    width: 100%; /* Full width button on smaller screens */
+  .img-display,
+  .img-display-before,
+  .img-display-after {
+    width: 100px;
+    height: 100px;
+  }
+
+  .button {
+    width: 100%;
     margin-top: 10px;
   }
 }
 
-/* Admin Users Container */
-.admin-users-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #333; /* Dark background to match theme */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-  color: #e5e5e5; /* Light text color */
+/* Bookmarks Page */
+/* General Styles for the Full Page Background */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #e9edc9, #faedcd);
+  color: #283618;
+  line-height: 1.6;
 }
 
-/* Users List */
-.users-list {
-  list-style: none;
+/* Bookmarks List Wrapper */
+.bookmarks-list {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Individual Bookmark Card */
+.bookmark-card {
+  background-color: #faedcd;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #d4a373;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bookmark-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Bookmark Card Headings and Paragraphs */
+.bookmark-card h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #606c38;
+}
+
+.bookmark-card p {
+  margin: 10px 0;
+}
+
+/* Bookmark Buttons */
+.bookmark-card .button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+  align-items: center;
+}
+
+.bookmark-card button {
+  padding: 8px 16px;
+  background-color: #ccd5ae;
+  color: #283618;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.bookmark-card button:hover {
+  background-color: #e9edc9;
+  transform: scale(1.05);
+}
+
+/* "Remove Bookmark" Button Specific Styles */
+.bookmark-card button:nth-of-type(2) {
+  background-color: #d4a373d4;
+}
+
+.bookmark-card button:nth-of-type(2):hover {
+  background-color: #ecc197;
+}
+
+/* Loading and No Bookmarks Messages */
+p {
+  font-size: 1.2em;
+  text-align: center;
+  color: #606c38;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bookmarks-list {
+    padding: 15px;
+    grid-template-columns: 1fr;
+  }
+
+  .bookmark-card {
+    padding: 15px;
+  }
+
+  .bookmark-card button {
+    width: 48%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+}
+
+/* Add Story Page*/
+/* General Styles for AddStory Component */
+body,
+html {
+  margin: 0;
   padding: 0;
-  margin: 20px 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Full page gradient background */
+  color: #283618;
+  line-height: 1.6;
+}
+
+/* Container for Add Story Form */
+.add-story-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Slightly transparent white for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Heading */
+.add-story-container h1 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #bc6c25; /* Rich brown-orange for error message */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Add Story Form */
+.add-story-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* User Item */
-.user-item {
-  background-color: #444; /* Darker background for each user item */
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for more depth */
-  color: #e5e5e5; /* Light text color */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  position: relative;
-}
-
-/* User Item Hover Effect */
-.user-item:hover {
-  background-color: #555; /* Slight hover effect for user items */
-  transform: translateY(-5px); /* Slight lift on hover */
-}
-
-/* User Details */
-.user-details {
+/* Form Group */
+.form-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.user-details .user-name {
-  font-size: 1.5rem;
+/* Labels */
+.form-group label {
+  font-size: 1em;
   font-weight: bold;
-  color: #00ff88; /* Green accent for username */
+  color: #283618;
+  margin-bottom: 8px;
 }
 
-.user-details .user-email {
-  font-size: 1.2rem;
-  color: #cccccc; /* Softer color for email */
+/* Input Field */
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccd5ae; /* Light olive border */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream background */
+  color: #283618;
 }
 
-.user-details .user-role {
-  font-size: 1rem;
-  color: #888; /* Gray for role information */
-  font-style: italic;
+/* Textarea for Summary */
+.form-group textarea {
+  resize: vertical;
+  height: 100px;
 }
 
-/* Delete Button */
-.delete-button {
-  background-color: #ff4b4b; /* Red button for delete */
-  color: white;
-  padding: 12px 18px;
+/* Select Dropdown */
+.form-group select {
+  padding: 10px;
+  font-size: 1em;
+}
+
+/* ReactQuill Editor */
+.ql-container {
+  height: 200px !important; /* Set the height of the editor */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream for the editor background */
+  color: #283618;
+  font-size: 1em;
+}
+
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+  background-color: #e9edc9; /* Soft green for toolbar background */
+}
+
+/* Submit Button */
+.submit-button {
+  padding: 15px;
+  background-color: #606c38; /* Deep green for button */
+  color: #fefae0;
+  font-size: 1em;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s, transform 0.2s;
 }
 
-.delete-button:hover {
-  background-color: #cc3838; /* Darker red on hover */
-  transform: scale(1.05); /* Scale up slightly on hover */
+.submit-button:hover {
+  background-color: #283618; /* Darker green on hover */
+  transform: scale(1.05);
 }
 
-/* Avatar Section */
-.user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #666; /* Placeholder dark background for avatar */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-right: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-}
-
-/* Flex Layout for Avatar and Details */
-.user-content {
-  display: flex;
-  align-items: center;
-}
-
-/* Responsive Styling */
+/* Responsive Design */
 @media (max-width: 768px) {
-  .admin-users-container {
+  .add-story-container {
     padding: 20px;
   }
 
-  .user-item {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px 15px;
-  }
-
-  .delete-button {
-    width: 100%; /* Full width button on smaller screens */
-    margin-top: 15px;
-  }
-
-  .user-avatar {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
+  .submit-button {
+    width: 100%;
+    padding: 10px;
   }
 }
 
-/* Admin Comments Container */
+/* All Comments Admin Page */
+/* General Styles for Admin Comments Feed */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Soft gradient background */
+  color: #283618; /* Dark green for text */
+  line-height: 1.6;
+}
+
+/* Container for Admin Comments Feed */
 .admin-comments-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
   padding: 30px;
-  background-color: #333; /* Dark background to match theme */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-  color: #e5e5e5; /* Light text color */
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Heading */
+.admin-comments-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error {
+  color: #bc6c25; /* Rich brown-orange for error messages */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border: 1px solid #ccd5ae; /* Light olive border */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream background */
+  color: #283618;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background: #ccd5ae; /* Light olive green */
+  color: #283618;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.pagination-button:hover {
+  background: #e9edc9; /* Softer shade on hover */
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background: #faedcd; /* Pale peach for disabled state */
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #606c38; /* Deep green for active page */
+  color: #fefae0; /* Light cream */
+  font-weight: bold;
 }
 
 /* Comments List */
 .comments-list {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
-  margin: 20px 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
+  gap: 15px;
+}
+
+.comment-item {
+  background: #faedcd; /* Pale peach */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
 
-/* Comment Item */
-.comment-item {
-  background-color: #444; /* Darker background for each comment item */
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for more depth */
-  color: #e5e5e5; /* Light text color */
+/* Comment Content Section */
+.comment-content {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  gap: 15px;
   align-items: center;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  position: relative;
+  flex: 1;
 }
 
-/* Comment Item Hover Effect */
-.comment-item:hover {
-  background-color: #555; /* Slight hover effect for comment items */
-  transform: translateY(-5px); /* Slight lift on hover */
-}
-
-/* Avatar Section */
+/* Placeholder Avatar with Initials */
 .comment-avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #666; /* Placeholder dark background for avatar */
+  background: #606c38; /* Deep green */
+  color: #fefae0; /* Light cream */
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.2em;
   font-weight: bold;
-  color: #ffffff;
-  margin-right: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-}
-
-/* Comment Content */
-.comment-content {
-  display: flex;
-  align-items: center;
 }
 
 /* Comment Details */
 .comment-details {
   display: flex;
   flex-direction: column;
-  gap: 5px;
 }
 
 .comment-username {
-  font-size: 1.2rem;
   font-weight: bold;
-  color: #00ff88; /* Green accent for username */
+  color: #283618; /* Dark green */
+  margin-bottom: 5px;
 }
 
 .comment-text {
-  font-size: 1rem;
-  color: #cccccc; /* Softer color for comment text */
+  color: #333; /* Standard dark gray */
 }
 
 /* Delete Button */
 .delete-button {
-  background-color: #ff4b4b; /* Red button for delete */
-  color: white;
-  padding: 12px 18px;
+  padding: 8px 16px;
+  background: #bc6c25; /* Rich brown-orange */
+  color: #fefae0;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .delete-button:hover {
-  background-color: #cc3838; /* Darker red on hover */
-  transform: scale(1.05); /* Scale up slightly on hover */
+  background: #dda15e; /* Softer brown-orange on hover */
+  transform: scale(1.05);
 }
 
-/* Responsive Styling */
+/* Responsive Design */
 @media (max-width: 768px) {
   .admin-comments-container {
     padding: 20px;
@@ -1611,196 +927,297 @@ form button:hover {
   .comment-item {
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 15px;
-  }
-
-  .delete-button {
-    width: 100%; /* Full width button on smaller screens */
-    margin-top: 15px;
   }
 
   .comment-avatar {
     width: 40px;
     height: 40px;
-    margin-bottom: 15px;
-  }
-}
-
-.commenting {
-  background-color: #444; /* Slightly darker background */
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add some depth with shadow */
-  color: #e5e5e5; /* Light text color */
-  border: 1px solid #555; /* Subtle border */
-}
-
-/* Bookmarks Container */
-.bookmarks-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #333; /* Dark background to match theme */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-  color: #e5e5e5; /* Light text color */
-}
-
-/* Bookmarks List */
-.bookmarks-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-/* Bookmark Card */
-.bookmark-card {
-  background-color: #444; /* Darker background for each bookmark card */
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
-  color: #e5e5e5; /* Light text color */
-  width: calc(50% - 20px); /* Two cards per row with gap */
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-/* Bookmark Card Hover Effect */
-.bookmark-card:hover {
-  background-color: #555; /* Slight hover effect for card */
-  transform: translateY(-5px); /* Slight lift on hover */
-}
-
-/* Bookmark Title */
-.bookmark-title {
-  font-size: 1.5rem;
-  color: #00ff88; /* Green accent for the title */
-  margin-bottom: 10px;
-}
-
-/* Bookmark Author */
-.bookmark-author,
-.bookmark-summary {
-  font-size: 1rem;
-  color: #cccccc; /* Softer color for author and summary */
-  margin-bottom: 10px;
-}
-
-/* Button Group for Bookmark Actions */
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-/* View Button */
-.view-button {
-  background-color: #4caf50; /* Green for viewing story */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Remove Button */
-.remove-button {
-  background-color: #ff4b4b; /* Red for removing bookmark */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Button Hover Effects */
-.view-button:hover {
-  background-color: #45a049; /* Darker green on hover */
-  transform: translateY(-3px); /* Slight lift on hover */
-}
-
-.remove-button:hover {
-  background-color: #cc3838; /* Darker red on hover */
-  transform: translateY(-3px); /* Slight lift on hover */
-}
-
-/* Responsive Styling */
-@media (max-width: 768px) {
-  .bookmarks-list {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .bookmark-card {
-    width: 100%; /* Full width on smaller screens */
-  }
-
-  .button-group {
-    flex-direction: column;
-  }
-
-  .view-button,
-  .remove-button {
-    width: 100%; /* Full width buttons on smaller screens */
-  }
-}
-
-/* Pagination Container */
-.pagination {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 12px; /* Increased spacing for better clickability */
-  padding: 10px 0;
-}
-
-/* Pagination Button Styles */
-.pagination-button {
-  padding: 10px 15px; /* Added padding for larger touch targets */
-  border: 1px solid #00ff88; /* Green border to match the theme */
-  border-radius: 8px; /* Smoother rounded corners */
-  background-color: transparent;
-  color: #00ff88; /* Green text color */
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
-}
-
-/* Hover Effect */
-.pagination-button:hover {
-  background-color: #00ff88; /* Fill green background on hover */
-  color: #1e1e1e; /* Dark text on hover */
-  transform: translateY(-2px); /* Lift effect for better interactivity */
-}
-
-/* Active Page Button */
-.active-page {
-  background-color: #00cc6a; /* Darker green for active page */
-  color: #ffffff; /* White text for contrast */
-  border: 1px solid #00cc6a;
-  transform: scale(1.05); /* Slightly larger for emphasis */
-}
-
-/* Disabled State */
-.pagination-button:disabled {
-  background-color: #555555; /* Gray background for disabled button */
-  color: #999999; /* Light text for disabled state */
-  cursor: not-allowed;
-  border: 1px solid #444444; /* Darker border to indicate disabled */
-}
-
-/* Responsive Pagination for Mobile */
-@media (max-width: 600px) {
-  .pagination {
-    gap: 8px; /* Reduce spacing for smaller screens */
+    font-size: 1em;
   }
 
   .pagination-button {
-    padding: 8px 12px; /* Smaller padding for mobile */
-    font-size: 0.9rem; /* Reduce font size for smaller screens */
+    width: 100%;
+  }
+}
+
+/* All Users Admin Page */
+/* General Styles for Admin Users Feed */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(
+    to right,
+    #e9edc9,
+    #faedcd
+  ); /* Full page gradient */
+  color: #283618;
+  line-height: 1.6;
+}
+
+/* Container for Admin Users Feed */
+.admin-users-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Heading */
+.admin-users-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error {
+  color: #bc6c25;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border: 1px solid #ccd5ae;
+  border-radius: 5px;
+  background-color: #fefae0;
+  color: #283618;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background: #ccd5ae;
+  color: #283618;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.pagination-button:hover {
+  background: #e9edc9;
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background: #faedcd;
+  cursor: not-allowed;
+}
+
+.active-page {
+  background: #606c38;
+  color: #fefae0;
+  font-weight: bold;
+}
+
+/* Users List */
+.users-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-item {
+  background: #faedcd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* User Content Section */
+.user-content {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+}
+
+.user-content a {
+  color: #ae7f28;
+}
+
+.user-content a:hover {
+  color: #606c38;
+}
+
+/* Placeholder Avatar with Initials */
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #606c38;
+  color: #fefae0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* User Details */
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #283618;
+  margin-bottom: 5px;
+}
+
+.user-email {
+  color: #333;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.user-role {
+  font-size: 0.9em;
+  color: #bc6c25;
+}
+
+/* Delete Button */
+.delete-button {
+  padding: 8px 16px;
+  background: #bc6c25;
+  color: #fefae0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.delete-button:hover {
+  background: #dda15e;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-users-container {
+    padding: 20px;
+  }
+
+  .user-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
+  }
+
+  .pagination-button {
+    width: 100%;
+  }
+}
+
+/* Register Form Container */
+.register-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Heading */
+.register-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #bc6c25; /* Rich brown-orange for error message */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Register Form Styles */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Labels */
+.register-form label {
+  font-size: 1em;
+  font-weight: bold;
+  color: #283618;
+  margin-bottom: 8px;
+}
+
+/* Input Fields */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccd5ae; /* Light olive border */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream background */
+  color: #283618;
+}
+
+/* Submit Button */
+.register-form .login-button {
+  padding: 15px;
+  background-color: #606c38; /* Deep green for button */
+  color: #fefae0; /* Light cream text color */
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.register-form .login-button:hover {
+  background-color: #283618; /* Darker green on hover */
+  transform: scale(1.05);
+}
+
+/* Responsive Design for Register Form */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 20px;
+  }
+
+  .register-form .login-button {
+    width: 100%;
+    padding: 10px;
   }
 }
