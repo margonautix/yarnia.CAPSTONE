@@ -155,47 +155,136 @@ const Profile = () => {
     }
   };
 
-  // Handle delete action for account
-  const handleDeleteAccount = async () => {
-    if (
-      !window.confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    ) {
-      return; // If user cancels, exit the function
-    }
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    const imgname = event.target.files[0].name;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxSize = Math.max(img.width, img.height);
+        canvas.width = maxSize;
+        canvas.height = maxSize;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+          img,
+          (maxSize - img.width) / 2,
+          (maxSize - img.height) / 2
+        );
+        canvas.toBlob(
+          (blob) => {
+            const file = new File([blob], imgname, {
+              type: "image/png",
+              lastModified: Date.now(),
+            });
 
+            setImage(file);
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+    };
+  };
+
+  const updateUserProfileWithImage = async (profileUrl) => {
     try {
       const response = await fetchWithAuth(
         "http://localhost:3000/api/users/me",
         {
-          method: "DELETE",
+          method: "PUT",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent for authentication
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          body: JSON.stringify({ profilePicture: profileUrl }),
         }
       );
 
       if (response.ok) {
-        localStorage.removeItem("token"); // Remove token from localStorage
-        setIsAuthenticated(false); // Set authentication to false
-        navigate("/register"); // Redirect to register or login page after deletion
+        await fetchUserData(); // Refresh user data to include the new profile picture
       } else {
-        console.error("Failed to delete account");
-        setError("An error occurred while deleting the account.");
+        console.error("Failed to update profile picture");
       }
     } catch (error) {
-      console.error("Error deleting account:", error);
-      setError("An error occurred while deleting the account.");
+      console.error("Error while updating profile picture:", error);
+    }
+  };
+
+  const handleUploadButtonClick = async (file) => {
+    if (!file) {
+      console.error("No file selected for upload.");
+      return; // Exit if no file
+    }
+
+    try {
+      const myHeaders = new Headers();
+      const token = localStorage.getItem("token");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const formdata = new FormData();
+      formdata.append("file", file);
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/api/upload/profile_pic",
+        requestOptions
+      );
+      if (response.ok) {
+        const result = await response.json();
+        const profileUrl = result.img_url; // Assuming backend returns { img_url: 'URL' }
+        setImage(profileUrl); // Update the image in state
+        await updateUserProfileWithImage(profileUrl); // Update user profile with the new image URL
+      } else {
+        console.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
+
+  const handleClick = (event) => {
+    hiddenFileInput.current.click();
+  };
+
+  // Handle delete action for comments
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const url = `http://localhost:3000/api/comments/${commentId}`;
+      const response = await fetchWithAuth(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.commentId !== commentId)
+        );
+      } else {
+        console.error("Failed to delete comment");
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
     }
   };
 
   if (loading) {
-    return <div>Loading user data...</div>;
+    return <div>Loading user data...</div>; // Show loading spinner or message
   }
 
-  if (!user) {
-    return <div>Redirecting to login...</div>;
+  if (!isAuthenticated || !user) {
+    return <div>Redirecting to login...</div>; // Redirect if user is not authenticated
   }
 
   return (
@@ -314,6 +403,7 @@ const Profile = () => {
                     Edit Profile
                   </button>
                 )}
+                <button className="button">Delete Account</button>
                 {saveError && <p className="error-message">{saveError}</p>}
               </div>
 
@@ -409,10 +499,6 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <button onClick={handleDeleteAccount} className="button danger">
-        Delete Account
-      </button>
-      ;
     </>
   );
 };
