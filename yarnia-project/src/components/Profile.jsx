@@ -325,233 +325,228 @@ const Profile = ({ user, setUser }) => {
 
   if (loading) {
     return <div>Loading user data...</div>;
+  }
+  if (!isAuthenticated || !user) {
+    return <div>Redirecting to login...</div>;
+  }
 
-    if (!isAuthenticated || !user) {
-      return <div>Redirecting to login...</div>;
-    }
+  return (
+    <>
+      <br />
+      <section id="whole-profile">
+        <div className="profile">
+          <div className="stories-container">
+            <div className="profile-stories-wrapper">
+              <div className="profile-container">
+                <h1>
+                  Welcome,{" "}
+                  {isEditing ? (
+                    <div className="group">
+                      <input
+                        id="username"
+                        className="input"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    user.username
+                  )}
+                  !
+                </h1>
+                <div className="info">
+                  <div className="image-upload-container">
+                    <div className="box-decoration">
+                      {isEditing ? (
+                        <>
+                          <label
+                            htmlFor="image-upload-input"
+                            className="image-upload-label"
+                          >
+                            {image ? image.name : "Choose an image"}
+                          </label>
+                          <div
+                            onClick={handleClick}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {image ? (
+                              <img
+                                src={URL.createObjectURL(image)}
+                                alt="upload image"
+                                className="img-display-after"
+                              />
+                            ) : (
+                              <img
+                                src={user.profilePicture || "./photo.png"}
+                                alt="upload image"
+                                className="img-display-before"
+                              />
+                            )}
+                          </div>
+                          <input
+                            id="image-upload-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            ref={hiddenFileInput}
+                            style={{ display: "none" }}
+                          />
+                          <button
+                            className="button"
+                            onClick={() => handleUploadButtonClick(image)}
+                          >
+                            Upload Image
+                          </button>
+                        </>
+                      ) : (
+                        <img
+                          src={user.profilePicture || "./photo.png"}
+                          alt="Profile"
+                          className="img-display"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <br />
+                  <br />
+                  <h4 id="label"> Email:</h4>
+                  <p>{user.email}</p>
 
-    return (
-      <>
-        <br />
-        <section id="whole-profile">
-          <div className="profile">
-            <div className="stories-container">
-              <div className="profile-stories-wrapper">
-                <div className="profile-container">
-                  <h1>
-                    Welcome,{" "}
+                  <br />
+                  <br />
+                  <h4 id="label">Bio:</h4>
+                  <p>
                     {isEditing ? (
                       <div className="group">
-                        <input
-                          id="username"
-                          className="input"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
+                        <textarea
+                          id="bio"
+                          className="form-textarea"
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value)}
                         />
                       </div>
                     ) : (
-                      user.username
+                      user.bio
                     )}
-                    !
-                  </h1>
-                  <div className="info">
-                    <div className="image-upload-container">
-                      <div className="box-decoration">
-                        {isEditing ? (
-                          <>
-                            <label
-                              htmlFor="image-upload-input"
-                              className="image-upload-label"
-                            >
-                              {image ? image.name : "Choose an image"}
-                            </label>
-                            <div
-                              onClick={handleClick}
-                              style={{ cursor: "pointer" }}
-                            >
-                              {image ? (
-                                <img
-                                  src={URL.createObjectURL(image)}
-                                  alt="upload image"
-                                  className="img-display-after"
-                                />
-                              ) : (
-                                <img
-                                  src={user.profilePicture || "./photo.png"}
-                                  alt="upload image"
-                                  className="img-display-before"
-                                />
-                              )}
-                            </div>
-                            <input
-                              id="image-upload-input"
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageChange}
-                              ref={hiddenFileInput}
-                              style={{ display: "none" }}
-                            />
-                            <button
-                              className="button"
-                              onClick={() => handleUploadButtonClick(image)}
-                            >
-                              Upload Image
-                            </button>
-                          </>
-                        ) : (
-                          <img
-                            src={user.profilePicture || "./photo.png"}
-                            alt="Profile"
-                            className="img-display"
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <br />
-                    <br />
-                    <h4 id="label"> Email:</h4>
-                    <p>{user.email}</p>
-
-                    <br />
-                    <br />
-                    <h4 id="label">Bio:</h4>
-                    <p>
-                      {isEditing ? (
-                        <div className="group">
-                          <textarea
-                            id="bio"
-                            className="form-textarea"
-                            value={bio}
-                            onChange={(e) => setBio(e.target.value)}
-                          />
-                        </div>
-                      ) : (
-                        user.bio
-                      )}
-                    </p>
-                  </div>
-                  {isEditing ? (
-                    <div className="group">
-                      <button className="button" onClick={handleSave}>
-                        Save
-                      </button>
-                      <button
-                        className="button"
-                        onClick={() => setIsEditing(false)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
+                  </p>
+                </div>
+                {isEditing ? (
+                  <div className="group">
+                    <button className="button" onClick={handleSave}>
+                      Save
+                    </button>
                     <button
                       className="button"
-                      onClick={() => setIsEditing(true)}
+                      onClick={() => setIsEditing(false)}
                     >
-                      Edit Profile
+                      Cancel
                     </button>
-                  )}
-                  {saveError && <p className="error-message">{saveError}</p>}
-                </div>
-
-                {/* Bookmarks Section */}
-                <div className="profile-container">
-                  <h2>Your Bookmarks</h2>
-                  {bookmarks.length > 0 ? (
-                    <ul className="bookmark-list">
-                      {bookmarks.map((bookmark) => (
-                        <li key={bookmark.bookmarkId} className="bookmark-item">
-                          <h3>{bookmark.story.title}</h3>
-                          <p>
-                            {bookmark.story.summary || "No summary available"}
-                          </p>
-                          <button
-                            onClick={() => handleReadMore(bookmark.storyId)}
-                            className="button"
-                          >
-                            Read more
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No bookmarks found.</p>
-                  )}
-                </div>
-                {/* Comment History Section */}
-                <div className="profile-container">
-                  <h3 id="history">Comment History:</h3>
-                  {comments.length > 0 ? (
-                    <ul className="comment-list">
-                      {comments.map((comment) => (
-                        <li className="comments-item" key={comment.commentId}>
-                          <strong>Story: {comment.story.title}</strong>
-                          <p>{comment.content}</p>
-                          <br />
-                          <button
-                            onClick={() => handleReadMore(comment.storyId)}
-                            className="button"
-                          >
-                            View Story
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleCommentDelete(comment.commentId)
-                            }
-                            className="button"
-                          >
-                            Delete
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No comments found</p>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <button className="button" onClick={() => setIsEditing(true)}>
+                    Edit Profile
+                  </button>
+                )}
+                {saveError && <p className="error-message">{saveError}</p>}
               </div>
 
-              {/* Stories Section */}
+              {/* Bookmarks Section */}
               <div className="profile-container">
-                <h2>Your Stories</h2>
-                {error && <p className="error-message">{error}</p>}
-
-                {stories.length > 0 ? (
-                  <ul className="story-list">
-                    {stories.map((story) => (
-                      <div className="story-item" key={story.storyId}>
-                        <li>
-                          <div id="story-card">
-                            <h3>{story.title}</h3>
-                            <p>{story.summary || "No summary available"}</p>
-                          </div>
-                          <button
-                            onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                            className="button"
-                          >
-                            Read more
-                          </button>
-                          <button
-                            onClick={() => handleStoryDelete(story.storyId)}
-                            className="button"
-                          >
-                            Delete
-                          </button>
-                        </li>
-                      </div>
+                <h2>Your Bookmarks</h2>
+                {bookmarks.length > 0 ? (
+                  <ul className="bookmark-list">
+                    {bookmarks.map((bookmark) => (
+                      <li key={bookmark.bookmarkId} className="bookmark-item">
+                        <h3>{bookmark.story.title}</h3>
+                        <p>
+                          {bookmark.story.summary || "No summary available"}
+                        </p>
+                        <button
+                          onClick={() => handleReadMore(bookmark.storyId)}
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                      </li>
                     ))}
                   </ul>
                 ) : (
-                  <p>Nothing to find here...</p>
+                  <p>No bookmarks found.</p>
+                )}
+              </div>
+              {/* Comment History Section */}
+              <div className="profile-container">
+                <h3 id="history">Comment History:</h3>
+                {comments.length > 0 ? (
+                  <ul className="comment-list">
+                    {comments.map((comment) => (
+                      <li className="comments-item" key={comment.commentId}>
+                        <strong>Story: {comment.story.title}</strong>
+                        <p>{comment.content}</p>
+                        <br />
+                        <button
+                          onClick={() => handleReadMore(comment.storyId)}
+                          className="button"
+                        >
+                          View Story
+                        </button>
+                        <button
+                          onClick={() => handleCommentDelete(comment.commentId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No comments found</p>
                 )}
               </div>
             </div>
+
+            {/* Stories Section */}
+            <div className="profile-container">
+              <h2>Your Stories</h2>
+              {error && <p className="error-message">{error}</p>}
+
+              {stories.length > 0 ? (
+                <ul className="story-list">
+                  {stories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                        <button
+                          onClick={() => handleStoryDelete(story.storyId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p>Nothing to find here...</p>
+              )}
+            </div>
           </div>
-        </section>
-        <button onClick={() => deleteUserAccount(authorId)}>
-          Delete Account
-        </button>
-      </>
-    );
-  }
+        </div>
+      </section>
+      <button onClick={() => deleteUserAccount(authorId)}>
+        Delete Account
+      </button>
+    </>
+  );
 };
+
 export default Profile;
