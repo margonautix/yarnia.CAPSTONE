@@ -40,6 +40,7 @@
   padding: px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 /* Navbar Image */
@@ -57,6 +58,11 @@
   margin: 0;
   padding: 0;
   align-items: center; /* Align items vertically with the image */
+  flex-grow: 1;
+}
+
+.navbar ul li:last-child {
+  margin-left: auto;
 }
 
 .navbar ul li {
