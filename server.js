@@ -630,6 +630,7 @@ app.delete("/api/users/:authorId", authenticateUser, async (req, res, next) => {
     // Log the error for debugging and send an appropriate error response
     console.error("Error deleting user:", err);
     res.status(500).json({ message: "Internal server error." });
+
   }
 });
 
