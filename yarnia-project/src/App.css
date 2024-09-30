@@ -8,7 +8,8 @@
   overflow: auto;
   width: 100%;
   margin: 0 auto;
-  font-family: "Arial, sans-serif";
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: #333;
   font-size: 16px;
 }
@@ -31,7 +32,7 @@
     #fefcee,
     #fbebc1
   ); /* Linear gradient background */
-  padding: 20px;
+  padding: px;
   display: flex;
   align-items: center;
 }
@@ -101,6 +102,33 @@
   }
 }
 
+.login {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  margin: 5%;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ccd5ae;
+}
+
+.login h2 {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  text-emphasis: 5;
+}
+
+.login input {
+  background-color: #606c38;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  min-width: 250px;
+}
+.login input::placeholder {
+  color: #ccd5ae;
+}
+
 /* Home Page/All Stories */
 /* General Styles */
 body {
@@ -124,7 +152,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 250px;
+  width: 300px;
   background: #ccd5ae;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -229,6 +257,14 @@ body {
   margin: 8px 0;
 }
 
+.story-card a {
+  color: #ae7f28;
+}
+
+.story-card a:hover {
+  color: #606c38;
+}
+
 .story-card button {
   padding: 10px 20px;
   background: #606c38;
@@ -241,6 +277,14 @@ body {
 
 .story-card button:hover {
   background: #283618;
+}
+
+.story-single a {
+  color: #ae7f28;
+}
+
+.story-single a:hover {
+  color: #606c38;
 }
 
 /* Modal Styles */
@@ -1011,6 +1055,14 @@ html {
   gap: 15px;
   align-items: center;
   flex: 1;
+}
+
+.user-content a {
+  color: #ae7f28;
+}
+
+.user-content a:hover {
+  color: #606c38;
 }
 
 /* Placeholder Avatar with Initials */
