@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchAllStories, fetchSingleStory } from "../API";
 import React from "react";
-import RichTextEditor from "./RichText";
 import "react-quill/dist/quill.snow.css";
 
 const Stories = () => {
@@ -214,6 +213,10 @@ const Stories = () => {
               <p>
                 <strong>Genre:</strong> {story.genre}
               </p>
+              <p>
+                <strong>Summary:</strong> {story.summary}
+              </p>
+
               <button onClick={() => handleReadMore(story.storyId)}>
                 Read More
               </button>
@@ -240,20 +243,18 @@ const Stories = () => {
                 {new Date(selectedStory.createdAt).toLocaleDateString()}
               </p>
               <p>
-                <strong>Summary:</strong> {selectedStory.summary}
-              </p>
-              <p>
                 <strong>Genre:</strong> {selectedStory.genre}
               </p>
               <p>
                 <strong>Excerpt:</strong>
               </p>
-              <RichTextEditor
-                value={selectedStory.content.slice(0, 150)}
-                onChange={() => {}} // No need to handle change, read-only
-                placeholder=""
-                height="100px"
-              />
+              <div
+                className="story-content"
+                dangerouslySetInnerHTML={{
+                  __html: selectedStory.content.slice(0, 150),
+                }}
+              ></div>
+
               <button
                 onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
               >
