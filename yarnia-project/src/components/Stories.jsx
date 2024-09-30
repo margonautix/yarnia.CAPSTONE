@@ -141,54 +141,6 @@ const Stories = () => {
 
       {/* Main Story Content */}
       <div className="stories-list">
-        {/* Pagination Controls at the Top */}
-        {totalPages > 1 && (
-          <div className="pagination">
-            {/* Previous Button */}
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="pagination-button"
-            >
-              Previous
-            </button>
-
-            {/* Page Numbers Logic */}
-            {Array.from({ length: totalPages }, (_, index) => {
-              const pageNumber = index + 1;
-
-              // Show the page if it meets the conditions: current page, previous two, next two
-              if (
-                pageNumber === currentPage ||
-                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
-              ) {
-                return (
-                  <button
-                    key={pageNumber}
-                    onClick={() => handlePageChange(pageNumber)}
-                    className={`pagination-button ${
-                      currentPage === pageNumber ? "active" : ""
-                    }`}
-                  >
-                    {pageNumber}
-                  </button>
-                );
-              }
-
-              return null;
-            })}
-
-            {/* Next Button */}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="pagination-button"
-            >
-              Next
-            </button>
-          </div>
-        )}
-
         {currentStories.length > 0 ? (
           currentStories.map((story) => (
             <div key={story.storyId} className="story-card">
@@ -260,51 +212,56 @@ const Stories = () => {
             </div>
           </div>
         )}
-
-        {/* Pagination Controls at the Bottom */}
+        {/* Pagination Controls */}
         <div className="pagination">
-          {/* Previous Button */}
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
-            Previous
-          </button>
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              {/* Previous Button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="pagination-button"
+              >
+                Previous
+              </button>
 
-          {/* Page Numbers Logic */}
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
+              {/* Page Numbers Logic */}
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
 
-            // Show the page if it meets the conditions: current page, previous two, next two
-            if (
-              pageNumber === currentPage ||
-              (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
-            ) {
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`pagination-button ${
-                    currentPage === pageNumber ? "active" : ""
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            }
+                // Show the page if it meets the conditions: current page, previous two, next two
+                if (
+                  pageNumber === currentPage ||
+                  (pageNumber >= currentPage - 2 &&
+                    pageNumber <= currentPage + 2)
+                ) {
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`pagination-button ${
+                        currentPage === pageNumber ? "active" : ""
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                }
 
-            return null;
-          })}
+                return null;
+              })}
 
-          {/* Next Button */}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            Next
-          </button>
+              {/* Next Button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
