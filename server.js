@@ -31,7 +31,7 @@ const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, isAdmin: user.isAdmin }, // Include isAdmin in the token
     JWT,
-    { expiresIn: "1h" }
+    { expiresIn: "6h" }
   );
 };
 
@@ -630,7 +630,6 @@ app.delete("/api/users/:authorId", authenticateUser, async (req, res, next) => {
     // Log the error for debugging and send an appropriate error response
     console.error("Error deleting user:", err);
     res.status(500).json({ message: "Internal server error." });
-
   }
 });
 
