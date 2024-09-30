@@ -284,6 +284,10 @@ body {
   background: #283618;
 }
 
+.story-single {
+  margin-right: 35px;
+}
+
 .story-single a {
   color: #ae7f28;
 }
