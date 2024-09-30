@@ -1256,6 +1256,13 @@ html {
   }
 }
 
+
+
+.yarnia-logo {
+  width:100px;
+
+}
+
 /* Single Story Component */
 .story-container {
   max-width: 800px;
@@ -1397,3 +1404,4 @@ button[type="submit"]:hover {
   margin-top: 1rem;
   text-align: center;
 }
+
