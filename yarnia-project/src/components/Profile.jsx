@@ -18,6 +18,7 @@ const Profile = () => {
   const navigate = useNavigate(); // Initialize navigate
   const [image, setImage] = useState(null);
   const hiddenFileInput = useRef(null);
+  const authorId = user?.id;
 
   const handleReadMore = (storyId) => {
     navigate(`/stories/${storyId}`);
@@ -152,6 +153,50 @@ const Profile = () => {
       }
     } catch (error) {
       setSaveError("Error while updating profile.");
+    }
+  };
+
+  const deleteUserAccount = async (authorId) => {
+    const token = localStorage.getItem("token");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account and all your stories? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return; // Exit the function if the user cancels
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/${authorId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        console.log("User account deleted successfully.");
+
+        // Clear the localStorage
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // Reset user state
+        setUser(null);
+
+        // Redirect to the homepage
+        navigate("/"); // Call navigate here for redirection
+      } else {
+        const textResponse = await response.text();
+        const responseData = JSON.parse(textResponse);
+        console.error("Error deleting account:", responseData.message);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
     }
   };
 
@@ -498,7 +543,9 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <button>Delete Account</button>
+      <button onClick={() => deleteUserAccount(authorId)}>
+        Delete Account
+      </button>
     </>
   );
 };
