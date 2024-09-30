@@ -201,7 +201,7 @@ export default function SingleStory({ user }) {
                 currentUser?.id === story?.authorId) && (
                 <button
                   onClick={() => handleDeleteComment(comment.commentId)}
-                  className="delete-button"
+                  className="button"
                 >
                   Delete
                 </button>
@@ -254,23 +254,24 @@ export default function SingleStory({ user }) {
           {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
               {isEditing ? (
-                <button onClick={handleSaveContent} className="save-button">
+                <button onClick={handleSaveContent} className="button">
                   Save
                 </button>
               ) : (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="edit-button"
-                >
+                <button onClick={() => setIsEditing(true)} className="button">
                   Edit
                 </button>
               )}
-              <button onClick={handleDeleteStory} className="cancel-button">
+              <button onClick={handleDeleteStory} className="button">
                 Delete
               </button>
             </div>
           )}
-          <button onClick={handleBookmark} disabled={bookmarked}>
+          <button
+            className="button"
+            onClick={handleBookmark}
+            disabled={bookmarked}
+          >
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </button>
           {/* Comments toggle and display */}
@@ -291,7 +292,9 @@ export default function SingleStory({ user }) {
                 placeholder="Write a comment..."
                 required
               />
-              <button type="submit">Submit Comment</button>
+              <button type="submit" className="button">
+                Submit Comment
+              </button>
             </form>
           )}
 

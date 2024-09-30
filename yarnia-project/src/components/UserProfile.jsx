@@ -87,7 +87,9 @@ export default function UserProfile() {
                               <p>{story.summary || "No summary available"}</p>
                             </div>
                             <button
-                              onClick={() => navigate(`/stories/${story.id}`)}
+                              onClick={() =>
+                                navigate(`/stories/${story.storyId}`)
+                              }
                               className="button"
                             >
                               Read more

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchAllStories, fetchSingleStory } from "../API"; // Assuming you have this fetch function
+import { fetchAllStories, fetchSingleStory } from "../API";
+import React from "react";
+import "react-quill/dist/quill.snow.css";
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
@@ -139,6 +141,54 @@ const Stories = () => {
 
       {/* Main Story Content */}
       <div className="stories-list">
+        {/* Pagination Controls at the Top */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            {/* Previous Button */}
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              Previous
+            </button>
+
+            {/* Page Numbers Logic */}
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+
+              // Show the page if it meets the conditions: current page, previous two, next two
+              if (
+                pageNumber === currentPage ||
+                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+              ) {
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`pagination-button ${
+                      currentPage === pageNumber ? "active" : ""
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              }
+
+              return null;
+            })}
+
+            {/* Next Button */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              Next
+            </button>
+          </div>
+        )}
+
         {currentStories.length > 0 ? (
           currentStories.map((story) => (
             <div key={story.storyId} className="story-card">
@@ -160,6 +210,10 @@ const Stories = () => {
               <p>
                 <strong>Genre:</strong> {story.genre}
               </p>
+              <p>
+                <strong>Summary:</strong> {story.summary}
+              </p>
+
               <button onClick={() => handleReadMore(story.storyId)}>
                 Read More
               </button>
@@ -186,11 +240,18 @@ const Stories = () => {
                 {new Date(selectedStory.createdAt).toLocaleDateString()}
               </p>
               <p>
-                <strong>Summary:</strong> {selectedStory.summary}
-              </p>
-              <p>
                 <strong>Genre:</strong> {selectedStory.genre}
               </p>
+              <p>
+                <strong>Excerpt:</strong>
+              </p>
+              <div
+                className="story-content"
+                dangerouslySetInnerHTML={{
+                  __html: selectedStory.content.slice(0, 150),
+                }}
+              ></div>
+
               <button
                 onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
               >
@@ -199,56 +260,51 @@ const Stories = () => {
             </div>
           </div>
         )}
-        {/* Pagination Controls */}
+
+        {/* Pagination Controls at the Bottom */}
         <div className="pagination">
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="pagination">
-              {/* Previous Button */}
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="pagination-button"
-              >
-                Previous
-              </button>
+          {/* Previous Button */}
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
+          >
+            Previous
+          </button>
 
-              {/* Page Numbers Logic */}
-              {Array.from({ length: totalPages }, (_, index) => {
-                const pageNumber = index + 1;
+          {/* Page Numbers Logic */}
+          {Array.from({ length: totalPages }, (_, index) => {
+            const pageNumber = index + 1;
 
-                // Show the page if it meets the conditions: current page, previous two, next two
-                if (
-                  pageNumber === currentPage ||
-                  (pageNumber >= currentPage - 2 &&
-                    pageNumber <= currentPage + 2)
-                ) {
-                  return (
-                    <button
-                      key={pageNumber}
-                      onClick={() => handlePageChange(pageNumber)}
-                      className={`pagination-button ${
-                        currentPage === pageNumber ? "active" : ""
-                      }`}
-                    >
-                      {pageNumber}
-                    </button>
-                  );
-                }
+            // Show the page if it meets the conditions: current page, previous two, next two
+            if (
+              pageNumber === currentPage ||
+              (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+            ) {
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`pagination-button ${
+                    currentPage === pageNumber ? "active" : ""
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            }
 
-                return null;
-              })}
+            return null;
+          })}
 
-              {/* Next Button */}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="pagination-button"
-              >
-                Next
-              </button>
-            </div>
-          )}
+          {/* Next Button */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
