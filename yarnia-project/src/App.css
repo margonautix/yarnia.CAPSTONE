@@ -439,7 +439,7 @@ body {
   margin-bottom: 10px;
   border: 1px solid #ccd5ae;
   border-radius: 5px;
-  background-color: #fefae0;
+  background-color: #e4fee0;
   color: #283618;
 }
 
@@ -720,7 +720,7 @@ html {
 
 /* ReactQuill Editor */
 .ql-container {
-  height: 200px !important; /* Set the height of the editor */
+  height: 500px !important; /* Set the height of the editor */
   border-radius: 5px;
   background-color: #fefae0; /* Light cream for the editor background */
   color: #283618;
@@ -1220,13 +1220,13 @@ html {
   border: 1px solid #ccd5ae; /* Light olive border */
   border-radius: 5px;
   background-color: #fefae0; /* Light cream background */
-  color: #283618;
+  color: #28361876;
 }
 
 /* Submit Button */
 .register-form .login-button {
   padding: 15px;
-  background-color: #606c38; /* Deep green for button */
+  background-color: #606c3864; /* Deep green for button */
   color: #fefae0; /* Light cream text color */
   font-size: 1em;
   border: none;
@@ -1250,4 +1250,146 @@ html {
     width: 100%;
     padding: 10px;
   }
+}
+
+/* Single Story Component */
+.story-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fefae0;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.story-single h2 {
+  color: #283618;
+  font-family: "Georgia", serif;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.story-single h4 {
+  color: #606c38;
+  font-family: "Times New Roman", serif;
+  margin: 0.5rem 0;
+}
+
+.story-content {
+  margin: 1.5rem 0;
+  line-height: 1.6;
+  font-family: "Times New Roman", serif;
+  background-color: #e9edc9;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.button-group {
+  display: flex;
+  margin: 10px;
+  justify-content: space-around;
+}
+
+.button {
+  background-color: #606c38;
+  border: none;
+  color: #fefae0;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #283618;
+}
+
+.bookmark-button {
+  margin-top: 1rem;
+}
+
+.toggle-comments-btn {
+  cursor: pointer;
+  color: #d4a373;
+  font-weight: bold;
+  margin-top: 2rem;
+}
+
+.toggle-comments-btn:hover {
+  color: #bc6c25;
+}
+
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.comment-item {
+  background-color: #e9edc9;
+  border: 1px solid #ccd5ae;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.comment-item strong {
+  color: #283618;
+  font-weight: bold;
+}
+
+.comment-item .button {
+  margin-left: 1rem;
+  background-color: #bc6c25;
+}
+
+.comment-item .button:hover {
+  background-color: #dda15e;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+textarea {
+  resize: vertical;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccd5ae;
+  background-color: #e9edc9;
+  color: #283618;
+  font-family: "Times New Roman", serif;
+  line-height: 1.5;
+}
+
+textarea::placeholder {
+  color: #606c38;
+}
+
+button[type="submit"] {
+  background-color: #606c38;
+  color: #fefae0;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #283618;
+}
+
+.error {
+  color: #bc6c25;
+  font-weight: bold;
+  margin-top: 1rem;
+  text-align: center;
 }
