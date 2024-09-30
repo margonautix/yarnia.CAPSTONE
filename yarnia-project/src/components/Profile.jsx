@@ -448,7 +448,6 @@ const Profile = ({ user, setUser }) => {
                     Edit Profile
                   </button>
                 )}
-                <button className="button">Delete Account</button>
                 {saveError && <p className="error-message">{saveError}</p>}
               </div>
 
