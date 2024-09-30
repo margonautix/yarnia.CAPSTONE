@@ -120,6 +120,18 @@
   color: #ccd5ae;
 }
 
+.login button {
+  background-color: #7f8d52; /* Deep green for button */
+  color: #fefae0; /* Light cream text color */
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  margin-left: 33%;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
 /* Home Page/All Stories */
 /* General Styles */
 body {
@@ -562,6 +574,7 @@ html {
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
+  margin-left: 25%;
 }
 
 .bookmark-card button:hover {
