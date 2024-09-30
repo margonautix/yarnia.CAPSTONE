@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchBookmarkedStories } from "../API"; // Import necessary functions
 import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
-const Profile = () => {
-  const [user, setUser] = useState(null); // Store the user's profile data
+const Profile = ({ user, setUser }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if the user is authenticated
   const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
   const [username, setUsername] = useState(""); // State for editing username
@@ -183,7 +182,7 @@ const Profile = () => {
 
         // Clear the localStorage
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        // localStorage.removeItem("user");
 
         // Reset user state
         setUser(null);
