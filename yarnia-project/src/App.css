@@ -1139,3 +1139,85 @@ html {
     width: 100%;
   }
 }
+
+/* Register Form Container */
+.register-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(254, 250, 224, 0.9); /* Light cream for readability */
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Heading */
+.register-container h2 {
+  font-size: 2em;
+  color: #606c38; /* Deep green for heading */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #bc6c25; /* Rich brown-orange for error message */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Register Form Styles */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Labels */
+.register-form label {
+  font-size: 1em;
+  font-weight: bold;
+  color: #283618;
+  margin-bottom: 8px;
+}
+
+/* Input Fields */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccd5ae; /* Light olive border */
+  border-radius: 5px;
+  background-color: #fefae0; /* Light cream background */
+  color: #283618;
+}
+
+/* Submit Button */
+.register-form .login-button {
+  padding: 15px;
+  background-color: #606c38; /* Deep green for button */
+  color: #fefae0; /* Light cream text color */
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.register-form .login-button:hover {
+  background-color: #283618; /* Darker green on hover */
+  transform: scale(1.05);
+}
+
+/* Responsive Design for Register Form */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 20px;
+  }
+
+  .register-form .login-button {
+    width: 100%;
+    padding: 10px;
+  }
+}
