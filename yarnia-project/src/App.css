@@ -79,21 +79,21 @@
 }
 
 .navbar ul li a:hover {
-  background-color: #ccd5ae; /* Light olive on hover */
-  color: #fefae0; /* Off-white for contrast */
+  background-color: #ccd5ae;
+  color: #fefae0;
 }
 
 /* Logout Link */
 .navbar ul li a[style*="marginLeft: auto"] {
   margin-left: auto;
-  background-color: #bc6c25; /* Rich brown-orange */
+  background-color: #bc6c25;
   color: #fefae0;
   padding: 10px 20px;
   border-radius: 8px;
 }
 
 .navbar ul li a[style*="marginLeft: auto"]:hover {
-  background-color: #dda15e; /* Softer brown-orange on hover */
+  background-color: #dda15e;
 }
 
 /* Mobile Responsive */

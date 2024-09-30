@@ -39,13 +39,12 @@ const Register = ({ setUser }) => {
   };
 
   return (
-    <div>
+    <div class="login">
       <h2>Register New Account</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div>
         <form onSubmit={handleSubmit}>
           <label>
-            Username:
             <input
               placeholder="Username"
               type="text"
@@ -57,7 +56,6 @@ const Register = ({ setUser }) => {
           <br />
           <br />
           <label>
-            Email:
             <input
               placeholder="Email"
               type="email"
@@ -69,7 +67,6 @@ const Register = ({ setUser }) => {
           <br />
           <br />
           <label>
-            Password:
             <input
               placeholder="Password"
               type="password"
