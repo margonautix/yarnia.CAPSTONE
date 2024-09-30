@@ -29,7 +29,7 @@
 /* Navbar */
 /* General Styles for Navbar */
 .navbar {
-  position: sticky; /* Makes the navbar stick to the top while scrolling */
+  position: static;
   top: 0; /* Sticks to the top of the viewport */
   z-index: 1000; /* Ensures the navbar stays on top of other elements */
   background: linear-gradient(
@@ -715,6 +715,30 @@ html {
   background-color: #e9edc9; /* Soft green for toolbar background */
 }
 
+.add-story-container {
+  text-align: left; /* Ensure container default is left-aligned */
+}
+
+/* Override any global centering styles */
+.ql-editor {
+  text-align: left !important; /* Force left alignment with !important */
+  margin: 0; /* Ensure there's no centering margin */
+  padding: 0; /* Ensure no padding that might center the content */
+}
+
+/* Ensure alignment works properly */
+.ql-align-right {
+  text-align: right !important;
+}
+
+.ql-align-center {
+  text-align: center !important;
+}
+
+.ql-align-justify {
+  text-align: justify !important;
+}
+
 /* Submit Button */
 .submit-button {
   padding: 15px;
@@ -1210,5 +1234,3 @@ html {
     padding: 10px;
   }
 }
-
-/* Single Story Component */

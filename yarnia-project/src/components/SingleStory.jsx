@@ -239,7 +239,35 @@ export default function SingleStory({ user }) {
               <ReactQuill
                 value={content}
                 onChange={setContent} // Update content state
-                theme="snow" // Quill theme
+                modules={{
+                  toolbar: [
+                    [{ header: "1" }, { header: "2" }, { font: [] }], // Headers and font styles
+                    [{ size: [] }], // Font sizes
+                    ["bold", "italic", "underline", "strike", "blockquote"], // Formatting options
+                    [
+                      { list: "ordered" },
+                      { list: "bullet" },
+                      { indent: "-1" },
+                      { indent: "+1" },
+                    ], // Lists and indentation
+                    [{ align: "justify" }], // Alignment options
+                    ["clean"], // Clear formatting
+                  ],
+                }}
+                formats={[
+                  "header",
+                  "font",
+                  "size",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strike",
+                  "blockquote",
+                  "list",
+                  "bullet",
+                  "indent",
+                  "align", // Add text alignment formats
+                ]}
               />
             ) : (
               <div
