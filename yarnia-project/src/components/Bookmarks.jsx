@@ -77,16 +77,18 @@ const Bookmarks = ({ user }) => {
             <strong>Summary:</strong>{" "}
             {bookmark.story.summary || "No summary available"}
           </p>
-          <button onClick={() => handleViewStory(bookmark?.storyId)}>
-            View Story
-          </button>
-          <button
-            onClick={() =>
-              handleRemoveBookmark(bookmark.storyId, bookmark.bookmarkId)
-            }
-          >
-            Remove Bookmark
-          </button>
+          <div class="button-container">
+            <button onClick={() => handleViewStory(bookmark?.storyId)}>
+              View Story
+            </button>
+            <button
+              onClick={() =>
+                handleRemoveBookmark(bookmark.storyId, bookmark.bookmarkId)
+              }
+            >
+              Remove Bookmark
+            </button>
+          </div>
         </div>
       ))}
     </div>
