@@ -476,6 +476,35 @@ const Profile = ({ user, setUser }) => {
                   <p>No bookmarks found.</p>
                 )}
               </div>
+              {/* Comment History Section */}
+              <div className="profile-container">
+                <h3 id="history">Comment History:</h3>
+                {comments.length > 0 ? (
+                  <ul className="comment-list">
+                    {comments.map((comment) => (
+                      <li className="comments-item" key={comment.commentId}>
+                        <strong>Story: {comment.story.title}</strong>
+                        <p>{comment.content}</p>
+                        <br />
+                        <button
+                          onClick={() => handleReadMore(comment.storyId)}
+                          className="button"
+                        >
+                          View Story
+                        </button>
+                        <button
+                          onClick={() => handleCommentDelete(comment.commentId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No comments found</p>
+                )}
+              </div>
             </div>
 
             {/* Stories Section */}
@@ -513,41 +542,11 @@ const Profile = ({ user, setUser }) => {
               )}
             </div>
           </div>
-          {/* Comment History Section */}
-          <div className="profile-container">
-            <h3 id="history">Comment History:</h3>
-            {comments.length > 0 ? (
-              <ul className="comment-list">
-                {comments.map((comment) => (
-                  <li className="comments-item" key={comment.commentId}>
-                    <strong>Story: {comment.story.title}</strong>
-                    <p>{comment.content}</p>
-                    <br />
-                    <button
-                      onClick={() => handleReadMore(comment.storyId)}
-                      className="button"
-                    >
-                      View Story
-                    </button>
-                    <button
-                      onClick={() => handleCommentDelete(comment.commentId)}
-                      className="button"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No comments found</p>
-            )}
-          </div>
         </div>
       </section>
       <button onClick={() => deleteUserAccount(authorId)}>
         Delete Account
       </button>
-
     </>
   );
 };
