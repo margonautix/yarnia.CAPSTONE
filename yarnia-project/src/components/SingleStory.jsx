@@ -4,42 +4,44 @@ import {
   fetchSingleStory,
   updateStoryContent,
   bookmarkStory,
-  deleteStory, // Ensure this import is correct
+  deleteStory,
   fetchComments,
   postComment,
   checkBookmarkStatus,
-  deleteComment, // Import your new API function
+  deleteComment,
 } from "../API"; // Adjust the API import path as necessary
-import jwt_decode from "jwt-decode"; // To decode JWT
-import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
-import ReactQuill from "react-quill"; // Import ReactQuill
-import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
+import jwt_decode from "jwt-decode";
+import DOMPurify from "dompurify";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function SingleStory({ user }) {
-  const { storyId } = useParams(); // Get storyId from the URL
-  const navigate = useNavigate(); // For navigating after delete or save
-  const [currentUser, setCurrentUser] = useState(null); // State for current user info
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
-  const [story, setStory] = useState(null); // Store story details
-  const [content, setContent] = useState(""); // Store content while editing
-  const [error, setError] = useState(null); // To track errors
-  const [comments, setComments] = useState([]); // Holds comments for the story
-  const [newComment, setNewComment] = useState(""); // Store new comment input
-  const [bookmarked, setBookmarked] = useState(false); // Track bookmark status
+  const { storyId } = useParams();
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [story, setStory] = useState(null);
+  const [content, setContent] = useState("");
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [bookmarked, setBookmarked] = useState(false);
 
-  // Fetch the story and comments from the server
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const commentsPerPage = 6;
+
   const fetchStoryAndComments = async (storyId) => {
     try {
-      const storyResponse = await fetchSingleStory(storyId); // Fetch the story
+      const storyResponse = await fetchSingleStory(storyId);
       if (storyResponse) {
-        setStory(storyResponse); // Set the story state
-        setContent(storyResponse.content); // Set the content for editing
+        setStory(storyResponse);
+        setContent(storyResponse.content);
 
-        // Fetch the comments related to the story
-        const commentsResponse = await fetchComments(storyId); // Ensure this API call works
+        const commentsResponse = await fetchComments(storyId);
         if (commentsResponse) {
-          setComments(commentsResponse); // Set the comments state
+          setComments(commentsResponse);
         }
       } else {
         setError("Story not found.");
@@ -50,23 +52,21 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Fetch bookmark status for the user and story
   const fetchBookmarkStatus = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token || !currentUser) return; // If no token or user is not logged in, skip
+      if (!token || !currentUser) return;
 
-      const { id } = jwt_decode(token); // Decode token to get user ID
-      const response = await checkBookmarkStatus(id, storyId); // Check if the user has bookmarked this story
+      const { id } = jwt_decode(token);
+      const response = await checkBookmarkStatus(id, storyId);
       if (response.bookmarked) {
-        setBookmarked(true); // Update bookmark status
+        setBookmarked(true);
       }
     } catch (error) {
       console.error("Failed to check bookmark status:", error);
     }
   };
 
-  // Fetch story, user data, and bookmark status when the component mounts or when storyId changes
   useEffect(() => {
     if (storyId) {
       fetchStoryAndComments(storyId);
@@ -74,25 +74,23 @@ export default function SingleStory({ user }) {
       setError("No story ID provided.");
     }
 
-    // Decode JWT and set the current user
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwt_decode(token); // Decode the token to get user info
+      const decoded = jwt_decode(token);
       setCurrentUser(decoded);
     }
   }, [storyId]);
 
   useEffect(() => {
-    fetchBookmarkStatus(); // Check bookmark status
+    fetchBookmarkStatus();
   }, [currentUser]);
 
-  // Function to handle content update
   const handleSaveContent = async () => {
     try {
-      const response = await updateStoryContent(storyId, content); // Send updated content to API
+      const response = await updateStoryContent(storyId, content);
       if (response) {
-        setIsEditing(false); // Exit editing mode after saving
-        fetchStoryAndComments(storyId); // Refresh the story data
+        setIsEditing(false);
+        fetchStoryAndComments(storyId);
       }
     } catch (error) {
       console.error("Failed to update the story:", error);
@@ -100,16 +98,15 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Function to handle story deletion
   const handleDeleteStory = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this story?"
     );
     if (confirmDelete) {
       try {
-        await deleteStory(storyId); // Call the deleteStory function
+        await deleteStory(storyId);
         alert("Story deleted successfully!");
-        navigate("/"); // Navigate back to the home page after deletion
+        navigate("/");
       } catch (error) {
         console.error("Failed to delete the story:", error);
         alert("Failed to delete the story.");
@@ -121,71 +118,84 @@ export default function SingleStory({ user }) {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this comment?"
     );
-    if (!confirmDelete) return; // If the user cancels, exit the function
+    if (!confirmDelete) return;
 
     try {
-      await deleteComment(storyId, commentId); // Call the API to delete the comment
-
-      // Update the comments state by removing the deleted comment
+      await deleteComment(storyId, commentId);
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.commentId !== commentId)
       );
-
-      alert("Comment deleted successfully!"); // Optional: You can remove this alert if you'd prefer no prompt
+      alert("Comment deleted successfully!");
     } catch (error) {
       console.error("Failed to delete the comment:", error);
       setError("Failed to delete the comment.");
     }
   };
 
-  // Handle bookmarking the story
   const handleBookmark = async () => {
     if (!currentUser) {
       setError("You must be logged in to bookmark stories.");
       return;
     }
-    const token = localStorage.getItem("token"); // Get the token
+    const token = localStorage.getItem("token");
     try {
-      await bookmarkStory(storyId, currentUser.id, token); // Pass the token correctly
-      setBookmarked(true); // Update bookmark status
+      await bookmarkStory(storyId, currentUser.id, token);
+      setBookmarked(true);
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
   };
 
-  // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+    setIsCommentsOpen(!isCommentsOpen);
   };
 
-  // Handle new comment submission
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!newComment) return;
 
     try {
-      await postComment(storyId, newComment); // Post the new comment to the API
-      setNewComment(""); // Clear the comment input
-      fetchStoryAndComments(storyId); // Refresh the comments
+      await postComment(storyId, newComment);
+      setNewComment("");
+      fetchStoryAndComments(storyId);
     } catch (error) {
       console.error("Failed to post comment:", error);
       setError("Failed to post comment.");
     }
   };
 
+  // Pagination controls
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  const paginateComments = () => {
+    const startIndex = (currentPage - 1) * commentsPerPage;
+    return comments.slice(startIndex, startIndex + commentsPerPage);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   const renderComments = () => {
-    if (comments.length > 0) {
+    const paginatedComments = paginateComments();
+    if (paginatedComments.length > 0) {
       return (
         <ul className="comments-list">
-          {comments.map((comment) => (
+          {paginatedComments.map((comment) => (
             <li key={comment.commentId} className="comment-item">
               <strong>
                 {comment.user?.username ? (
                   currentUser?.id === comment.userId ? (
-                    // Link to the current user's profile
                     <Link to="/profile">{comment.user.username}</Link>
                   ) : (
-                    // Link to other users' profiles
                     <Link to={`/users/${comment.userId}`}>
                       {comment.user.username}
                     </Link>
@@ -195,7 +205,6 @@ export default function SingleStory({ user }) {
                 )}
               </strong>
               : {comment.content || "No content available"}
-              {/* Show delete button for user, admin, or story author */}
               {(currentUser?.id === comment.userId ||
                 currentUser?.isAdmin ||
                 currentUser?.id === story?.authorId) && (
@@ -219,7 +228,6 @@ export default function SingleStory({ user }) {
     <div className="story-container">
       <main>
         <ul className="story-single">
-          {/* Display story title */}
           <h2>{story?.title || "No Title"}</h2>
           <h4>
             Author:{" "}
@@ -232,25 +240,18 @@ export default function SingleStory({ user }) {
             )}
           </h4>
           <h4>Description: {story?.summary || "No Description"}</h4>
-
-          {/* Display or edit story content */}
           <div>
             {isEditing ? (
-              <ReactQuill
-                value={content}
-                onChange={setContent} // Update content state
-                theme="snow" // Quill theme
-              />
+              <ReactQuill value={content} onChange={setContent} theme="snow" />
             ) : (
               <div
                 className="story-content"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(story?.content || "No Content"),
-                }} // Use DOMPurify to sanitize and render the content as HTML
+                }}
               />
             )}
           </div>
-          {/* Edit and Save/Delete Buttons */}
           {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
               {isEditing ? (
@@ -274,7 +275,6 @@ export default function SingleStory({ user }) {
           >
             {bookmarked ? "Bookmarked" : "Bookmark"}
           </button>
-          {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
               ? "Hide Comments"
@@ -283,7 +283,28 @@ export default function SingleStory({ user }) {
 
           {isCommentsOpen && renderComments()}
 
-          {/* New Comment Form */}
+          {isCommentsOpen && totalPages > 1 && (
+            <div className="pagination">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="button"
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="button"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
           {isCommentsOpen && currentUser && (
             <form onSubmit={handleSubmitComment}>
               <textarea
@@ -298,7 +319,6 @@ export default function SingleStory({ user }) {
             </form>
           )}
 
-          {/* Display error if there is any */}
           {error && <p className="error">{error}</p>}
         </ul>
       </main>
