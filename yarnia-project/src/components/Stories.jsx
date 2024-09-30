@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchAllStories, fetchSingleStory } from "../API"; // Assuming you have this fetch function
+import { fetchAllStories, fetchSingleStory } from "../API";
+import React from "react";
+import RichTextEditor from "./RichText";
+import "react-quill/dist/quill.snow.css";
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
@@ -242,6 +245,15 @@ const Stories = () => {
               <p>
                 <strong>Genre:</strong> {selectedStory.genre}
               </p>
+              <p>
+                <strong>Excerpt:</strong>
+              </p>
+              <RichTextEditor
+                value={selectedStory.content.slice(0, 150)}
+                onChange={() => {}} // No need to handle change, read-only
+                placeholder=""
+                height="100px"
+              />
               <button
                 onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
               >
