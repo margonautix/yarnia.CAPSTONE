@@ -4,6 +4,7 @@ import { useState } from "react";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
+  console.log(user);
 
   // Example categories
   const categories = [
@@ -31,7 +32,7 @@ const NavBar = ({ user, setUser }) => {
   const handleLogout = (event) => {
     event.preventDefault(); // Prevent default link behavior
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
     setUser(null); // Clear the user state
     navigate("/login"); // Redirect to login page after logging out
   };
