@@ -772,7 +772,7 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-app.get("/api/users/:userId/stories", authenticateUser, async (req, res) => {
+app.get("/api/users/:userId/stories", async (req, res) => {
   const { userId } = req.params;
 
   try {

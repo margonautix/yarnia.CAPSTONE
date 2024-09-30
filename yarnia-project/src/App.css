@@ -102,6 +102,33 @@
   }
 }
 
+.login {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  margin: 5%;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ccd5ae;
+}
+
+.login h2 {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  text-emphasis: 5;
+}
+
+.login input {
+  background-color: #606c38;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  min-width: 250px;
+}
+.login input::placeholder {
+  color: #ccd5ae;
+}
+
 /* Home Page/All Stories */
 /* General Styles */
 body {
@@ -250,6 +277,14 @@ body {
 
 .story-card button:hover {
   background: #283618;
+}
+
+.story-single a {
+  color: #ae7f28;
+}
+
+.story-single a:hover {
+  color: #606c38;
 }
 
 /* Modal Styles */
@@ -1020,6 +1055,14 @@ html {
   gap: 15px;
   align-items: center;
   flex: 1;
+}
+
+.user-content a {
+  color: #ae7f28;
+}
+
+.user-content a:hover {
+  color: #606c38;
 }
 
 /* Placeholder Avatar with Initials */
