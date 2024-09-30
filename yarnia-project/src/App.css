@@ -1287,8 +1287,8 @@ html {
 
 .button-group {
   display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
+  margin: 10px;
+  justify-content: space-around;
 }
 
 .button {
