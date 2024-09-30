@@ -82,18 +82,18 @@ export default function UserProfile() {
                       {userStories.map((story) => (
                         <div className="story-item" key={story.id}>
                           <li>
-                            <div id="story-card">
+                            <div class="story-card">
                               <h3>{story.title}</h3>
                               <p>{story.summary || "No summary available"}</p>
+                              <button
+                                onClick={() =>
+                                  navigate(`/stories/${story.storyId}`)
+                                }
+                                className="button"
+                              >
+                                Read more
+                              </button>
                             </div>
-                            <button
-                              onClick={() =>
-                                navigate(`/stories/${story.storyId}`)
-                              }
-                              className="button"
-                            >
-                              Read more
-                            </button>
                           </li>
                         </div>
                       ))}

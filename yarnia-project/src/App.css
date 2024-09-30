@@ -242,6 +242,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .story-card:hover {
@@ -256,6 +258,7 @@ body {
 
 .story-card p {
   margin: 8px 0;
+  text-align: left;
 }
 
 .story-card a {
@@ -274,6 +277,7 @@ body {
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s;
+  margin: auto;
 }
 
 .story-card button:hover {
