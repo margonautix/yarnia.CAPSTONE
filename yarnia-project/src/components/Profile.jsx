@@ -177,7 +177,7 @@ const Profile = () => {
         canvas.toBlob(
           (blob) => {
             const file = new File([blob], imgname, {
-              type: "image/png",
+              type: "image/*",
               lastModified: Date.now(),
             });
 
@@ -343,6 +343,7 @@ const Profile = () => {
                           <input
                             id="image-upload-input"
                             type="file"
+                            accept="image/*"
                             onChange={handleImageChange}
                             ref={hiddenFileInput}
                             style={{ display: "none" }}
