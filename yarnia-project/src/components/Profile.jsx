@@ -464,7 +464,7 @@ const Profile = ({ user, setUser }) => {
                   </p>
                 </div>
                 {isEditing ? (
-                  <div className="group">
+                  <div className="button-group">
                     <button className="button" onClick={handleSave}>
                       Save
                     </button>
