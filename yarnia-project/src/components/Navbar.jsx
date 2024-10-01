@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import yarniaLogo from "./images/yarniaLogo.png"
+import yarniaLogo from "./images/yarniaLogo.png";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -39,7 +39,6 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar">
-      <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo" />
       <ul>
         <li>
           <Link to="/">Home</Link>
@@ -59,7 +58,7 @@ const NavBar = ({ user, setUser }) => {
             <li>
               <Link to="/profile">Profile</Link>
             </li>
-            <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo-1" />
+            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-1" />
             {/* Admin-only link to comments feed */}
             {user.isAdmin && (
               <>
@@ -87,7 +86,7 @@ const NavBar = ({ user, setUser }) => {
             <li>
               <Link to="/login">Login</Link>
             </li>
-            <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo-2" />
+            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-2" />
             <li>
               <Link to="/register">Register</Link>
             </li>
