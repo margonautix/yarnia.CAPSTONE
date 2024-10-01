@@ -1,11 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import yarniaLogo from"./images/yarniaLogo.png";
+import yarniaLogo from "./images/yarniaLogo.png"
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
-  console.log(user);
 
   // Example categories
   const categories = [
@@ -33,16 +32,14 @@ const NavBar = ({ user, setUser }) => {
   const handleLogout = (event) => {
     event.preventDefault(); // Prevent default link behavior
     localStorage.removeItem("token");
-    // localStorage.removeItem("user");
+    localStorage.removeItem("user");
     setUser(null); // Clear the user state
     navigate("/login"); // Redirect to login page after logging out
   };
 
   return (
     <nav className="navbar">
-
       <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo" />
-
       <ul>
         <li>
           <Link to="/">Home</Link>
@@ -62,6 +59,7 @@ const NavBar = ({ user, setUser }) => {
             <li>
               <Link to="/profile">Profile</Link>
             </li>
+            <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo-1" />
             {/* Admin-only link to comments feed */}
             {user.isAdmin && (
               <>
@@ -89,6 +87,7 @@ const NavBar = ({ user, setUser }) => {
             <li>
               <Link to="/login">Login</Link>
             </li>
+            <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo-2" />
             <li>
               <Link to="/register">Register</Link>
             </li>
