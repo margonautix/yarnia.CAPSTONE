@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import catGif from "./images/Yarnia.gif";
+
 import { useState } from "react";
 import yarniaLogo from "./images/yarniaLogo.png"
 
@@ -39,7 +39,7 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar">
- 
+      <img src={yarniaLogo} alt ="Yarnia" className="yarnia-logo" />
       <ul>
         <li>
           <Link to="/">Home</Link>
