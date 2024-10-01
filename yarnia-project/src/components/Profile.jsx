@@ -597,8 +597,7 @@ const Profile = ({ user, setUser }) => {
                 )}
               </div>
             </div>
-            // Stories Section
-            <div className="profile-container">
+            <div className="bottom-container">
               <h2>Your Stories</h2>
               {error && <p className="error-message">{error}</p>}
 
