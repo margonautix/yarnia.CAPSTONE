@@ -99,16 +99,21 @@
 
 .login {
   border: 1px solid;
+  color: #f8f9f6;
+  text-shadow: #283618 1px 1px 10px;
   border-radius: 10px;
   display: flex;
-  margin: 5%;
+  margin: auto;
+  margin-top: 5%;
   flex-direction: column;
   align-items: center;
   background: url("./components/images/Yarnia.gif");
+  background-size: cover;
+  background-color: rgba(128, 83, 5, 0.25);
   background-repeat: no-repeat;
   height: auto;
   width: 30%;
-  padding: 40px;
+  padding: 0px;
 }
 
 .login h2 {
@@ -167,7 +172,7 @@ body {
 }
 .sidebar {
   height: 22.7%;
-  width: fit-content;
+  width: 90%;
   background: #ccd5ae;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -395,8 +400,9 @@ body {
   padding: 30px;
   border-radius: 10px;
   margin: 20px auto;
+  margin-left: auto;
   max-width: 1800px;
-  justify-self: center;
+  justify-content: center;
   align-items: center;
 }
 
@@ -409,27 +415,71 @@ body {
 
 /* Profile Container Styles */
 .profile-container {
+  display: flex;
+  flex-direction: column;
   box-shadow: 1px 1px 5px #ba733442;
   background-color: #faedcd;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
   width: fit-content;
-  max-width: 700px;
+  max-width: 500px;
+  max-height: 1300px;
 }
 .bottom-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   box-shadow: 1px 1px 5px #ba733442;
   background-color: #faedcd;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
-  width: fit-content;
+  width: 97%;
+}
+
+.bottom-container li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bottom-container button {
+  margin: auto;
+}
+
+#bio.form-textarea {
+  min-width: 300px;
+  min-height: 200px;
+  margin-right: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: large;
+}
+
+#username.input {
+  font-size: larger;
 }
 
 .profile-stories-wrapper {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: no-wrap;
   gap: 20px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: smaller;
+}
+
+.pagination-controls button {
+  padding: 4px 8px;
+  font-size: small;
+  background-color: #ae7f28;
+  color: #333;
+  margin: 10px;
 }
 
 /* Information and Upload Section */
@@ -487,6 +537,7 @@ body {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 }
 
 .bookmark-item,
@@ -496,6 +547,9 @@ body {
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 #story-card {
@@ -531,6 +585,7 @@ body {
   }
 
   .profile-container {
+    display: flex;
     padding: 15px;
   }
 
