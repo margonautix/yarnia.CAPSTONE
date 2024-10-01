@@ -1204,7 +1204,6 @@ html {
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 /* Form Labels */
@@ -1229,7 +1228,7 @@ html {
 
 /* Submit Button */
 .register-form .login-button {
-  padding: 15px;
+  padding: 15px
   background-color: #606c3864; /* Deep green for button */
   color: #fefae0; /* Light cream text color */
   font-size: 1em;
@@ -1237,6 +1236,9 @@ html {
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 25px;
 }
 
 .register-form .login-button:hover {
