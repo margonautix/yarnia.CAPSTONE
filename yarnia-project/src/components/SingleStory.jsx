@@ -232,7 +232,6 @@ export default function SingleStory({ user }) {
             )}
           </h4>
           <h4>Description: {story?.summary || "No Description"}</h4>
-
           {/* Display or edit story content */}
           <div>
             {isEditing ? (
@@ -293,25 +292,22 @@ export default function SingleStory({ user }) {
               <button onClick={handleDeleteStory} className="button">
                 Delete
               </button>
-              <button
-                className="button"
-                onClick={handleBookmark}
-                disabled={bookmarked}
-              >
-                {bookmarked ? "Bookmarked" : "Bookmark"}
-              </button>
             </div>
           )}
-
+          <button
+            className="button"
+            onClick={handleBookmark}
+            disabled={bookmarked}
+          >
+            {bookmarked ? "Bookmarked" : "Bookmark"}
+          </button>
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
               ? "Hide Comments"
               : `Show Comments (${comments.length})`}
           </h2>
-
           {isCommentsOpen && renderComments()}
-
           {/* New Comment Form */}
           {isCommentsOpen && currentUser && (
             <form onSubmit={handleSubmitComment}>
@@ -326,7 +322,6 @@ export default function SingleStory({ user }) {
               </button>
             </form>
           )}
-
           {/* Display error if there is any */}
           {error && <p className="error">{error}</p>}
         </ul>
