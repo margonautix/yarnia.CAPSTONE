@@ -328,6 +328,13 @@ const Profile = ({ user, setUser }) => {
 
   // Handle delete action for comments
   const handleCommentDelete = async (commentId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this comment? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const url = `http://localhost:3000/api/comments/${commentId}`;
       const response = await fetchWithAuth(url, {
@@ -487,20 +494,22 @@ const Profile = ({ user, setUser }) => {
                           <strong>Story: {comment.story.title}</strong>
                           <p>{comment.content}</p>
                           <br />
-                          <button
-                            onClick={() => handleReadMore(comment.storyId)}
-                            className="button"
-                          >
-                            View Story
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleCommentDelete(comment.commentId)
-                            }
-                            className="button"
-                          >
-                            Delete
-                          </button>
+                          <div className="button-group">
+                            <button
+                              onClick={() => handleReadMore(comment.storyId)}
+                              className="button"
+                            >
+                              View Story
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleCommentDelete(comment.commentId)
+                              }
+                              className="button"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -615,18 +624,20 @@ const Profile = ({ user, setUser }) => {
                             <h3>{story.title}</h3>
                             <p>{story.summary || "No summary available"}</p>
                           </div>
-                          <button
-                            onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                            className="button"
-                          >
-                            Read more
-                          </button>
-                          <button
-                            onClick={() => handleStoryDelete(story.storyId)}
-                            className="button"
-                          >
-                            Delete
-                          </button>
+                          <div className="button-group">
+                            <button
+                              onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                              className="button"
+                            >
+                              Read more
+                            </button>
+                            <button
+                              onClick={() => handleStoryDelete(story.storyId)}
+                              className="button"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </li>
                       </div>
                     ))}
