@@ -445,6 +445,19 @@ body {
   margin: auto;
 }
 
+#bio.form-textarea {
+  min-width: 300px;
+  min-height: 200px;
+  margin-right: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: large;
+}
+
+#username.input {
+  font-size: larger;
+}
+
 .profile-stories-wrapper {
   display: flex;
   flex-wrap: no-wrap;
