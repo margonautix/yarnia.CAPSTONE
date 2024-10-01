@@ -46,7 +46,7 @@
 }
 
 /* Navbar Image */
-.navbar img.navbar-gif {
+.navbar img {
   height: 100%;
   margin-right: 15px;
   border-radius: 8px;
@@ -152,12 +152,18 @@ body {
 }
 
 /* Sidebar Styles */
+.gif {
+  display: flex;
+  left: 0;
+  width: 100%;
+  margin: 0;
+}
 .sidebar {
-  width: 300px;
+  width: fit-content;
   background: #ccd5ae;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 0;
 }
 
 .sidebar h2 {
@@ -444,6 +450,7 @@ body {
 }
 
 /* Bookmarks and Stories List */
+
 .bookmark-list,
 .story-list,
 .comment-list {
@@ -518,7 +525,6 @@ html {
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #e9edc9, #faedcd);
   color: #283618;
   line-height: 1.6;
 }
@@ -526,14 +532,13 @@ html {
 /* Bookmarks List Wrapper */
 .bookmarks-list {
   max-width: 1200px;
+  width: 90%;
   margin: 20px auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Individual Bookmark Card */
@@ -1254,7 +1259,8 @@ html {
 
 /* Single Story Component */
 .story-container {
-  max-width: 800px;
+  width: 90%;
+  max-width: 1600px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: #fefae0;

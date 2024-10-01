@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import catGif from "./images/Yarnia.gif";
+
 import { useState } from "react";
 
 const NavBar = ({ user, setUser }) => {
@@ -39,7 +39,7 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar">
-      <img src={catGif} alt="Harlee" className="navbar-gif" />
+      {/* <img src={catGif} alt="Harlee" className="navbar-gif" /> */}
       <ul>
         <li>
           <Link to="/">Home</Link>

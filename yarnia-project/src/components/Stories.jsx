@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchAllStories, fetchSingleStory } from "../API";
+import catGif from "./images/Yarnia.gif";
 import React from "react";
 import "react-quill/dist/quill.snow.css";
 
@@ -136,6 +137,7 @@ const Stories = () => {
 
           <br />
           <br />
+          <img src={catGif} alt="Harlee" className="gif" />
         </aside>
       </div>
 
