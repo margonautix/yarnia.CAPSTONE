@@ -101,11 +101,7 @@
   margin: 5%;
   flex-direction: column;
   align-items: center;
-  background: url("./components/images/Yarnia.gif");
-  background-repeat: no-repeat;
-  height: auto;
-  width: 30%;
-  padding: 40px;
+  background-color: #ccd5ae;
 }
 
 .login h2 {
