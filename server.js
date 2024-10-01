@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 app.use(
   cors({
-    origin: "http://localhost:5173", 
-    credentials: true, 
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 app.use((err, req, res, next) => {
@@ -28,20 +28,20 @@ app.use((err, req, res, next) => {
 
 const generateToken = (user) => {
   return jwt.sign(
-    { id: user.id, email: user.email, isAdmin: user.isAdmin }, 
+    { id: user.id, email: user.email, isAdmin: user.isAdmin },
     JWT,
     { expiresIn: "6h" }
   );
 };
 
 const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; 
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, token missing" });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT); 
+    const decoded = jwt.verify(token, JWT);
     req.user = decoded;
     next();
   } catch (err) {
@@ -51,19 +51,19 @@ const authenticateUser = (req, res, next) => {
 
 // Middleware to check if the user is an admin
 const authenticateAdmin = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; 
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Authorization header missing" });
   }
 
   try {
-    const decoded = jwt.verify(token, JWT); 
+    const decoded = jwt.verify(token, JWT);
 
     if (!decoded.isAdmin) {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    req.user = decoded; 
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
@@ -72,13 +72,19 @@ const authenticateAdmin = (req, res, next) => {
 
 // API routes go here
 
-// `fetchAllStories` 
+// `fetchAllStories`
 app.get("/api/stories", async (req, res) => {
   try {
     const stories = await prisma.story.findMany({
       include: {
         author: {
-          select: { username: true }, 
+          select: { username: true },
+        },
+        _count: {
+          select: {
+            bookmarks: true,
+            comments: true,
+          },
         },
       },
     });
@@ -93,10 +99,10 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
 
   try {
     const story = await prisma.story.findUnique({
-      where: { storyId: parseInt(storyId) }, 
+      where: { storyId: parseInt(storyId) },
       include: {
         author: {
-          select: { username: true }, 
+          select: { username: true },
         },
       },
     });
@@ -105,9 +111,9 @@ app.get("/api/stories/:storyId", async (req, res, next) => {
       return res.status(404).json({ message: "Story not found." });
     }
 
-    res.json(story); 
+    res.json(story);
   } catch (err) {
-    console.error("Error fetching story:", err); 
+    console.error("Error fetching story:", err);
     next(err);
   }
 });
@@ -148,13 +154,13 @@ app.post("/api/stories", authenticateUser, async (req, res) => {
         summary,
         content,
         genre,
-        authorId: req.user.id, 
+        authorId: req.user.id,
         createdAt: new Date(),
       },
     });
     res.status(201).json(newStory);
   } catch (error) {
-    console.error("Failed to create story:", error); 
+    console.error("Failed to create story:", error);
     res.status(500).json({ error: "Failed to create story" });
   }
 });
@@ -199,7 +205,7 @@ app.get("/api/stories/:storyId/comments", async (req, res, next) => {
       },
       include: {
         user: {
-          select: { username: true }, 
+          select: { username: true },
         },
       },
     });
@@ -226,8 +232,8 @@ app.post(
       // Create the comment in the database
       const newComment = await prisma.comment.create({
         data: {
-          userId: req.user.id, 
-          storyId: parseInt(storyId), 
+          userId: req.user.id,
+          storyId: parseInt(storyId),
           content,
         },
       });
@@ -252,7 +258,7 @@ app.delete("/api/comments/:commentId", async (req, res) => {
     }
 
     const deletedComment = await prisma.comment.delete({
-      where: { commentId: commentIdInt }, 
+      where: { commentId: commentIdInt },
     });
 
     res.status(200).json(deletedComment);
@@ -291,13 +297,13 @@ app.put("/api/users/me", authenticateUser, async (req, res, next) => {
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: req.user.id }, 
-      data: { username, bio }, 
+      where: { id: req.user.id },
+      data: { username, bio },
     });
 
-    res.json(updatedUser); 
+    res.json(updatedUser);
   } catch (error) {
-    next(error); 
+    next(error);
   }
 });
 
@@ -307,7 +313,7 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
     const comments = await prisma.comment.findMany({
       include: {
         user: {
-          select: { username: true }, 
+          select: { username: true },
         },
       },
     });
@@ -329,7 +335,7 @@ app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
       include: {
         story: {
           include: {
-            author: { select: { username: true } }, 
+            author: { select: { username: true } },
           },
         },
       },
@@ -343,11 +349,9 @@ app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
   }
 });
 
-
-
 //Route to delete a bookmark from a story
 app.delete("/api/users/:userId/bookmarks/:storyId", async (req, res, next) => {
-  const { userId, storyId } = req.params; 
+  const { userId, storyId } = req.params;
 
   try {
     const bookmark = await prisma.bookmark.findUnique({
@@ -417,9 +421,9 @@ app.get("/api/stories/:storyId/bookmarks", async (req, res, next) => {
 
     // Find all bookmarks for the story
     const bookmarks = await prisma.bookmark.findMany({
-      where: { storyId: parseInt(storyId) }, 
+      where: { storyId: parseInt(storyId) },
       include: {
-        user: true, 
+        user: true,
       },
     });
 
@@ -443,7 +447,7 @@ app.post("/api/stories/:storyId/bookmarks", async (req, res, next) => {
       data: {
         userId: parseInt(userId),
         storyId: parseInt(storyId),
-        createdAt: createdAt ? new Date(createdAt) : new Date(), 
+        createdAt: createdAt ? new Date(createdAt) : new Date(),
       },
     });
 
@@ -558,7 +562,7 @@ app.get("/api/users/:authorId", async (req, res, next) => {
 
     res.json(user);
   } catch (err) {
-    console.error("Error fetching user data:", err); 
+    console.error("Error fetching user data:", err);
     next(err);
   }
 });
@@ -573,7 +577,7 @@ app.delete("/api/users/:authorId", authenticateUser, async (req, res, next) => {
 
     if (user) {
       // User deleted successfully
-      res.status(204).send(); 
+      res.status(204).send();
     } else {
       res.status(404).json({ message: "User not found." });
     }
@@ -602,7 +606,7 @@ app.post("/api/auth/login", async (req, res, next) => {
 
     const token = generateToken(user);
 
-    res.json({ message: "Login successful", token, user }); 
+    res.json({ message: "Login successful", token, user });
   } catch (err) {
     next(err);
   }
@@ -678,7 +682,7 @@ app.delete(
 
     try {
       const deletedBookmark = await prisma.bookmark.delete({
-        where: { bookmarkId: parseInt(bookmarkId) }, 
+        where: { bookmarkId: parseInt(bookmarkId) },
       });
       res.status(200).json({ message: "Bookmark deleted successfully." });
     } catch (err) {
@@ -720,7 +724,7 @@ app.get("/api/users/:userId/stories", async (req, res) => {
 
   try {
     const stories = await prisma.story.findMany({
-      where: { authorId: parseInt(userId, 10) }, 
+      where: { authorId: parseInt(userId, 10) },
     });
 
     if (!stories.length) {
@@ -741,7 +745,7 @@ app.get("/api/users/:userId/comments", async (req, res) => {
   try {
     const comments = await prisma.comment.findMany({
       where: { userId: Number(userId) },
-      include: { story: true }, 
+      include: { story: true },
     });
     res.json(comments);
   } catch (error) {
@@ -750,7 +754,7 @@ app.get("/api/users/:userId/comments", async (req, res) => {
 });
 
 app.post("/api/upload/profile_pic", (req, res) => {
-  const file = req.files.file; 
+  const file = req.files.file;
   const filePath = `uploads/${file.name}`;
   file.mv(filePath, (err) => {
     if (err) {

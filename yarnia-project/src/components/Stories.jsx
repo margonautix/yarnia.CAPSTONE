@@ -8,14 +8,14 @@ import "react-quill/dist/quill.snow.css";
 const Stories = () => {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedStory, setSelectedStory] = useState(null); 
-  const [showModal, setShowModal] = useState(false); 
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [selectedCategory, setSelectedCategory] = useState(""); 
-  const [currentPage, setCurrentPage] = useState(1); 
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
-  const storiesPerPage = 10; 
+  const storiesPerPage = 10;
 
   // Fetch all stories on component mount
   useEffect(() => {
@@ -59,7 +59,6 @@ const Stories = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-
   const totalPages = Math.ceil(filteredStories.length / storiesPerPage);
   const indexOfLastStory = currentPage * storiesPerPage;
   const indexOfFirstStory = indexOfLastStory - storiesPerPage;
@@ -86,7 +85,7 @@ const Stories = () => {
   // Handle category selection for filtering stories by genre
   const handleCategorySelect = (genre) => {
     setSelectedCategory(genre);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   if (loading) {
@@ -242,7 +241,12 @@ const Stories = () => {
               <p>
                 <strong>Summary:</strong> {story.summary}
               </p>
-
+              <p>
+                <strong>Bookmarks:</strong> {story._count?.bookmarks || 0}
+              </p>
+              <p>
+                <strong>Comments:</strong> {story._count?.comments || 0}
+              </p>
               <button onClick={() => handleReadMore(story.storyId)}>
                 Read More
               </button>
