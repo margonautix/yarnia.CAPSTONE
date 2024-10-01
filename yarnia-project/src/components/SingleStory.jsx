@@ -317,16 +317,17 @@ export default function SingleStory({ user }) {
               <button onClick={handleDeleteStory} className="button">
                 Delete
               </button>
-              <button
-                className="button"
-                onClick={handleBookmark}
-                disabled={bookmarked}
-              >
-                {bookmarked ? "Bookmarked" : "Bookmark"}
-              </button>
             </div>
           )}
-
+          <div className="button-group">
+            <button
+              className="button"
+              onClick={handleBookmark}
+              disabled={bookmarked}
+            >
+              {bookmarked ? "Bookmarked" : "Bookmark"}
+            </button>
+          </div>
           {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
