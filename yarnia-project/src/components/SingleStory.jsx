@@ -54,23 +54,21 @@ export default function SingleStory({ user }) {
     }
   };
 
-// Fetch bookmark status for the user and story
-const fetchBookmarkStatus = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token || !currentUser) return; // If no token or user is not logged in, skip
+  // Fetch bookmark status for the user and story
+  const fetchBookmarkStatus = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !currentUser) return; // If no token or user is not logged in, skip
 
-    const { id } = jwt_decode(token); // Decode token to get user ID
-    const response = await checkBookmarkStatus(id, storyId); // Check if the user has bookmarked this story
-    
-    // Update bookmark status based on response
-    setBookmarked(response.bookmarked);
-  } catch (error) {
-    console.error("Failed to check bookmark status:", error);
-    // Optional: You can also handle specific error cases here
-  }
-};
-
+      const { id } = jwt_decode(token); // Decode token to get user ID
+      const response = await checkBookmarkStatus(id, storyId); // Check if the user has bookmarked this story
+      if (response.bookmarked) {
+        setBookmarked(true); // Update bookmark status
+      }
+    } catch (error) {
+      console.error("Failed to check bookmark status:", error);
+    }
+  };
 
   // Fetch story, user data, and bookmark status when the component mounts or when storyId changes
   useEffect(() => {

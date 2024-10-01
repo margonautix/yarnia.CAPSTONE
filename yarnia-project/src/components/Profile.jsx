@@ -682,6 +682,41 @@ const fetchUserData = async () => {
 
 
             </div>
+
+            {/* Stories Section */}
+            <div className="profile-container">
+              <h2>Your Stories</h2>
+              {error && <p className="error-message">{error}</p>}
+
+              {stories.length > 0 ? (
+                <ul className="story-list">
+                  {stories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleReadMore(story.storyId)} 
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                        <button
+                          onClick={() => handleStoryDelete(story.storyId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <p>Nothing to find here...</p>
+              )}
+            </div>
           </div>
         </div>
       </section>
