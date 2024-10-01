@@ -229,10 +229,11 @@ export default function SingleStory({ user }) {
       <main>
         <ul className="story-single">
           {/* Display or edit story title */}
-          <div>
+          <div className="form-group">
             {isEditing ? (
               <input
                 type="text"
+                id="title"
                 value={title} // Controlled input for title
                 onChange={(e) => setTitle(e.target.value)} // Update title state
                 placeholder="Enter story title"
@@ -243,10 +244,11 @@ export default function SingleStory({ user }) {
           </div>
 
           {/* Display or edit story summary */}
-          <div>
+          <div className="form-group">
             {isEditing ? (
               <textarea
                 value={summary} // Controlled textarea for summary
+                id="summary"
                 onChange={(e) => setSummary(e.target.value)} // Update summary state
                 placeholder="Enter story summary"
               />

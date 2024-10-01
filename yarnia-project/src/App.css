@@ -71,6 +71,10 @@
   position: relative;
 }
 
+.admin-li {
+  margin-left: auto;
+}
+
 .navbar ul li a {
   text-decoration: none;
   color: #283618; /* Dark green */
