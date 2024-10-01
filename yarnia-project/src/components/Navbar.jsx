@@ -1,5 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom"; 
 import { useState } from "react";
 import yarniaLogo from "./images/yarniaLogo.png";
 
@@ -33,6 +32,7 @@ const NavBar = ({ user, setUser }) => {
     localStorage.removeItem("user");
     setUser(null); 
     navigate("/login");
+  }; // Fixed: Added missing closing brace here
 
   return (
     <nav className="navbar">

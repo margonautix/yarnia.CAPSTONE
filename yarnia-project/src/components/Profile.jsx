@@ -74,50 +74,38 @@ const Profile = ({ user, setUser }) => {
   };
 
   // Fetch user data and their stories when the component mounts
-  const fetchUserData = async () => {
-    try {
-      const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
+// Fetch user data and their stories when the component mounts
+// Fetch user data and their stories when the component mounts
+const fetchUserData = async () => {
+  try {
+    const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
 
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData); 
-        setUsername(userData.username); 
-        setBio(userData.bio);
-        setIsAuthenticated(true); 
+    if (response.ok) {
+      const userData = await response.json();
+      setUser(userData); 
+      setUsername(userData.username); 
+      setBio(userData.bio);
+      setIsAuthenticated(true); 
 
-        // Fetch the user's stories, bookmarks, and comments after fetching user data
-        await fetchUserStories(userData.id);
-        await fetchUserBookmarks(userData.id); 
-        await fetchUserComments(userData.id); 
-      } else {
-        console.error("Failed to fetch user data");
-        setIsAuthenticated(false); 
-        
-        setUser(userData);
-        setUsername(userData.username);
-        setBio(userData.bio);
-        setIsAuthenticated(true);
-
-        // Fetch the user's stories, bookmarks, and comments after fetching user data
-        await fetchUserStories(userData.id);
-        await fetchUserBookmarks(userData.id);
-        await fetchUserComments(userData.id);
-      } else {
-        console.error("Failed to fetch user data");
-        setIsAuthenticated(false);
-
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      
+      // Fetch the user's stories, bookmarks, and comments after fetching user data
+      await fetchUserStories(userData.id);
+      await fetchUserBookmarks(userData.id); 
+      await fetchUserComments(userData.id); 
+    } else {
+      console.error("Failed to fetch user data");
       setIsAuthenticated(false);
       navigate("/login");
-    } finally {
-      setLoading(false);
-
     }
-  };
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    setIsAuthenticated(false);
+    navigate("/login");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   // Fetch stories written by the user
   const fetchUserStories = async (userId) => {
