@@ -81,8 +81,6 @@ const Profile = ({ user, setUser }) => {
   };
 
   // Fetch user data and their stories when the component mounts
-  // Fetch user data and their stories when the component mounts
-  // Fetch user data and their stories when the component mounts
   const fetchUserData = async () => {
     try {
       const response = await fetchWithAuth("http://localhost:3000/api/auth/me");
