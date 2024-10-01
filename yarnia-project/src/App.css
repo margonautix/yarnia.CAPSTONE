@@ -301,6 +301,10 @@ body {
   background: #283618;
 }
 
+.story-single {
+  margin-right: 35px;
+}
+
 .story-single a {
   color: #ae7f28;
 }
@@ -736,7 +740,7 @@ html {
 
 /* ReactQuill Editor */
 .ql-container {
-  height: 200px !important; /* Set the height of the editor */
+  height: 500px !important; /* Set the height of the editor */
   border-radius: 5px;
   background-color: #fefae0; /* Light cream for the editor background */
   color: #283618;
@@ -1216,7 +1220,6 @@ html {
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 /* Form Labels */
@@ -1249,6 +1252,9 @@ html {
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 25px;
 }
 
 .register-form .login-button:hover {
@@ -1266,6 +1272,13 @@ html {
     width: 100%;
     padding: 10px;
   }
+}
+
+
+
+.yarnia-logo {
+  width:100px;
+
 }
 
 /* Single Story Component */
@@ -1410,3 +1423,4 @@ button[type="submit"]:hover {
   margin-top: 1rem;
   text-align: center;
 }
+

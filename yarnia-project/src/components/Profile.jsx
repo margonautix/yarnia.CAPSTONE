@@ -1,20 +1,20 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchBookmarkedStories } from "../API";
-import { fetchWithAuth } from "../API";
+import { fetchBookmarkedStories } from "../API"; // Import necessary functions
+import { fetchWithAuth } from "../API"; // Import the utility function to fetch with auth
 
 const Profile = ({ user, setUser }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [stories, setStories] = useState([]);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [error, setError] = useState(null);
-  const [saveError, setSaveError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if the user is authenticated
+  const [isEditing, setIsEditing] = useState(false); // Track if we are in edit mode
+  const [username, setUsername] = useState(""); // State for editing username
+  const [bio, setBio] = useState(""); // State for editing bio
+  const [stories, setStories] = useState([]); // State to store user's stories
+  const [bookmarks, setBookmarks] = useState([]); // State to store user's bookmarks
+  const [comments, setComments] = useState([]); // State to store user's comments
+  const [error, setError] = useState(null); // Error state
+  const [saveError, setSaveError] = useState(null); // Error state for saving profile
+  const [loading, setLoading] = useState(true); // Loading state for user data
+  const navigate = useNavigate(); // Initialize navigate
   const [image, setImage] = useState(null);
   const hiddenFileInput = useRef(null);
   const authorId = user?.id;
@@ -52,7 +52,7 @@ const Profile = ({ user, setUser }) => {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent for authentication
           },
         }
       );
@@ -79,26 +79,26 @@ const Profile = ({ user, setUser }) => {
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
-        setUsername(userData.username);
+        setUser(userData); // Set user data in state
+        setUsername(userData.username); // Initialize editing fields
         setBio(userData.bio);
-        setIsAuthenticated(true);
+        setIsAuthenticated(true); // User is authenticated
 
         // Fetch the user's stories, bookmarks, and comments after fetching user data
         await fetchUserStories(userData.id);
-        await fetchUserBookmarks(userData.id);
-        await fetchUserComments(userData.id);
+        await fetchUserBookmarks(userData.id); // Fetch user's bookmarks
+        await fetchUserComments(userData.id); // Fetch comments posted by the user
       } else {
         console.error("Failed to fetch user data");
-        setIsAuthenticated(false);
+        setIsAuthenticated(false); // Not authenticated
         navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      setIsAuthenticated(false);
+      setIsAuthenticated(false); // Handle error as unauthenticated
       navigate("/login");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading once user data is fetched
     }
   };
 
@@ -110,7 +110,7 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const userStories = await response.json();
-        setStories(userStories);
+        setStories(userStories); // Set stories in state
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
@@ -123,7 +123,7 @@ const Profile = ({ user, setUser }) => {
     try {
       const token = localStorage.getItem("token");
       const bookmarkedStories = await fetchBookmarkedStories(userId, token);
-      setBookmarks(bookmarkedStories);
+      setBookmarks(bookmarkedStories); // Set bookmarks in state
     } catch (error) {
       console.error("Error fetching user bookmarks:", error);
       setError("An error occurred while fetching bookmarks.");
@@ -138,7 +138,7 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const userComments = await response.json();
-        setComments(userComments);
+        setComments(userComments); // Set comments in state
       }
     } catch (error) {
       console.error("Error fetching user comments:", error);
@@ -147,7 +147,7 @@ const Profile = ({ user, setUser }) => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserData(); // Fetch user data once when the component mounts
   }, []);
 
   // Handle save action for editing profile
@@ -159,16 +159,16 @@ const Profile = ({ user, setUser }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent
           },
-          body: JSON.stringify({ username, bio }),
+          body: JSON.stringify({ username, bio }), // Include updated username and bio
         }
       );
 
       if (response.ok) {
-        await fetchUserData();
-        setIsEditing(false);
-        setSaveError(null);
+        await fetchUserData(); // Fetch updated data again after saving
+        setIsEditing(false); // Exit edit mode after saving
+        setSaveError(null); // Reset any previous save error
       } else {
         setSaveError("Failed to update profile");
       }
@@ -184,7 +184,7 @@ const Profile = ({ user, setUser }) => {
     );
 
     if (!confirmDelete) {
-      return;
+      return; // Exit the function if the user cancels
     }
 
     try {
@@ -210,7 +210,7 @@ const Profile = ({ user, setUser }) => {
         setUser(null);
 
         // Redirect to the homepage
-        navigate("/");
+        navigate("/"); // Call navigate here for redirection
       } else {
         const textResponse = await response.text();
         const responseData = JSON.parse(textResponse);
@@ -271,7 +271,7 @@ const Profile = ({ user, setUser }) => {
       );
 
       if (response.ok) {
-        await fetchUserData();
+        await fetchUserData(); // Refresh user data to include the new profile picture
       } else {
         console.error("Failed to update profile picture");
       }
@@ -283,7 +283,7 @@ const Profile = ({ user, setUser }) => {
   const handleUploadButtonClick = async (file) => {
     if (!file) {
       console.error("No file selected for upload.");
-      return;
+      return; // Exit if no file
     }
 
     try {
@@ -307,9 +307,9 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const result = await response.json();
-        const profileUrl = result.img_url;
-        setImage(profileUrl);
-        await updateUserProfileWithImage(profileUrl);
+        const profileUrl = result.img_url; // Assuming backend returns { img_url: 'URL' }
+        setImage(profileUrl); // Update the image in state
+        await updateUserProfileWithImage(profileUrl); // Update user profile with the new image URL
       } else {
         console.error("Failed to upload image");
       }
@@ -346,11 +346,13 @@ const Profile = ({ user, setUser }) => {
   };
 
   if (loading) {
+
     return <div>Loading user data...</div>;
   }
   if (!isAuthenticated || !user) {
     return <div>Redirecting to login...</div>;
   }
+
 
   return (
     <>
@@ -486,16 +488,35 @@ const Profile = ({ user, setUser }) => {
                           <button
                             onClick={() => handleReadMore(comment.storyId)}
                             className="button"
+
                           >
-                            View Story
-                          </button>
+                            {image ? (
+                              <img
+                                src={URL.createObjectURL(image)}
+                                alt="upload image"
+                                className="img-display-after"
+                              />
+                            ) : (
+                              <img
+                                src={user.profilePicture || "./photo.png"}
+                                alt="upload image"
+                                className="img-display-before"
+                              />
+                            )}
+                          </div>
+                          <input
+                            id="image-upload-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            ref={hiddenFileInput}
+                            style={{ display: "none" }}
+                          />
                           <button
-                            onClick={() =>
-                              handleCommentDelete(comment.commentId)
-                            }
                             className="button"
+                            onClick={() => handleUploadButtonClick(image)}
                           >
-                            Delete
+                            Upload Image
                           </button>
                         </li>
                       ))}
@@ -537,12 +558,14 @@ const Profile = ({ user, setUser }) => {
                 ) : (
                   <p>No comments found</p>
                 )}
+
               </div>
 
               {/* Bookmarks Section */}
               <div className="profile-container">
                 <h2>Your Bookmarks</h2>
                 {bookmarks.length > 0 ? (
+
                   <>
                     <ul className="bookmark-list">
                       {currentBookmarks.map((bookmark) => (
@@ -592,10 +615,12 @@ const Profile = ({ user, setUser }) => {
                       </button>
                     </div>
                   </>
+
                 ) : (
                   <p>No bookmarks found.</p>
                 )}
               </div>
+
             </div>
             // Stories Section
             <div className="profile-container">
@@ -660,6 +685,42 @@ const Profile = ({ user, setUser }) => {
                     </button>
                   </div>
                 </>
+              ) : (
+                <p>Nothing to find here...</p>
+              )}
+
+            </div>
+
+            {/* Stories Section */}
+            <div className="profile-container">
+              <h2>Your Stories</h2>
+              {error && <p className="error-message">{error}</p>}
+
+              {stories.length > 0 ? (
+                <ul className="story-list">
+                  {stories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                        <button
+                          onClick={() => handleStoryDelete(story.storyId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
               ) : (
                 <p>Nothing to find here...</p>
               )}
