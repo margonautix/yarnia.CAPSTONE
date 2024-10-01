@@ -159,6 +159,16 @@ body {
   border-radius: 10px;
 }
 
+.stats-group {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.stats-group p {
+  padding: 10px;
+}
+
 /* Sidebar Styles */
 .gif {
   display: flex;
@@ -168,7 +178,7 @@ body {
   padding-bottom: -30px;
 }
 .sidebar {
-  height: 22.7%;
+  height: 18%;
   width: 90%;
   background: #ccd5ae;
   border-radius: 8px;
@@ -265,6 +275,7 @@ body {
   transition: transform 0.3s;
   display: flex;
   flex-direction: column;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .story-card:hover {
