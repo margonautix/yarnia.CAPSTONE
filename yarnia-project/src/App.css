@@ -445,6 +445,11 @@ body {
   margin: auto;
 }
 
+.delete-account {
+  background-color: #733014;
+  margin-bottom: 1%;
+}
+
 #bio.form-textarea {
   min-width: 300px;
   min-height: 200px;

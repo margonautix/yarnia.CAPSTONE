@@ -681,9 +681,14 @@ const Profile = ({ user, setUser }) => {
           </div>
         </div>
       </section>
-      <button onClick={() => deleteUserAccount(authorId)}>
-        Delete Account
-      </button>
+      <div className="button-group">
+        <button
+          className="delete-account"
+          onClick={() => deleteUserAccount(authorId)}
+        >
+          Delete Account
+        </button>
+      </div>
     </>
   );
 };
