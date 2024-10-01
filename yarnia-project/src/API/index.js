@@ -452,3 +452,27 @@ export async function fetchUserStoriesById(userId) {
     throw error;
   }
 }
+
+// Function to upload a profile picture
+export async function uploadProfilePicture(userId, file) {
+  const formData = new FormData();
+  formData.append('profilePic', file); // Append the file to the form data
+  formData.append('userId', userId); // Include the userId
+
+  try {
+    const response = await fetch(`${API_URL}/upload-profile-pic`, {
+      method: 'POST',
+      body: formData, // Send the form data
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload profile picture');
+    }
+
+    const data = await response.json(); // Get the updated user data
+    return data; // Return the updated user object
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw error; // Rethrow the error for further handling
+  }
+}

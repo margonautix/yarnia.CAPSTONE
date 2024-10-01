@@ -21,6 +21,7 @@ model User {
   joinedOn DateTime @default(now())
   bio      String?
   isAdmin  Boolean  @default(false) // Admin status
+  profilePic  String?   // Add this line for profile picture URL
 
   // Relations
   bookmarks Bookmark[]

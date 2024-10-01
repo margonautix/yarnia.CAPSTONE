@@ -11,6 +11,14 @@ const bcrypt = require("bcryptjs");
 
 const JWT = process.env.JWT || "shhh";
 
+const multer = require('multer');
+// const path = require('path');
+
+
+
+const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
+
 app.use(express.json());
 app.use(require("morgan")("dev"));
 app.use(
@@ -812,3 +820,29 @@ app.post("/api/upload/profile_pic", (req, res) => {
     res.json({ img_url: `http://localhost:3000/${filePath}` });
   });
 });
+
+
+
+
+
+// Endpoint to upload a profile picture
+router.post('/upload-profile-pic', upload.single('profilePic'), async (req, res) => {
+  try {
+    const { userId } = req.body; // Assuming you send userId in the request body
+    const filePath = `/uploads/${req.file.filename}`;
+
+    // Update user with the new profile picture URL
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { profilePic: filePath },
+    });
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    res.status(500).send("Error uploading profile picture");
+  }
+});
+
+module.exports = router;
+
