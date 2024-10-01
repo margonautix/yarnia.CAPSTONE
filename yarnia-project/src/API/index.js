@@ -426,17 +426,10 @@ export async function fetchUserProfileById(authorId) {
 }
 
 export async function fetchUserStoriesById(userId) {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("User is not authenticated.");
-  }
-
   try {
     const response = await fetch(`${API_URL}/users/${userId}/stories`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include token for authorization if required
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // No token needed
       },
     });
 
