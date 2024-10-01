@@ -27,6 +27,8 @@ export default function SingleStory({ user }) {
   const [comments, setComments] = useState([]); // Holds comments for the story
   const [newComment, setNewComment] = useState(""); // Store new comment input
   const [bookmarked, setBookmarked] = useState(false); // Track bookmark status
+  const [title, setTitle] = useState(""); // Store title while editing
+  const [summary, setSummary] = useState(""); // Store summary while editing
 
   // Fetch the story and comments from the server
   const fetchStoryAndComments = async (storyId) => {
@@ -35,6 +37,8 @@ export default function SingleStory({ user }) {
       if (storyResponse) {
         setStory(storyResponse); // Set the story state
         setContent(storyResponse.content); // Set the content for editing
+        setTitle(storyResponse.title); // Set the title for editing
+        setSummary(storyResponse.summary); // Set the summary for editing
 
         // Fetch the comments related to the story
         const commentsResponse = await fetchComments(storyId); // Ensure this API call works
@@ -89,7 +93,12 @@ export default function SingleStory({ user }) {
   // Function to handle content update
   const handleSaveContent = async () => {
     try {
-      const response = await updateStoryContent(storyId, content); // Send updated content to API
+      // Send updated title, summary, and content to the API
+      const response = await updateStoryContent(storyId, {
+        title,
+        summary,
+        content,
+      });
       if (response) {
         setIsEditing(false); // Exit editing mode after saving
         fetchStoryAndComments(storyId); // Refresh the story data
@@ -219,39 +228,52 @@ export default function SingleStory({ user }) {
     <div className="story-container">
       <main>
         <ul className="story-single">
-          {/* Display story title */}
-          <h2>{story?.title || "No Title"}</h2>
-          <h4>
-            Author:{" "}
-            {story?.author?.username ? (
-              <Link to={`/users/${story.authorId}`}>
-                {story.author.username}
-              </Link>
+          {/* Display or edit story title */}
+          <div>
+            {isEditing ? (
+              <input
+                type="text"
+                value={title} // Controlled input for title
+                onChange={(e) => setTitle(e.target.value)} // Update title state
+                placeholder="Enter story title"
+              />
             ) : (
-              "Unknown Author"
+              <h2>{story?.title || "No Title"}</h2> // Display the title when not editing
             )}
-          </h4>
-          <h4>Description: {story?.summary || "No Description"}</h4>
+          </div>
 
-          {/* Display or edit story content */}
+          {/* Display or edit story summary */}
+          <div>
+            {isEditing ? (
+              <textarea
+                value={summary} // Controlled textarea for summary
+                onChange={(e) => setSummary(e.target.value)} // Update summary state
+                placeholder="Enter story summary"
+              />
+            ) : (
+              <h4>Description: {story?.summary || "No Description"}</h4> // Display the summary when not editing
+            )}
+          </div>
+
+          {/* Existing content editing section */}
           <div>
             {isEditing ? (
               <ReactQuill
-                value={content}
+                value={content} // Controlled editor for content
                 onChange={setContent} // Update content state
                 modules={{
                   toolbar: [
-                    [{ header: "1" }, { header: "2" }, { font: [] }], // Headers and font styles
-                    [{ size: [] }], // Font sizes
-                    ["bold", "italic", "underline", "strike", "blockquote"], // Formatting options
+                    [{ header: "1" }, { header: "2" }, { font: [] }],
+                    [{ size: [] }],
+                    ["bold", "italic", "underline", "strike", "blockquote"],
                     [
                       { list: "ordered" },
                       { list: "bullet" },
                       { indent: "-1" },
                       { indent: "+1" },
-                    ], // Lists and indentation
-                    [{ align: "justify" }], // Alignment options
-                    ["clean"], // Clear formatting
+                    ],
+                    [{ align: "justify" }],
+                    ["clean"],
                   ],
                 }}
                 formats={[
@@ -266,7 +288,7 @@ export default function SingleStory({ user }) {
                   "list",
                   "bullet",
                   "indent",
-                  "align", // Add text alignment formats
+                  "align",
                 ]}
               />
             ) : (
@@ -274,7 +296,7 @@ export default function SingleStory({ user }) {
                 className="story-content"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(story?.content || "No Content"),
-                }} // Use DOMPurify to sanitize and render the content as HTML
+                }}
               />
             )}
           </div>
@@ -326,8 +348,6 @@ export default function SingleStory({ user }) {
               </button>
             </form>
           )}
-
-          {/* Display error if there is any */}
           {error && <p className="error">{error}</p>}
         </ul>
       </main>
