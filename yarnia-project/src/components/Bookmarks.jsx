@@ -8,16 +8,13 @@ const Bookmarks = ({ user }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  console.log("testing");
-
   useEffect(() => {
-    console.log("Bookmarks data:", bookmarks); // Add this to check the structure of the bookmarks
   }, [bookmarks]);
 
   useEffect(() => {
     const getBookmarks = async () => {
       try {
-        const data = await fetchBookmarkedStories(user.id, token); // Fetch bookmarks from the API
+        const data = await fetchBookmarkedStories(user.id, token); 
         setBookmarks(data);
       } catch (error) {
         console.error("Failed to fetch bookmarks", error);
@@ -29,18 +26,11 @@ const Bookmarks = ({ user }) => {
     if (user?.id) {
       getBookmarks();
     }
-  }, [user?.id, token]); // Add user.id and token as dependencies
+  }, [user?.id, token]); 
 
   const handleRemoveBookmark = async (storyId, bookmarkId) => {
-    console.log(
-      "Deleting bookmark with storyId:",
-      storyId,
-      "and bookmarkId:",
-      bookmarkId
-    );
     try {
       await removeBookmark(storyId, user.id, token, bookmarkId);
-      // Update the bookmarks list locally by filtering out the removed bookmark
       setBookmarks(
         bookmarks.filter((bookmark) => bookmark.bookmarkId !== bookmarkId)
       );
@@ -50,7 +40,7 @@ const Bookmarks = ({ user }) => {
   };
 
   const handleViewStory = (storyId) => {
-    navigate(`/stories/${storyId}`); // Navigate to the story details page
+    navigate(`/stories/${storyId}`); 
   };
 
   if (loading) {
@@ -71,7 +61,7 @@ const Bookmarks = ({ user }) => {
           <p>
             <strong>Author:</strong>{" "}
             {bookmark.story.author?.username || "Unknown"}{" "}
-            {/* Display author's username */}
+
           </p>
           <p>
             <strong>Summary:</strong>{" "}

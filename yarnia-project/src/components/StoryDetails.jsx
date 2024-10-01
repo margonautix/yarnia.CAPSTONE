@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchWithAuth } from "../API"; // Authenticated fetch function
+import { fetchWithAuth } from "../API"; 
 import DOMPurify from "dompurify";
 
 const StoryDetails = () => {
-  const { storyId } = useParams(); // Get storyId from route params
-  const [story, setStory] = useState(null); // Story state
-  const [error, setError] = useState(null); // Error state
+  const { storyId } = useParams(); 
+  const [story, setStory] = useState(null); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
-    // Fetch the story from the API
     const fetchStory = async () => {
       try {
         const response = await fetchWithAuth(
@@ -17,7 +16,7 @@ const StoryDetails = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setStory(data); // Set the story data
+          setStory(data); 
         } else {
           setError("Failed to load story.");
         }
@@ -47,7 +46,7 @@ const StoryDetails = () => {
       )}
       <div
         className="story-content"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(story.content) }} // Render HTML content properly
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(story.content) }} 
       ></div>
     </div>
   );

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchWithAuth } from "../API"; // Assuming this function sends authenticated requests
-import ReactQuill from "react-quill"; // Import ReactQuill component
-import "react-quill/dist/quill.snow.css"; // Import styles for ReactQuill
+import { fetchWithAuth } from "../API"; 
+import ReactQuill from "react-quill"; 
+import "react-quill/dist/quill.snow.css"; 
 
 const AddStory = () => {
-  const [title, setTitle] = useState(""); // State for story title
-  const [summary, setSummary] = useState(""); // State for story summary
-  const [content, setContent] = useState(""); // State for story content
-  const [genre, setGenre] = useState(""); // State for selected genre
-  const [error, setError] = useState(null); // State to handle errors
-  const [showPopup, setShowPopup] = useState(false); // To control pop-up visibility
+  const [title, setTitle] = useState(""); 
+  const [summary, setSummary] = useState(""); 
+  const [content, setContent] = useState(""); 
+  const [genre, setGenre] = useState(""); 
+  const [error, setError] = useState(null); 
+  const [showPopup, setShowPopup] = useState(false); 
   const navigate = useNavigate();
 
   // Predefined genres for the dropdown
@@ -29,6 +29,7 @@ const AddStory = () => {
     e.preventDefault(); // Prevent form refresh
 
     try {
+
       // Send POST request directly within handleSubmit
       const response = await fetch("http://localhost:3000/api/stories", {
         method: "POST",
@@ -46,6 +47,7 @@ const AddStory = () => {
 
       if (!response.ok) {
         throw new Error("Failed to add story");
+
       }
 
       const result = await response.json();
@@ -65,7 +67,6 @@ const AddStory = () => {
       <div className="add-story-container">
         <h1>Create a New Story</h1>
         {error && <p className="error-message">{error}</p>}{" "}
-        {/* Show error if exists */}
         <form onSubmit={handleSubmit} className="add-story-form">
           <div className="form-group">
             <label htmlFor="title">Title</label>
@@ -73,7 +74,7 @@ const AddStory = () => {
               type="text"
               id="title"
               value={title}
-              onChange={(e) => setTitle(e.target.value)} // Update title state
+              onChange={(e) => setTitle(e.target.value)} 
               required
             />
           </div>
@@ -82,7 +83,7 @@ const AddStory = () => {
             <textarea
               id="summary"
               value={summary}
-              onChange={(e) => setSummary(e.target.value)} // Update summary state
+              onChange={(e) => setSummary(e.target.value)}
               placeholder="Write a short summary (optional)"
             />
           </div>
@@ -91,7 +92,7 @@ const AddStory = () => {
             <select
               id="genre"
               value={genre}
-              onChange={(e) => setGenre(e.target.value)} // Update genre state
+              onChange={(e) => setGenre(e.target.value)}
               required
             >
               <option value="">Select a genre</option>
@@ -106,20 +107,20 @@ const AddStory = () => {
             <label htmlFor="content">Content</label>
             <ReactQuill
               value={content}
-              onChange={setContent} // Update content state using ReactQuill
+              onChange={setContent} 
               modules={{
                 toolbar: [
-                  [{ header: "1" }, { header: "2" }, { font: [] }], // Headers and font styles
+                  [{ header: "1" }, { header: "2" }, { font: [] }], 
                   [{ size: [] }], // Font sizes
-                  ["bold", "italic", "underline", "strike", "blockquote"], // Formatting options
+                  ["bold", "italic", "underline", "strike", "blockquote"], 
                   [
                     { list: "ordered" },
                     { list: "bullet" },
                     { indent: "-1" },
                     { indent: "+1" },
-                  ], // Lists and indentation
-                  [{ align: "justify" }], // Alignment options
-                  ["clean"], // Clear formatting
+                  ], 
+                  [{ align: "justify" }], 
+                  ["clean"], 
                 ],
               }}
               formats={[
@@ -134,11 +135,11 @@ const AddStory = () => {
                 "list",
                 "bullet",
                 "indent",
-                "align", // Add text alignment formats
+                "align", 
               ]}
               placeholder="Write your story here..."
               required
-              style={{ height: "500px" }} // Adjust the height as needed
+              style={{ height: "500px" }} 
             />
           </div>
           <br />
