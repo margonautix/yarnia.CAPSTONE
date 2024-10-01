@@ -249,7 +249,10 @@ export async function loginUser(email, password) {
 }
 
 // Update story content function
-export const updateStoryContent = async (storyId, content) => {
+export const updateStoryContent = async (
+  storyId,
+  { title, summary, content }
+) => {
   try {
     const response = await fetch(`${API_URL}/stories/${storyId}`, {
       method: "PUT",
@@ -257,7 +260,7 @@ export const updateStoryContent = async (storyId, content) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ title, summary, content }),
     });
 
     if (!response.ok) {
@@ -421,17 +424,10 @@ export async function fetchUserProfileById(authorId) {
 }
 
 export async function fetchUserStoriesById(userId) {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("User is not authenticated.");
-  }
-
   try {
     const response = await fetch(`${API_URL}/users/${userId}/stories`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include token for authorization if required
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // No token needed
       },
     });
 

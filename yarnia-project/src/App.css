@@ -387,9 +387,13 @@ body {
 
 /* Profile Section Wrapper */
 #whole-profile {
+  display: flex;
   padding: 30px;
   border-radius: 10px;
   margin: 20px auto;
+  max-width: 1800px;
+  justify-self: center;
+  align-items: center;
 }
 
 /* Profile Header */
@@ -406,6 +410,16 @@ body {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
+  width: fit-content;
+  max-width: 700px;
+}
+.bottom-container {
+  box-shadow: 1px 1px 5px #ba733442;
+  background-color: #faedcd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  width: fit-content;
 }
 
 .profile-stories-wrapper {
@@ -1268,11 +1282,6 @@ html {
   }
 }
 
-.yarnia-logo {
-  width:100px;
-
-}
-
 /* Single Story Component */
 .story-container {
   width: 90%;
@@ -1416,14 +1425,14 @@ button[type="submit"]:hover {
   text-align: center;
 }
 
-.yarnia-logo-1{
-  width:300px;
-  margin-top: 43px;
+.yarnia-logo-1 {
+  width: 300px;
+  margin-top: 48px;
   margin-left: 316px;
 }
 
 .yarnia-logo-2 {
-  width:300px;
-  margin-top: 43px;
+  width: 300px;
+  margin-top: 48px;
   margin-left: 584px;
 }

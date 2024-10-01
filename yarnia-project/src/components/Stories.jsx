@@ -161,7 +161,7 @@ const Stories = () => {
               <div
                 className="story-content"
                 dangerouslySetInnerHTML={{
-                  __html: selectedStory.content.slice(0, 150),
+                  __html: selectedStory.content.slice(0, 500),
                 }}
               ></div>
 
@@ -276,7 +276,7 @@ const Stories = () => {
               <div
                 className="story-content"
                 dangerouslySetInnerHTML={{
-                  __html: selectedStory.content.slice(0, 150),
+                  __html: selectedStory.content.slice(0, 500),
                 }}
               ></div>
 
