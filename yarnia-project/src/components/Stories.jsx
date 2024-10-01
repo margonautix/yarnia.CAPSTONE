@@ -125,16 +125,16 @@ const Stories = () => {
               </li>
             ))}
           </ul>
-
-          {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search by title or author"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-bar"
-          />
-
+          <div id="searchbar">
+            {/* Search Bar */}
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-bar"
+            />
+          </div>
           <br />
           <br />
           <img src={catGif} alt="Harlee" className="gif" />

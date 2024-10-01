@@ -101,7 +101,11 @@
   margin: 5%;
   flex-direction: column;
   align-items: center;
-  background-color: #ccd5ae;
+  background: url("./components/images/Yarnia.gif");
+  background-repeat: no-repeat;
+  height: auto;
+  width: 30%;
+  padding: 40px;
 }
 
 .login h2 {
@@ -157,8 +161,10 @@ body {
   left: 0;
   width: 100%;
   margin: 0;
+  padding-bottom: -30px;
 }
 .sidebar {
+  height: 22.7%;
   width: fit-content;
   background: #ccd5ae;
   border-radius: 8px;
@@ -167,6 +173,8 @@ body {
 }
 
 .sidebar h2 {
+  padding-left: 10px;
+  padding-top: 10px;
   font-size: 1.5em;
   margin-bottom: 15px;
   color: #606c38;
@@ -174,7 +182,7 @@ body {
 
 .sidebar-menu {
   list-style-type: none;
-  padding: 0;
+  padding: 10px;
 }
 
 .sidebar-menu li {
@@ -192,9 +200,12 @@ body {
   font-weight: bold;
   color: #283618;
 }
+#searchbar {
+  padding: 10px;
+}
 
 .search-bar {
-  width: calc(100% - 20px);
+  width: 50%;
   padding: 10px;
   margin-top: 20px;
   border: 1px solid #606c38;
