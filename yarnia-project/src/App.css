@@ -1228,7 +1228,7 @@ html {
 
 /* Submit Button */
 .register-form .login-button {
-  padding: 15px
+  padding: 15px;
   background-color: #606c3864; /* Deep green for button */
   color: #fefae0; /* Light cream text color */
   font-size: 1em;
