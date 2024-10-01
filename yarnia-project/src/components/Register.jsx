@@ -37,6 +37,7 @@ const Register = ({ setUser }) => {
 
   return (
     <div class="login">
+      <br />
       <h2>Register New Account</h2>
       {error && <p className="error-message">{error}</p>}
       <div>

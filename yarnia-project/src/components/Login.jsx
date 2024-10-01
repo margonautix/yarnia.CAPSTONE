@@ -33,9 +33,10 @@ const Login = ({ setUser }) => {
 
   return (
     <div class="login">
+      <br />
       <h2>Login</h2>
       {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <form class="register-form" onSubmit={handleSubmit}>
         <label>
           <input
             type="email"
@@ -44,7 +45,6 @@ const Login = ({ setUser }) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
-        <br />
         <label>
           <input
             type="password"
@@ -53,8 +53,9 @@ const Login = ({ setUser }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <br />
-        <button type="submit">Submit</button>
+        <button className="login-button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
