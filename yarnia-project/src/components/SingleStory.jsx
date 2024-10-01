@@ -207,84 +207,35 @@ export default function SingleStory({ user }) {
     <div className="story-container">
       <main>
         <ul className="story-single">
-          <li>
-            <h2>{story?.title || "No Title"}</h2>
-            <h4>
-              Author:{" "}
-              {story?.author?.username ? (
-                <Link to={`/users/${story.authorId}`}>
-                  {story.author.username}
-                </Link>
-              ) : (
-                "Unknown Author"
-              )}
-            </h4>
-          </li>
-        </ul>
-        <div>
-          {isEditing ? (
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter story title"
-            />
-          ) : (
-            <h2>{story?.title || "No Title"}</h2>
-          )}
-        </div>
+          {/* Display or edit story title */}
+          <div className="form-group">
+            {isEditing ? (
+              <input
+                type="text"
+                id="title"
+                value={title} // Controlled input for title
+                onChange={(e) => setTitle(e.target.value)} // Update title state
+                placeholder="Enter story title"
+              />
+            ) : (
+              <h2>{story?.title || "No Title"}</h2> // Display the title when not editing
+            )}
+          </div>
 
-        <div>
-          {isEditing ? (
-            <textarea
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
-              placeholder="Enter story summary"
-            />
-          ) : (
-            <h4>Description: {story?.summary || "No Description"}</h4>
-          )}
-        </div>
+          {/* Display or edit story summary */}
+          <div className="form-group">
+            {isEditing ? (
+              <textarea
+                value={summary} // Controlled textarea for summary
+                id="summary"
+                onChange={(e) => setSummary(e.target.value)} // Update summary state
+                placeholder="Enter story summary"
+              />
+            ) : (
+              <h4>Description: {story?.summary || "No Description"}</h4> // Display the summary when not editing
+            )}
+          </div>
 
-        <div>
-          {isEditing ? (
-            <ReactQuill
-              value={content}
-              onChange={setContent}
-              modules={{
-                toolbar: [
-                  [{ header: "1" }, { header: "2" }, { font: [] }],
-                  [{ size: [] }],
-                  ["bold", "italic", "underline", "strike", "blockquote"],
-                  [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
-                  [{ align: "justify" }],
-                  ["clean"],
-                ],
-              }}
-              formats={[
-                "header",
-                "font",
-                "size",
-                "bold",
-                "italic",
-                "underline",
-                "strike",
-                "blockquote",
-                "list",
-                "bullet",
-                "indent",
-                "align",
-              ]}
-            />
-          ) : (
-            <div
-              className="story-content"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(story?.content || "No Content"),
-              }}
-            />
-          )}
-        </div>
 
         {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
           <div className="button-group">
@@ -308,13 +259,40 @@ export default function SingleStory({ user }) {
               {bookmarked ? "Bookmarked" : "Bookmark"}
             </button>
           </div>
-        )}
 
-        <h2 onClick={toggleComments} className="toggle-comments-btn">
-          {isCommentsOpen
-            ? "Hide Comments"
-            : `Show Comments (${comments.length})`}
-        </h2>
+          {/* Edit and Save/Delete Buttons */}
+          {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
+            <div className="button-group">
+              {isEditing ? (
+                <button onClick={handleSaveContent} className="button">
+                  Save
+                </button>
+              ) : (
+                <button onClick={() => setIsEditing(true)} className="button">
+                  Edit
+                </button>
+              )}
+              <button onClick={handleDeleteStory} className="button">
+                Delete
+              </button>
+            </div>
+          )}
+          <div className="button-group">
+            <button
+              className="button"
+              onClick={handleBookmark}
+              disabled={bookmarked}
+            >
+              {bookmarked ? "Bookmarked" : "Bookmark"}
+            </button>
+          </div>
+          {/* Comments toggle and display */}
+          <h2 onClick={toggleComments} className="toggle-comments-btn">
+            {isCommentsOpen
+              ? "Hide Comments"
+              : `Show Comments (${comments.length})`}
+          </h2>
+
 
         {isCommentsOpen && renderComments()}
 

@@ -47,6 +47,13 @@ const Profile = ({ user, setUser }) => {
   };
 
   const handleStoryDelete = async (storyId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this story? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await fetchWithAuth(
         `http://localhost:3000/api/stories/${storyId}`,

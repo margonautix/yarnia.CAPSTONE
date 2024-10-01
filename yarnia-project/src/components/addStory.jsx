@@ -26,36 +26,39 @@ const AddStory = () => {
   ];
 
   const handleSubmit = async (e) => {
-    if (!title || !content || !genre) {
-      setError("Title, content, and genre are required.");
-      return;
-    }
+    e.preventDefault(); // Prevent form refresh
 
     try {
-      const response = await fetchWithAuth(
-        "http://localhost:3000/api/stories",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            title,
-            summary,
-            content,
-            genre,
-          }),
-        }
-      );
 
-      if (response.storyId) {
-        setTitle("");
-        setSummary("");
-        setContent("");
-        setGenre("");
+      // Send POST request directly within handleSubmit
+      const response = await fetch("http://localhost:3000/api/stories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // If using tokens
+        },
+        body: JSON.stringify({
+          title,
+          summary,
+          content,
+          genre,
+        }),
+      });
 
-        navigate(`/${response.storyId}`);
+      if (!response.ok) {
+        throw new Error("Failed to add story");
+
       }
+
+      const result = await response.json();
+
+      console.log("Story added successfully:", result);
+
+      // Story added successfully, navigate to home page
+      navigate(`/stories/${result.storyId}`);
     } catch (error) {
-      console.error("Error creating story:", error);
-      setError(error.message || "An error occurred while creating the story.");
+      console.error("Failed to add the story:", error);
+      setError("Failed to add the story.");
     }
   };
 
