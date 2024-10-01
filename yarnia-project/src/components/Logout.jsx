@@ -5,10 +5,8 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Clear the token from localStorage
     localStorage.removeItem("token");
-
-    // Redirect the user to the main book page ("/books" in this example)
+    
     navigate("/books");
   }, [navigate]);
 

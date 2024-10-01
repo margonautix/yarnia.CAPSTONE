@@ -14,8 +14,7 @@ export default function AdminUsersFeed() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const allUsers = await fetchAllUsers(); // Fetch all users from the API
-        console.log(allUsers); // Log users to verify structure
+        const allUsers = await fetchAllUsers(); 
         setUsers(allUsers);
         setFilteredUsers(allUsers);
       } catch (err) {
@@ -23,14 +22,15 @@ export default function AdminUsersFeed() {
       }
     };
 
+
     fetchUsers();
   }, []);
 
   // Handle delete action for users
   const handleDeleteUser = async (userId) => {
     try {
-      await deleteUsers(userId); // Assuming deleteUsers takes only userId as a parameter
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); // Remove the deleted user from state
+      await deleteUsers(userId); 
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); 
       setFilteredUsers((prevUsers) =>
         prevUsers.filter((user) => user.id !== userId)
       );
@@ -45,7 +45,7 @@ export default function AdminUsersFeed() {
     const term = e.target.value;
     setSearchTerm(term);
     if (term.trim() === "") {
-      setFilteredUsers(users); // If the search term is empty, reset to all users
+      setFilteredUsers(users); 
     } else {
       const lowerCaseTerm = term.toLowerCase();
       const filtered = users.filter(
@@ -56,7 +56,7 @@ export default function AdminUsersFeed() {
       );
       setFilteredUsers(filtered);
     }
-    setCurrentPage(1); // Reset to the first page whenever the search changes
+    setCurrentPage(1); 
   };
 
   // Pagination logic
@@ -75,7 +75,6 @@ export default function AdminUsersFeed() {
       <h2>All Users</h2>
       {error && <p className="error">{error}</p>}
 
-      {/* Search Bar */}
       <input
         type="text"
         placeholder="Search by username or email"
@@ -86,11 +85,8 @@ export default function AdminUsersFeed() {
       <br />
       <br />
 
-      {/* Pagination Controls */}
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="pagination">
-          {/* Previous Button */}
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -99,11 +95,9 @@ export default function AdminUsersFeed() {
             Previous
           </button>
 
-          {/* Page Numbers Logic */}
           {Array.from({ length: totalPages }, (_, index) => {
             const pageNumber = index + 1;
 
-            // Show the page if it meets the conditions: current page, previous two, next two
             if (
               pageNumber === currentPage ||
               (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
@@ -124,7 +118,6 @@ export default function AdminUsersFeed() {
             return null;
           })}
 
-          {/* Next Button */}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
@@ -140,12 +133,10 @@ export default function AdminUsersFeed() {
           currentUsers.map((user) => (
             <li key={user.id} className="user-item">
               <div className="user-content">
-                {/* Placeholder Avatar with Initials */}
                 <div className="user-avatar">
                   {user.username ? user.username.charAt(0).toUpperCase() : "U"}
                 </div>
 
-                {/* User Details Section */}
                 <div className="user-details">
                   <span className="user-name">
                     <Link to={`/users/${user.id}`}>
@@ -160,7 +151,6 @@ export default function AdminUsersFeed() {
                   </span>
                 </div>
               </div>
-              {/* Delete Button */}
               <button
                 onClick={() => handleDeleteUser(user.id)}
                 className="delete-button"

@@ -18,15 +18,12 @@ const Register = ({ setUser }) => {
       const result = await createNewUser(username, email, password);
 
       if (result && result.token) {
-        // Store the token and user data in localStorage
         const userData = { username, email };
         localStorage.setItem("token", result.token);
         localStorage.setItem("user", JSON.stringify(userData));
 
-        // Update the parent component's user state
         setUser(userData);
 
-        // Navigate to the profile page after successful registration
         navigate("/profile");
       }
     } catch (error) {

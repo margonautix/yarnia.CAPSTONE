@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../API"; // Assuming this is a function to handle your login logic
+import { loginUser } from "../API"; 
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
@@ -15,13 +15,13 @@ const Login = ({ setUser }) => {
     try {
       const response = await loginUser(email, password);
       if (response && response.token) {
-        // Save token and user info to localStorage
+
         localStorage.setItem("token", response.token);
         localStorage.setItem("user", JSON.stringify(response.user));
 
-        setUser(response.user); // Update the user state in the App component
+        setUser(response.user); 
 
-        navigate("/profile"); // Redirect to profile page after successful login
+        navigate("/profile"); 
       } else {
         setError("Invalid login credentials");
       }

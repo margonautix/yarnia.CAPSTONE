@@ -6,7 +6,6 @@ import yarniaLogo from "./images/yarniaLogo.png"
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // Example categories
   const categories = [
     "Fiction",
     "Non-fiction",
@@ -16,7 +15,6 @@ const NavBar = ({ user, setUser }) => {
     "Horror",
   ];
 
-  // State to handle selected category
   const [selectedCategory, setSelectedCategory] = useState("");
 
   // Handle category change and navigate to the appropriate search page
@@ -24,18 +22,17 @@ const NavBar = ({ user, setUser }) => {
     const selected = event.target.value;
     setSelectedCategory(selected);
     if (selected) {
-      navigate(`/search?category=${selected}`); // Assuming you have query parameters in your route
+      navigate(`/search?category=${selected}`); 
     }
   };
 
   // Handle logout functionality
   const handleLogout = (event) => {
-    event.preventDefault(); // Prevent default link behavior
+    event.preventDefault(); 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null); // Clear the user state
-    navigate("/login"); // Redirect to login page after logging out
-  };
+    setUser(null); 
+    navigate("/login");
 
   return (
     <nav className="navbar">
@@ -54,7 +51,7 @@ const NavBar = ({ user, setUser }) => {
         {user ? (
           <>
             <li>
-              <Link to="/add-story">Add Story</Link> {/* Add Story Link */}
+              <Link to="/add-story">Add Story</Link> 
             </li>
             <li>
               <Link to="/profile">Profile</Link>

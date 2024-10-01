@@ -37,7 +37,7 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    z-index: 2; /* Keep higher than the GIF */
+    z-index: 2; 
     position: relative;
   }
   
@@ -58,7 +58,7 @@
     font-size: 18px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
-    z-index: 2; /* Ensure it stays above the GIF */
+    z-index: 2; 
     position: relative;
   }
   
@@ -71,16 +71,16 @@
     background-color: #0f5a00;
     border: none;
     cursor: pointer;
-    z-index: 2; /* Higher than the GIF */
+    z-index: 2; 
     position: relative;
   }
   
   .navbar-gif {
     margin-top: 30px;
     margin-left: -20px;
-    z-index: 1; /* Lower than the text and buttons */
+    z-index: 1; 
     max-width: 80px;
-    position: relative; /* Required for z-index to work */
+    position: relative; 
   }
   
   .navbar button:hover {
@@ -115,7 +115,7 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    padding: 120px 20px 20px; /* Adjust padding to account for fixed navbar */
+    padding: 120px 20px 20px; 
     max-width: 1280px;
     margin: 0 auto;
     margin-top: 60px;
@@ -170,7 +170,6 @@
     background-color: #45a049;
   }
   
-  /* Responsive Stories Container */
   @media (max-width: 768px) {
     .stories-container {
       flex-direction: column;
@@ -273,7 +272,7 @@
   }
   
   .modal-content {
-    position: relative; /* Add relative positioning to the modal content */
+    position: relative; 
     background-color: #fff8dd;
     color: black;
     padding: 20px;
@@ -308,10 +307,10 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
-    font-size: 24px; /* You can adjust the size if needed */
+    font-size: 24px; 
     background: none;
     border: none;
-    color: #333; /* Set color to make the X visible */
+    color: #333; 
     margin-top: 0px;
   }
   
@@ -333,42 +332,41 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Ensure the content is centered horizontally */
+    align-items: center;
     padding: 40px 20px;
-    background-color: #151515; /* Darker background color */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow for depth */
-    color: #000000; /* Light text color for contrast */
-  }
+    background-color: #151515; 
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
+    color: #000000; 
   
   /* Story Single Styling */
   .story-single {
     list-style-type: none;
-    background-color: #444; /* Darker background for the story card */
+    background-color: #444; 
     padding: 20px;
     max-width: 600px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    color: #000000; /* Light text color for contrast */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+    color: #000000; 
   }
   
   /* Headings */
   .story-single h2 {
     font-size: 2rem;
-    color: #000000; /* Green accent for heading */
+    color: #000000; 
     margin-bottom: 10px;
   }
   
   .story-single h4 {
     font-size: 1.2rem;
-    color: #00c368; /* Green accent for subheadings */
+    color: #00c368; 
     margin-bottom: 10px;
   }
   
   /* Paragraph and text content */
   .story-single p {
     font-size: 1.2rem;
-    color: #000000; /* Softer contrast for text */
+    color: #000000; 
     margin-bottom: 10px;
   }
   
@@ -377,30 +375,30 @@
   .story-single p textarea {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    width: 100%; /* Full width */
-    height: 300px; /* Increased height */
-    padding: 10px; /* Padding for better readability */
-    background-color: #555; /* Darker background for input fields */
-    color: #000000; /* Light text color */
-    border: 1px solid #00ff88; /* Green border for input */
+    width: 100%; 
+    height: 300px; 
+    padding: 10px; 
+    background-color: #555; 
+    color: #000000;
+    border: 1px solid #00ff88; 
     border-radius: 5px;
-    box-sizing: border-box; /* Ensures padding is included in width/height */
-    resize: vertical; /* Allows the user to manually resize the height if needed */
-    white-space: pre-wrap; /* Ensure text wraps properly */
-    overflow-wrap: break-word; /* Ensure long words break properly */
+    box-sizing: border-box; 
+    resize: vertical; 
+    white-space: pre-wrap; 
+    overflow-wrap: break-word; 
   }
   
   /* Input and Textarea Focus State */
   .story-single p input:focus,
   .story-single p textarea:focus {
     outline: none;
-    border-color: #00ff88; /* Green border on focus */
+    border-color: #00ff88; 
   }
   
   /* Button Styling (optional if needed) */
   .story-single button {
-    background-color: #00ff88; /* Green background for buttons */
-    color: #1e1e1e; /* Dark text color for buttons */
+    background-color: #00ff88; 
+    color: #1e1e1e;
     padding: 10px 20px;
     font-size: 1rem;
     border-radius: 5px;
@@ -410,8 +408,8 @@
   }
   
   .story-single button:hover {
-    background-color: #00cc6a; /* Darker green on hover */
-    transform: translateY(-3px); /* Slight lift on hover */
+    background-color: #00cc6a; 
+    transform: translateY(-3px); 
   }
   
   textarea {
@@ -437,7 +435,7 @@
     transform: translateY(-3px);
   }
   
-  /* Responsive Styling */
+
   @media (max-width: 768px) {
     .story-container {
       padding: 20px;
@@ -465,15 +463,14 @@
     width: fit-content;
   }
   
-  /* Ensure both containers take up equal width */
   .stories-container {
-    flex: 1; /* This makes both containers the same size */
+    flex: 1; 
     padding: 40px;
-    background-color: #585858; /* Dark gray background */
+    background-color: #585858; 
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Box shadow for depth */
-    color: #e5e5e5; /* Light text color */
-    min-height: 400px; /* Adjust min-height if needed */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
+    color: #e5e5e5; 
+    min-height: 400px; 
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -537,8 +534,8 @@
     }
   
     .stories-container {
-      width: 100%; /* Full width on smaller screens */
-      margin-bottom: 20px; /* Add spacing between sections */
+      width: 100%; 
+      margin-bottom: 20px; 
     }
   }
   /* Form group for inputs and textareas */
@@ -552,7 +549,7 @@
     margin-bottom: 10px;
     display: block;
     font-weight: bold;
-    color: #00ff88; /* Green accent for labels */
+    color: #00ff88; 
   }
   
   /* Input fields with dark background and light text */
@@ -561,9 +558,9 @@
     width: 100%;
     padding: 15px 20px;
     margin-top: 5px;
-    background-color: #333333; /* Dark input background */
-    color: #e5e5e5; /* Light text for inputs */
-    border: 1px solid #555555; /* Subtle border */
+    background-color: #333333; 
+    color: #e5e5e5; 
+    border: 1px solid #555555; 
     border-radius: 8px;
     font-size: 1.2rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
@@ -592,8 +589,8 @@
   
   /* Button styling with green accents */
   .button {
-    background-color: #00ff88; /* Green button background */
-    color: #1e1e1e; /* Dark text for contrast on green */
+    background-color: #00ff88; 
+    color: #1e1e1e; 
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -604,7 +601,7 @@
   
   /* Hover effect for buttons */
   .button:hover {
-    background-color: #00cc6a; /* Darker green on hover */
+    background-color: #00cc6a; 
   }
   
   /* Disabled button state */
@@ -616,11 +613,11 @@
   
   /* Cancel button with a red accent */
   .cancel-button {
-    background-color: #ff4b4b; /* Red for cancel button */
+    background-color: #ff4b4b; 
   }
   
   .cancel-button:hover {
-    background-color: #cc3838; /* Darker red on hover */
+    background-color: #cc3838; 
   }
   
   /* Email text color */
@@ -748,18 +745,18 @@
   .profile-stories-wrapper {
     display: flex;
     justify-content: space-between;
-    gap: 30px; /* Space between the containers */ /* Adjust the max width as needed */
+    gap: 30px; 
     margin: 0 auto;
   }
   
   /* Ensure both containers take up equal width */
   .profile-container {
-    flex: 1; /* This makes both containers the same size */
-    background-color: #585858; /* Dark gray background */
+    flex: 1; 
+    background-color: #585858; 
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Box shadow for depth */
-    color: #e5e5e5; /* Light text color */
-    min-height: 400px; /* Adjust min-height if needed */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
+    color: #e5e5e5; 
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -787,11 +784,11 @@
     font-size: 18px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
-    z-index: 2; /* Ensure it stays above the GIF */
+    z-index: 2; 
     position: relative;
     width: 100%;
   }
-  /* Optional: Adjust heading and text for better layout */
+
   h1,
   h2 {
     text-align: center;
@@ -851,8 +848,8 @@
   
     .profile-container,
     .stories-container {
-      width: 100%; /* Full width on smaller screens */
-      margin-bottom: 20px; /* Add spacing between sections */
+      width: 100%; 
+      margin-bottom: 20px; 
     }
   }
   
@@ -867,7 +864,7 @@
     margin-bottom: 10px;
     display: block;
     font-weight: bold;
-    color: #00ff88; /* Green accent for labels */
+    color: #00ff88; 
   }
   
   /* Input fields with dark background and light text */
@@ -875,9 +872,9 @@
   .form-textarea {
     padding: 15px 20px;
     margin-top: 5px;
-    background-color: #333333; /* Dark input background */
-    color: #e5e5e5; /* Light text for inputs */
-    border: 1px solid #555555; /* Subtle border */
+    background-color: #333333; 
+    color: #e5e5e5; 
+    border: 1px solid #555555; 
     border-radius: 8px;
     font-size: 1.2rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
@@ -906,8 +903,8 @@
   
   /* Button styling with green accents */
   .button {
-    background-color: #00ff88; /* Green button background */
-    color: #1e1e1e; /* Dark text for contrast on green */
+    background-color: #00ff88; 
+    color: #1e1e1e; 
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -918,7 +915,7 @@
   
   /* Hover effect for buttons */
   .button:hover {
-    background-color: #00cc6a; /* Darker green on hover */
+    background-color: #00cc6a; 
   }
   
   /* Disabled button state */
@@ -930,14 +927,13 @@
   
   /* Cancel button with a red accent */
   .cancel-button {
-    background-color: #ff4b4b; /* Red for cancel button */
+    background-color: #ff4b4b; 
   }
   
   .cancel-button:hover {
-    background-color: #cc3838; /* Darker red on hover */
+    background-color: #cc3838; 
   }
-  
-  /* Email text color */
+
   p.email {
     color: #cccccc;
   }
@@ -947,13 +943,13 @@
   }
   
   .comments-container {
-    background-color: #333; /* Dark background to blend with the theme */
+    background-color: #333; 
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
     max-width: 600px;
     margin: 20px auto;
-    color: #e5e5e5; /* Light text color */
+    color: #e5e5e5; 
   }
   
   .comments-container textarea {

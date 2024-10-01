@@ -14,7 +14,6 @@ export default function AdminCommentsFeed() {
     const fetchComments = async () => {
       try {
         const allComments = await fetchAllComments();
-        console.log(allComments); // Log comments to verify structure
         setComments(allComments);
         setFilteredComments(allComments);
       } catch (err) {
@@ -57,7 +56,7 @@ export default function AdminCommentsFeed() {
         )
       );
     }
-    setCurrentPage(1); // Reset to the first page whenever the search changes
+    setCurrentPage(1); 
   };
 
   // Pagination logic
@@ -88,7 +87,6 @@ export default function AdminCommentsFeed() {
       />
       <br />
       <br />
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
@@ -101,14 +99,12 @@ export default function AdminCommentsFeed() {
 
           {Array.from({ length: totalPages }, (_, index) => {
             const pageNumber = index + 1;
-
-            // Determine whether to show the page button
             if (
               pageNumber === currentPage ||
               (pageNumber >= currentPage - 2 &&
                 pageNumber <= currentPage + 2) ||
-              pageNumber === 1 || // Optionally, show the first page
-              pageNumber === totalPages // Optionally, show the last page
+              pageNumber === 1 || 
+              pageNumber === totalPages 
             ) {
               return (
                 <button
@@ -140,13 +136,12 @@ export default function AdminCommentsFeed() {
           currentComments.map((comment) => (
             <li key={comment.commentId} className="comment-item">
               <div className="comment-content">
-                {/* Placeholder Avatar with Initials */}
                 <div className="comment-avatar">
                   {comment.user?.username
                     ? comment.user.username.charAt(0).toUpperCase()
                     : "U"}
                 </div>
-                {/* Comment Details Section */}
+
                 <div className="comment-details">
                   <span className="comment-username">
                     {comment.user?.username || "Unknown User"}
@@ -156,7 +151,7 @@ export default function AdminCommentsFeed() {
                   </p>
                 </div>
               </div>
-              {/* Delete Button */}
+
               <button
                 onClick={() => handleDeleteComment(comment.commentId)}
                 className="delete-button"
