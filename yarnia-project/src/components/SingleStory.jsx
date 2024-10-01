@@ -4,18 +4,19 @@ import {
   fetchSingleStory,
   updateStoryContent,
   bookmarkStory,
-  deleteStory, // Ensure this import is correct
+  deleteStory, 
   fetchComments,
   postComment,
   checkBookmarkStatus,
-  deleteComment, // Import your new API function
-} from "../API"; // Adjust the API import path as necessary
-import jwt_decode from "jwt-decode"; // To decode JWT
-import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
-import ReactQuill from "react-quill"; // Import ReactQuill
-import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
+  deleteComment, 
+} from "../API"; 
+import jwt_decode from "jwt-decode"; 
+import DOMPurify from "dompurify"; 
+import ReactQuill from "react-quill"; 
+import "react-quill/dist/quill.snow.css"; 
 
 export default function SingleStory({ user }) {
+
   const { storyId } = useParams(); // Get storyId from the URL
   const navigate = useNavigate(); // For navigating after delete or save
   const [currentUser, setCurrentUser] = useState(null); // State for current user info
@@ -33,7 +34,7 @@ export default function SingleStory({ user }) {
   // Fetch the story and comments from the server
   const fetchStoryAndComments = async (storyId) => {
     try {
-      const storyResponse = await fetchSingleStory(storyId); // Fetch the story
+      const storyResponse = await fetchSingleStory(storyId); 
       if (storyResponse) {
         setStory(storyResponse); // Set the story state
         setContent(storyResponse.content); // Set the content for editing
@@ -41,9 +42,9 @@ export default function SingleStory({ user }) {
         setSummary(storyResponse.summary); // Set the summary for editing
 
         // Fetch the comments related to the story
-        const commentsResponse = await fetchComments(storyId); // Ensure this API call works
+        const commentsResponse = await fetchComments(storyId); 
         if (commentsResponse) {
-          setComments(commentsResponse); // Set the comments state
+          setComments(commentsResponse); 
         }
       } else {
         setError("Story not found.");
@@ -58,19 +59,18 @@ export default function SingleStory({ user }) {
   const fetchBookmarkStatus = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token || !currentUser) return; // If no token or user is not logged in, skip
+      if (!token || !currentUser) return; 
 
-      const { id } = jwt_decode(token); // Decode token to get user ID
-      const response = await checkBookmarkStatus(id, storyId); // Check if the user has bookmarked this story
+      const { id } = jwt_decode(token); 
+      const response = await checkBookmarkStatus(id, storyId);
       if (response.bookmarked) {
-        setBookmarked(true); // Update bookmark status
+        setBookmarked(true); 
       }
     } catch (error) {
       console.error("Failed to check bookmark status:", error);
     }
   };
 
-  // Fetch story, user data, and bookmark status when the component mounts or when storyId changes
   useEffect(() => {
     if (storyId) {
       fetchStoryAndComments(storyId);
@@ -78,16 +78,15 @@ export default function SingleStory({ user }) {
       setError("No story ID provided.");
     }
 
-    // Decode JWT and set the current user
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwt_decode(token); // Decode the token to get user info
+      const decoded = jwt_decode(token);
       setCurrentUser(decoded);
     }
   }, [storyId]);
 
   useEffect(() => {
-    fetchBookmarkStatus(); // Check bookmark status
+    fetchBookmarkStatus(); 
   }, [currentUser]);
 
   // Function to handle content update
@@ -100,8 +99,8 @@ export default function SingleStory({ user }) {
         content,
       });
       if (response) {
-        setIsEditing(false); // Exit editing mode after saving
-        fetchStoryAndComments(storyId); // Refresh the story data
+        setIsEditing(false); 
+        fetchStoryAndComments(storyId); 
       }
     } catch (error) {
       console.error("Failed to update the story:", error);
@@ -116,9 +115,9 @@ export default function SingleStory({ user }) {
     );
     if (confirmDelete) {
       try {
-        await deleteStory(storyId); // Call the deleteStory function
+        await deleteStory(storyId); 
         alert("Story deleted successfully!");
-        navigate("/"); // Navigate back to the home page after deletion
+        navigate("/"); 
       } catch (error) {
         console.error("Failed to delete the story:", error);
         alert("Failed to delete the story.");
@@ -130,17 +129,16 @@ export default function SingleStory({ user }) {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this comment?"
     );
-    if (!confirmDelete) return; // If the user cancels, exit the function
+    if (!confirmDelete) return; 
 
     try {
-      await deleteComment(storyId, commentId); // Call the API to delete the comment
+      await deleteComment(storyId, commentId); 
 
-      // Update the comments state by removing the deleted comment
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.commentId !== commentId)
       );
 
-      alert("Comment deleted successfully!"); // Optional: You can remove this alert if you'd prefer no prompt
+      alert("Comment deleted successfully!"); 
     } catch (error) {
       console.error("Failed to delete the comment:", error);
       setError("Failed to delete the comment.");
@@ -153,10 +151,10 @@ export default function SingleStory({ user }) {
       setError("You must be logged in to bookmark stories.");
       return;
     }
-    const token = localStorage.getItem("token"); // Get the token
+    const token = localStorage.getItem("token"); 
     try {
-      await bookmarkStory(storyId, currentUser.id, token); // Pass the token correctly
-      setBookmarked(true); // Update bookmark status
+      await bookmarkStory(storyId, currentUser.id, token); 
+      setBookmarked(true); 
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
@@ -164,7 +162,7 @@ export default function SingleStory({ user }) {
 
   // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
+    setIsCommentsOpen(!isCommentsOpen); 
   };
 
   // Handle new comment submission
@@ -173,9 +171,9 @@ export default function SingleStory({ user }) {
     if (!newComment) return;
 
     try {
-      await postComment(storyId, newComment); // Post the new comment to the API
-      setNewComment(""); // Clear the comment input
-      fetchStoryAndComments(storyId); // Refresh the comments
+      await postComment(storyId, newComment); 
+      setNewComment(""); 
+      fetchStoryAndComments(storyId); 
     } catch (error) {
       console.error("Failed to post comment:", error);
       setError("Failed to post comment.");
@@ -191,10 +189,10 @@ export default function SingleStory({ user }) {
               <strong>
                 {comment.user?.username ? (
                   currentUser?.id === comment.userId ? (
-                    // Link to the current user's profile
+
                     <Link to="/profile">{comment.user.username}</Link>
                   ) : (
-                    // Link to other users' profiles
+
                     <Link to={`/users/${comment.userId}`}>
                       {comment.user.username}
                     </Link>
@@ -228,6 +226,14 @@ export default function SingleStory({ user }) {
     <div className="story-container">
       <main>
         <ul className="story-single">
+
+          <h2>{story?.title || "No Title"}</h2>
+          <h4>
+            Author:{" "}
+            {story?.author?.username ? (
+              <Link to={`/users/${story.authorId}`}>
+                {story.author.username}
+              </Link>
           {/* Display or edit story title */}
           <div>
             {isEditing ? (
@@ -250,6 +256,7 @@ export default function SingleStory({ user }) {
                 onChange={(e) => setSummary(e.target.value)} // Update summary state
                 placeholder="Enter story summary"
               />
+
             ) : (
               <h4>Description: {story?.summary || "No Description"}</h4> // Display the summary when not editing
             )}
@@ -259,6 +266,7 @@ export default function SingleStory({ user }) {
           <div>
             {isEditing ? (
               <ReactQuill
+
                 value={content} // Controlled editor for content
                 onChange={setContent} // Update content state
                 modules={{
@@ -266,6 +274,7 @@ export default function SingleStory({ user }) {
                     [{ header: "1" }, { header: "2" }, { font: [] }],
                     [{ size: [] }],
                     ["bold", "italic", "underline", "strike", "blockquote"],
+
                     [
                       { list: "ordered" },
                       { list: "bullet" },
@@ -274,6 +283,7 @@ export default function SingleStory({ user }) {
                     ],
                     [{ align: "justify" }],
                     ["clean"],
+
                   ],
                 }}
                 formats={[
@@ -297,10 +307,11 @@ export default function SingleStory({ user }) {
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(story?.content || "No Content"),
                 }}
+
               />
             )}
           </div>
-          {/* Edit and Save/Delete Buttons */}
+
           {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
               {isEditing ? (
@@ -325,7 +336,6 @@ export default function SingleStory({ user }) {
             </div>
           )}
 
-          {/* Comments toggle and display */}
           <h2 onClick={toggleComments} className="toggle-comments-btn">
             {isCommentsOpen
               ? "Hide Comments"
@@ -348,6 +358,7 @@ export default function SingleStory({ user }) {
               </button>
             </form>
           )}
+
           {error && <p className="error">{error}</p>}
         </ul>
       </main>

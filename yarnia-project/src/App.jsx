@@ -23,15 +23,12 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Get user info and token from localStorage when the component loads
     const token = localStorage.getItem("token");
 
     if (token) {
       try {
-        // Decode the token to get user info
         const decodedUser = jwt_decode(token);
 
-        // Check if the token is expired
         if (decodedUser.exp * 1000 < Date.now()) {
           console.log("Token expired");
           localStorage.removeItem("token");
@@ -40,7 +37,6 @@ function App() {
           return;
         }
 
-        // Set the user state based on the stored user information
         const userInfo = JSON.parse(localStorage.getItem("user"));
         setUser(userInfo);
       } catch (error) {

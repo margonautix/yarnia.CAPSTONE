@@ -15,6 +15,7 @@ const Profile = ({ user, setUser }) => {
   const [saveError, setSaveError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   const [image, setImage] = useState(null);
   const hiddenFileInput = useRef(null);
   const authorId = user?.id;
@@ -79,6 +80,19 @@ const Profile = ({ user, setUser }) => {
 
       if (response.ok) {
         const userData = await response.json();
+        setUser(userData); 
+        setUsername(userData.username); 
+        setBio(userData.bio);
+        setIsAuthenticated(true); 
+
+        // Fetch the user's stories, bookmarks, and comments after fetching user data
+        await fetchUserStories(userData.id);
+        await fetchUserBookmarks(userData.id); 
+        await fetchUserComments(userData.id); 
+      } else {
+        console.error("Failed to fetch user data");
+        setIsAuthenticated(false); 
+        
         setUser(userData);
         setUsername(userData.username);
         setBio(userData.bio);
@@ -91,14 +105,17 @@ const Profile = ({ user, setUser }) => {
       } else {
         console.error("Failed to fetch user data");
         setIsAuthenticated(false);
+
         navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      
       setIsAuthenticated(false);
       navigate("/login");
     } finally {
       setLoading(false);
+
     }
   };
 
@@ -110,7 +127,6 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const userStories = await response.json();
-        setStories(userStories);
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
@@ -123,7 +139,7 @@ const Profile = ({ user, setUser }) => {
     try {
       const token = localStorage.getItem("token");
       const bookmarkedStories = await fetchBookmarkedStories(userId, token);
-      setBookmarks(bookmarkedStories);
+      
     } catch (error) {
       console.error("Error fetching user bookmarks:", error);
       setError("An error occurred while fetching bookmarks.");
@@ -138,7 +154,10 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const userComments = await response.json();
+
+
         setComments(userComments);
+
       }
     } catch (error) {
       console.error("Error fetching user comments:", error);
@@ -148,6 +167,7 @@ const Profile = ({ user, setUser }) => {
 
   useEffect(() => {
     fetchUserData();
+
   }, []);
 
   // Handle save action for editing profile
@@ -166,10 +186,11 @@ const Profile = ({ user, setUser }) => {
       );
 
       if (response.ok) {
+
         await fetchUserData();
         setIsEditing(false);
         setSaveError(null);
-      } else {
+         } else {
         setSaveError("Failed to update profile");
       }
     } catch (error) {
@@ -184,7 +205,7 @@ const Profile = ({ user, setUser }) => {
     );
 
     if (!confirmDelete) {
-      return;
+
     }
 
     try {
@@ -200,17 +221,15 @@ const Profile = ({ user, setUser }) => {
       );
 
       if (response.status === 204) {
-        console.log("User account deleted successfully.");
 
-        // Clear the localStorage
+ 
         localStorage.removeItem("token");
-        // localStorage.removeItem("user");
 
-        // Reset user state
         setUser(null);
 
         // Redirect to the homepage
         navigate("/");
+
       } else {
         const textResponse = await response.text();
         const responseData = JSON.parse(textResponse);
@@ -272,6 +291,7 @@ const Profile = ({ user, setUser }) => {
 
       if (response.ok) {
         await fetchUserData();
+
       } else {
         console.error("Failed to update profile picture");
       }
@@ -283,7 +303,8 @@ const Profile = ({ user, setUser }) => {
   const handleUploadButtonClick = async (file) => {
     if (!file) {
       console.error("No file selected for upload.");
-      return;
+
+      return; 
     }
 
     try {
@@ -310,6 +331,7 @@ const Profile = ({ user, setUser }) => {
         const profileUrl = result.img_url;
         setImage(profileUrl);
         await updateUserProfileWithImage(profileUrl);
+
       } else {
         console.error("Failed to upload image");
       }
@@ -659,6 +681,43 @@ const Profile = ({ user, setUser }) => {
                     </button>
                   </div>
                 </>
+              ) : (
+                <p>Nothing to find here...</p>
+              )}
+
+
+            </div>
+
+            {/* Stories Section */}
+            <div className="profile-container">
+              <h2>Your Stories</h2>
+              {error && <p className="error-message">{error}</p>}
+
+              {stories.length > 0 ? (
+                <ul className="story-list">
+                  {stories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <button
+                          onClick={() => handleReadMore(story.storyId)} 
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                        <button
+                          onClick={() => handleStoryDelete(story.storyId)}
+                          className="button"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
               ) : (
                 <p>Nothing to find here...</p>
               )}

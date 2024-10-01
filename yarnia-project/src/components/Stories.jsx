@@ -8,14 +8,14 @@ import "react-quill/dist/quill.snow.css";
 const Stories = () => {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedStory, setSelectedStory] = useState(null); // For the selected story
-  const [showModal, setShowModal] = useState(false); // Modal visibility
-  const [searchQuery, setSearchQuery] = useState(""); // Search query
-  const [selectedCategory, setSelectedCategory] = useState(""); // Selected genre filter
-  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+  const [selectedStory, setSelectedStory] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [selectedCategory, setSelectedCategory] = useState(""); 
+  const [currentPage, setCurrentPage] = useState(1); 
 
   const navigate = useNavigate();
-  const storiesPerPage = 10; // Number of stories per page
+  const storiesPerPage = 10; 
 
   // Fetch all stories on component mount
   useEffect(() => {
@@ -43,7 +43,6 @@ const Stories = () => {
     }
   };
 
-  // Close the modal
   const closeModal = () => setShowModal(false);
 
   // Filter and sort stories based on search query and selected genre (category)
@@ -60,7 +59,7 @@ const Stories = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // Pagination calculation
+
   const totalPages = Math.ceil(filteredStories.length / storiesPerPage);
   const indexOfLastStory = currentPage * storiesPerPage;
   const indexOfFirstStory = indexOfLastStory - storiesPerPage;
@@ -69,12 +68,10 @@ const Stories = () => {
     indexOfLastStory
   );
 
-  // Handle page change
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  // Categories (Genres) for the sidebar
   const genres = [
     "Fantasy",
     "Science Fiction",
@@ -89,10 +86,9 @@ const Stories = () => {
   // Handle category selection for filtering stories by genre
   const handleCategorySelect = (genre) => {
     setSelectedCategory(genre);
-    setCurrentPage(1); // Reset to the first page when changing category
+    setCurrentPage(1); 
   };
 
-  // Conditional rendering for loading state
   if (loading) {
     return <p>Loading stories...</p>;
   }
@@ -104,7 +100,6 @@ const Stories = () => {
   return (
     <div className="stories-page">
       <div id="search">
-        {/* Sidebar for Categories and Search */}
         <aside className="sidebar">
           <h2>Genres</h2>
 
@@ -141,7 +136,6 @@ const Stories = () => {
         </aside>
       </div>
 
-      {/* Main Story Content */}
       <div className="stories-list">
         {showModal && selectedStory && (
           <div className="modal-backdrop">
@@ -179,12 +173,9 @@ const Stories = () => {
             </div>
           </div>
         )}
-        {/* Pagination Controls */}
         <div className="pagination">
-          {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="pagination">
-              {/* Previous Button */}
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -193,11 +184,9 @@ const Stories = () => {
                 Previous
               </button>
 
-              {/* Page Numbers Logic */}
               {Array.from({ length: totalPages }, (_, index) => {
                 const pageNumber = index + 1;
 
-                // Show the page if it meets the conditions: current page, previous two, next two
                 if (
                   pageNumber === currentPage ||
                   (pageNumber >= currentPage - 2 &&
@@ -219,7 +208,6 @@ const Stories = () => {
                 return null;
               })}
 
-              {/* Next Button */}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
@@ -264,7 +252,6 @@ const Stories = () => {
           <p>No stories match your search.</p>
         )}
 
-        {/* Modal for Story Details */}
         {showModal && selectedStory && (
           <div className="modal-backdrop">
             <div className="modal-content">
@@ -301,12 +288,10 @@ const Stories = () => {
             </div>
           </div>
         )}
-        {/* Pagination Controls */}
+
         <div className="pagination">
-          {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="pagination">
-              {/* Previous Button */}
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -315,11 +300,8 @@ const Stories = () => {
                 Previous
               </button>
 
-              {/* Page Numbers Logic */}
               {Array.from({ length: totalPages }, (_, index) => {
                 const pageNumber = index + 1;
-
-                // Show the page if it meets the conditions: current page, previous two, next two
                 if (
                   pageNumber === currentPage ||
                   (pageNumber >= currentPage - 2 &&
@@ -341,7 +323,6 @@ const Stories = () => {
                 return null;
               })}
 
-              {/* Next Button */}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
