@@ -118,6 +118,7 @@ const Profile = ({ user, setUser }) => {
       );
       if (response.ok) {
         const userStories = await response.json();
+        setStories(userStories); // Set stories in state
       }
     } catch (error) {
       console.error("Error fetching user stories:", error);
