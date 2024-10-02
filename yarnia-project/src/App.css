@@ -271,7 +271,7 @@ body {
 
 .story-card {
   position: relative;
-  background: #faedcd;
+  background: #ffefc6;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -279,6 +279,7 @@ body {
   display: flex;
   flex-direction: column;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.301);
 }
 
 .story-card:hover {
@@ -320,6 +321,7 @@ body {
 .story-card p {
   margin: 8px 0;
   text-align: left;
+  color: #ad8733;
 }
 
 .story-card a {
@@ -1409,7 +1411,7 @@ html {
   margin: 1.5rem 0;
   line-height: 1.6;
   font-family: "Times New Roman", serif;
-  background-color: #e9edc9;
+  background-color: #50492b;
   padding: 1rem;
   border-radius: 10px;
 }
@@ -1533,4 +1535,1026 @@ button[type="submit"]:hover {
   width: 300px;
   margin-top: 48px;
   margin-left: 584px;
+}
+
+/* darkmode */
+html.dark #root {
+  background: rgba(0, 0, 0, 0.884);
+  color: #283618;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  width: 100%;
+  margin: 0 auto;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #333;
+  font-size: 16px;
+}
+/* Dark Mode Styles for Navbar */
+html.dark .navbar {
+  background: linear-gradient(to bottom, #031400, #25220067);
+  box-shadow: 0 1px 10px #00000067;
+}
+
+html.dark .navbar ul li a {
+  color: #fefae0; /* Light text color for navbar links */
+  background-color: transparent;
+}
+
+html.dark .navbar ul li a:hover {
+  background-color: #3e3e3e;
+  color: #fefae0;
+}
+
+/* Navbar Image */
+html.dark .navbar img {
+  filter: brightness(0.8);
+  border-radius: 8px;
+}
+
+/* Dark Mode for Login Container */
+html.dark .login {
+  color: #fefae0;
+  background-color: rgba(
+    40,
+    54,
+    24,
+    0.85
+  ); /* Darker background color for login */
+  text-shadow: #000000 1px 1px 10px;
+  box-shadow: 1px 1px 5px #00000088;
+}
+
+html.dark .login input {
+  background-color: #2f2f2f;
+  color: #fefae0;
+  border: 1px solid #7f8d52;
+}
+
+html.dark .login input::placeholder {
+  color: #9aa282;
+}
+
+html.dark .login button {
+  background-color: #4b5b30;
+  color: #fefae0;
+  border: 1px solid #7f8d52;
+}
+
+html.dark .login button:hover {
+  background-color: #6a793c;
+}
+
+/* Dark Mode for Navbar Responsive Styles */
+@media (max-width: 768px) {
+  html.dark .navbar {
+    background: linear-gradient(to bottom, #2e2e2e, #4a4a4a);
+  }
+
+  html.dark .navbar ul li a:hover {
+    background-color: #4a4a4a;
+  }
+}
+
+/* Additional General Dark Mode Styles */
+
+/* Background and Text for the Entire Page */
+html.dark,
+body.dark {
+  background-color: #1c1c1c; /* Dark background for the whole page */
+  color: #fefae0; /* Light text color */
+}
+
+/* Dark Mode for Buttons */
+html.dark button {
+  background-color: #4b5b30; /* Darker button background */
+  color: #fefae0; /* Light text for buttons */
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark button:hover {
+  background-color: #6a793c; /* Lighter shade for hover */
+}
+
+/* Dark Mode for Input Fields */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #2f2f2f; /* Darker background for input fields */
+  color: #fefae0; /* Light text color */
+  border: 1px solid #7f8d52; /* Border color for inputs */
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #9aa282; /* Lighter color for placeholders */
+}
+
+/* Dark Mode for Navbar List Items */
+html.dark .navbar ul {
+  gap: 20px;
+}
+
+html.dark .navbar ul li {
+  border-radius: 8px;
+}
+
+html.dark .navbar ul li a {
+  padding: 10px 15px;
+  transition: color 0.3s, background 0.3s;
+}
+
+/* Dark Mode for Navbar Last Child Item */
+html.dark .navbar ul li:last-child {
+  margin-left: auto;
+}
+
+/* Dark Mode for Admin-specific List Item */
+html.dark .admin-li {
+  margin-left: auto;
+}
+
+/* Navbar Links in Dark Mode */
+html.dark .navbar ul li a {
+  text-decoration: none;
+  color: #fefae0; /* Light color for text */
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+/* Mobile Responsive for Dark Mode */
+@media (max-width: 768px) {
+  html.dark .navbar {
+    flex-direction: column;
+    align-items: center;
+    position: static;
+  }
+
+  html.dark .navbar ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+/* Dark Mode for Modal Backdrop */
+html.dark .modal-backdrop {
+  background: rgba(34, 43, 21, 0.9); /* Dark green-brown backdrop for modal */
+}
+
+/* Dark Mode for Modal Content */
+html.dark .modal-content {
+  background: #3b4b33; /* Deep olive green background for the modal */
+  color: #fefae0; /* Light text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow for contrast */
+}
+
+html.dark .modal-content h2 {
+  color: #c2a678; /* Muted light brown for headings */
+}
+
+html.dark .modal-content p {
+  color: #e6e1c5; /* Softer beige for paragraph text */
+}
+
+/* Dark Mode for Modal Close Button (#X) */
+html.dark #X {
+  background: #6a793c; /* Olive green background for close button */
+  color: #fefae0; /* Light text color */
+}
+
+html.dark #X:hover {
+  background: #a3b18a; /* Lighter green on hover for close button */
+}
+
+/* Dark Mode for Modal Action Buttons */
+html.dark .modal-content button {
+  background: #7d8755; /* Muted green-brown for buttons */
+  color: #fefae0; /* Light text color for buttons */
+}
+
+html.dark .modal-content button:hover {
+  background: #a3b18a; /* Lighter olive green for button hover */
+}
+
+/* Dark Mode for Profile Page */
+html.dark body {
+  background-color: #2f3b27; /* Dark green-brown for profile page background */
+  color: #fefae0; /* Light text color */
+}
+
+html.dark .profile-container {
+  background-color: #4b5b3b; /* Deep olive background for profile container */
+  color: #fefae0; /* Light text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow for depth */
+}
+
+/* Dark Mode for Other General Elements */
+html.dark button {
+  background-color: #6a793c; /* Olive green background for general buttons */
+  color: #fefae0; /* Light text for buttons */
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark button:hover {
+  background-color: #a3b18a; /* Lighter olive green for button hover */
+}
+
+/* Dark Mode for Sidebar */
+html.dark .sidebar {
+  background: #4b5b3b; /* Dark olive green for sidebar */
+  color: #e6e1c5; /* Light beige text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+html.dark .sidebar h2 {
+  color: #d4a373; /* Light muted brown for headings */
+}
+
+html.dark .sidebar-menu li {
+  background: #5c6d48; /* Softer green for sidebar items */
+  color: #fefae0;
+}
+
+html.dark .sidebar-menu li:hover {
+  background: #a3b18a; /* Lighter olive for hover effect */
+  color: #2f3b27; /* Dark green text */
+}
+
+html.dark .sidebar-menu li.active {
+  font-weight: bold;
+  color: #c2a678; /* Muted light brown for active item */
+}
+
+/* Dark Mode for Search Bar */
+html.dark .search-bar {
+  background-color: #6a793c; /* Olive green for search bar */
+  color: #fefae0;
+  border: 1px solid #a3b18a; /* Softer olive border */
+}
+
+/* Dark Mode for Story Cards */
+html.dark .story-card {
+  background: #25301a; /* Dark green-brown for card background */
+  color: #fefae0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+html.dark .story-card h2 {
+  color: #d4a373; /* Muted light brown for headings */
+}
+
+html.dark .story-card a {
+  color: #e6b566; /* Soft gold for links */
+}
+
+html.dark .story-card a:hover {
+  color: #fefae0; /* Light color for link hover */
+}
+
+html.dark .story-card button {
+  background: #6a793c; /* Olive green for button */
+  color: #fefae0;
+}
+
+html.dark .story-card button:hover {
+  background: #a3b18a; /* Lighter olive green for button hover */
+}
+
+/* Stats Group in Dark Mode */
+html.dark .stats-group p {
+  color: #e6e1c5; /* Light beige text */
+}
+
+/* General Elements in Dark Mode */
+html.dark .bookmark-count,
+html.dark .comment-count {
+  color: #c2a678; /* Warm muted brown for counts */
+}
+/* General Dark Mode Styles for Body */
+html.dark,
+body.dark {
+  background-color: #3a4a37; /* Soft dark green-brown background */
+  color: #e8e4cf; /* Softer light text color */
+  font-family: Arial, sans-serif;
+}
+
+/* Dark Mode for Stories Page Wrapper */
+html.dark .stories-page {
+  background-color: #4c5c4a00; /* Muted dark olive green */
+  color: #e8e4cf; /* Softer light text */
+  border-radius: 10px;
+}
+
+/* Dark Mode for Sidebar */
+html.dark .sidebar {
+  background: #5a6b55; /* Dark olive with a brownish hue */
+  color: #f4f1e0; /* Softer light text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+html.dark .sidebar h2 {
+  color: #d4b87f; /* Warm muted gold for contrast */
+}
+
+html.dark .sidebar-menu li {
+  background: #475843; /* Muted dark green */
+  color: #f4f1e0; /* Light text */
+}
+
+html.dark .sidebar-menu li:hover {
+  background: #908d72; /* Softer warm beige highlight */
+  color: #3a4a37; /* Dark green text */
+}
+
+html.dark .sidebar-menu li.active {
+  font-weight: bold;
+  color: #d4b87f; /* Warm gold to indicate active */
+}
+
+/* Dark Mode for Search Bar */
+html.dark .search-bar {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #f4f1e0; /* Softer light text */
+  border: 1px solid #a5a38a; /* Softer olive border */
+}
+
+/* Dark Mode for Pagination */
+html.dark .pagination-button {
+  background: #736f5b; /* Muted brownish-green */
+  color: #fefae0; /* Soft cream text */
+}
+
+html.dark .pagination-button:hover {
+  background: #9b977a; /* Lighter brownish-green for hover */
+}
+
+html.dark .pagination-button:disabled {
+  background: #5a5a48; /* Muted green-gray for disabled buttons */
+  color: #a3a3a3; /* Muted gray text */
+  cursor: not-allowed;
+}
+
+html.dark .pagination-button.active {
+  background: #a0946d; /* Softer dark gold-brown */
+  font-weight: bold;
+}
+
+/* Dark Mode for Stories List and Cards */
+html.dark .story-card {
+  background: #5b6b54; /* Muted green-brown for card background */
+  color: #f4f1e0; /* Light text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+html.dark .story-card-counts {
+  color: #d4b87f; /* Muted warm gold */
+  background: rgba(100, 100, 80, 0.7); /* Soft dark warm tone for counts */
+}
+
+html.dark .story-card h2 {
+  color: #e0c084; /* Warm beige for headings */
+}
+
+html.dark .story-card a {
+  color: #e6c270; /* Muted gold for links */
+}
+
+html.dark .story-card a:hover {
+  color: #fefae0; /* Light color for hover */
+}
+
+html.dark .story-card button {
+  background: #736f5b; /* Muted brownish-green for button */
+  color: #fefae0; /* Light text */
+}
+
+html.dark .story-card button:hover {
+  background: #9b977a; /* Softer brownish highlight for hover */
+}
+
+/* Dark Mode for Single Story */
+html.dark .story-single {
+  color: #f4f1e0; /* Softer light text */
+}
+
+html.dark .story-single a {
+  color: #e6c270; /* Muted gold for links */
+}
+
+html.dark .story-single a:hover {
+  color: #fefae0; /* Light text for hover */
+}
+
+/* Stats Group in Dark Mode */
+html.dark .stats-group p {
+  color: #f4f1e0; /* Softer light text */
+}
+
+/* General Elements in Dark Mode */
+html.dark .bookmark-count,
+html.dark .comment-count {
+  color: #e0c084; /* Softer warm yellow for counts */
+}
+
+/* Pagination in Dark Mode */
+html.dark .pagination {
+  background-color: transparent; /* Keep pagination background transparent */
+}
+
+html.dark .pagination-button {
+  color: #fefae0; /* Light text color */
+  background-color: #736f5b; /* Softer brownish-green for buttons */
+  border: none;
+}
+
+html.dark .pagination-button:hover {
+  background-color: #9b977a; /* Lighter brownish-green for hover */
+}
+/* Dark Mode for Profile Page */
+html.dark,
+body.dark {
+  background-color: #3a4a37; /* Soft dark green-brown for the whole page */
+  color: #e8e4cf; /* Softer light text color */
+  font-family: Arial, sans-serif;
+}
+
+/* Dark Mode for Profile Section Wrapper */
+html.dark #whole-profile {
+  background-color: #4b5c4a00; /* Muted dark olive green */
+  padding: 30px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Dark Mode for Profile Header */
+html.dark .profile h1 {
+  color: #d4b87f; /* Warm muted gold */
+}
+
+/* Dark Mode for User Profile Container */
+html.dark .user-profile-container {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Softer shadow */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Dark Mode for Profile Container */
+html.dark .profile-container {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  width: 900px;
+  max-width: fit-content;
+}
+
+/* Dark Mode for Bottom Container */
+html.dark .bottom-container {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  width: 97%;
+}
+
+html.dark .bottom-container button {
+  background-color: #736f5b; /* Muted brownish-green for buttons */
+  color: #fefae0;
+}
+
+html.dark .bottom-container button:hover {
+  background-color: #9b977a; /* Lighter brownish-green for hover */
+}
+
+/* Dark Mode for Delete Account Button */
+html.dark .delete-account {
+  background-color: #8a5e3b; /* Warm muted brown */
+  color: #fefae0;
+  margin-bottom: 1%;
+}
+
+/* Dark Mode for Bio and Username Input Fields */
+html.dark #bio.form-textarea,
+html.dark #username.input {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #fefae0;
+  border: 1px solid #9d9a7b;
+}
+
+/* Dark Mode for Profile Stories Wrapper */
+html.dark .profile-stories-wrapper {
+  background-color: transparent; /* Keep consistent with the rest of the profile */
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Dark Mode for Pagination Controls */
+html.dark .pagination-controls button {
+  background-color: #736f5b; /* Muted brownish-green */
+  color: #fefae0;
+  border: none;
+  padding: 4px 8px;
+}
+
+html.dark .pagination-controls button:hover {
+  background-color: #9b977a; /* Softer brownish highlight for hover */
+}
+
+/* Dark Mode for Information and Upload Section */
+html.dark .info {
+  color: #f4f1e0; /* Light beige text */
+}
+
+html.dark .image-upload-container {
+  align-items: center;
+}
+
+html.dark .img-display,
+html.dark .img-display-before,
+html.dark .img-display-after {
+  border: 2px solid #9d9a7b; /* Light olive border for images */
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* Dark Mode for General Button Styling */
+html.dark .button {
+  background-color: #736f5b; /* Muted green-brown */
+  color: #fefae0;
+  border: none;
+  transition: background 0.3s;
+}
+
+html.dark .button:hover {
+  background-color: #9b977a; /* Lighter brownish-green for hover */
+}
+
+/* Dark Mode for Editing Input Fields */
+html.dark .input,
+html.dark .form-textarea {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #fefae0;
+  border: 1px solid #9d9a7b;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+/* General Dark Mode Styles for Body */
+html.dark,
+body.dark {
+  background-color: #3a4a37; /* Soft dark green-brown for the whole page */
+  color: #e8e4cf; /* Softer light text color */
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Dark Mode for Bookmarks and Stories List */
+html.dark .story-list,
+html.dark .comment-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+html.dark .bookmark-item,
+html.dark .story-item,
+html.dark .comments-item {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+}
+
+/* Dark Mode for Individual Story Cards */
+html.dark #story-card {
+  margin-bottom: 15px;
+  background-color: #4a5a42; /* Dark olive green */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Headings for Bookmark and Story Items */
+html.dark .bookmark-item h3,
+html.dark .story-item h3 {
+  color: #d4b87f; /* Warm muted gold for headings */
+  margin: 0;
+  font-size: 1.5em;
+}
+
+/* Dark Mode for Error Message */
+html.dark .error-message {
+  color: #d48a60; /* Warm muted red */
+  margin-top: 10px;
+}
+
+/* Dark Mode for Comment History Section */
+html.dark #history {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #c7b296; /* Softer warm yellow */
+}
+
+/* Dark Mode for Bookmarks List Wrapper */
+html.dark .bookmarks-list {
+  max-width: 1200px;
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 10px;
+}
+
+/* Dark Mode for Individual Bookmark Card */
+html.dark .bookmark-card {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #a0946d; /* Softer dark gold-brown */
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .bookmark-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow on hover */
+}
+
+/* Dark Mode for Bookmark Card Headings and Paragraphs */
+html.dark .bookmark-card h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #e0c084; /* Warm beige for headings */
+}
+
+html.dark .bookmark-card p {
+  margin: 10px 0;
+  color: #f4f1e0; /* Light beige text */
+}
+
+/* Dark Mode for Bookmark Buttons */
+html.dark .bookmark-card .button-container {
+  display: flex;
+  justify-content: center;
+}
+
+html.dark .bookmark-card button {
+  padding: 8px 16px;
+  background-color: #736f5b; /* Muted green-brown */
+  color: #fefae0; /* Light text */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  margin: 5px;
+}
+
+html.dark .bookmark-card button:hover {
+  background-color: #9b977a; /* Softer brownish highlight */
+  transform: scale(1.05);
+}
+
+/* Dark Mode for "Remove Bookmark" Button Specific Styles */
+html.dark .bookmark-card button:nth-of-type(2) {
+  background-color: #a0946d; /* Warm muted gold */
+}
+
+html.dark .bookmark-card button:nth-of-type(2):hover {
+  background-color: #bca982; /* Lighter muted gold */
+}
+
+/* Dark Mode for Loading and No Bookmarks Messages */
+html.dark p {
+  font-size: 1.2em;
+  text-align: center;
+  color: #c7b296; /* Softer warm yellow */
+  margin-top: 20px;
+}
+
+/* Dark Mode for Add Story Container */
+html.dark .add-story-container {
+  background: rgba(70, 80, 60, 0.9); /* Dark greenish-brown */
+  color: #f4f1e0;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode for Add Story Form Heading */
+html.dark .add-story-container h1 {
+  font-size: 2em;
+  color: #d4b87f; /* Warm muted gold */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Dark Mode for Add Story Form Error Message */
+html.dark .error-message {
+  color: #d48a60; /* Warm muted red for errors */
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Dark Mode for Input Fields in Add Story Form */
+html.dark .form-group input[type="text"],
+html.dark .form-group select,
+html.dark .form-group textarea {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #f4f1e0;
+  border: 1px solid #9d9a7b;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+}
+
+/* Dark Mode for Submit Button */
+html.dark .submit-button {
+  padding: 15px;
+  background-color: #736f5b; /* Muted brownish-green */
+  color: #fefae0;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark .submit-button:hover {
+  background-color: #9b977a; /* Softer brownish highlight */
+  transform: scale(1.05);
+}
+
+/* Dark Mode for Admin Comments Container */
+html.dark .admin-comments-container {
+  background: rgba(70, 80, 60, 0.9); /* Dark greenish-brown */
+  color: #f4f1e0;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode for Admin Comments Feed Heading */
+html.dark .admin-comments-container h2 {
+  font-size: 2em;
+  color: #d4b87f; /* Warm muted gold */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Dark Mode for Search Bar */
+html.dark .search-bar {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #fefae0;
+  border: 1px solid #9d9a7b;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+/* General Dark Mode Styles for Body */
+html.dark,
+body.dark {
+  background-color: #3a4a37; /* Soft dark green-brown for the whole page */
+  color: #e8e4cf; /* Softer light text color */
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Dark Mode for Pagination Controls */
+html.dark .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+html.dark .pagination-button {
+  padding: 8px 16px;
+  background: #5b5a41; /* Muted brownish-green */
+  color: #fefae0; /* Light text */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark .pagination-button:hover {
+  background: #807b5e; /* Lighter brownish-green for hover */
+  transform: scale(1.05);
+}
+
+html.dark .pagination-button:disabled {
+  background: #4a4a4a; /* Dark muted gray for disabled buttons */
+  cursor: not-allowed;
+}
+
+html.dark .active-page {
+  background: #7a704e; /* Warm muted yellow-brown */
+  color: #fefae0;
+  font-weight: bold;
+}
+
+/* Dark Mode for Comments List */
+html.dark .comments-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+html.dark .comment-item {
+  background: #4a5a42; /* Dark olive green */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Dark Mode for Comment Avatar */
+html.dark .comment-avatar {
+  background: #7f8d52; /* Muted green */
+  color: #fefae0;
+}
+
+/* Dark Mode for Comment Details */
+html.dark .comment-username {
+  color: #d4b87f; /* Warm muted gold */
+}
+
+html.dark .comment-text {
+  color: #e8e4cf; /* Softer light text */
+}
+
+/* Dark Mode for Delete Button */
+html.dark .delete-button {
+  background: #8a5e3b; /* Warm muted brown */
+  color: #fefae0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark .delete-button:hover {
+  background: #a97b57; /* Softer lighter brown for hover */
+  transform: scale(1.05);
+}
+
+/* Dark Mode for Admin Users Container */
+html.dark .admin-users-container {
+  background: #4b5c4a; /* Dark muted green */
+  color: #f4f1e0;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode for Admin Users Feed Heading */
+html.dark .admin-users-container h2 {
+  color: #e0c084; /* Warm beige */
+}
+
+/* Dark Mode for User Items */
+html.dark .user-item {
+  background: #4a5a42; /* Dark olive green */
+  color: #f4f1e0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode for User Avatar */
+html.dark .user-avatar {
+  background: #7f8d52; /* Muted green */
+  color: #fefae0;
+}
+
+/* Dark Mode for User Details */
+html.dark .user-name {
+  color: #e0c084; /* Warm beige */
+}
+
+html.dark .user-email {
+  color: #e8e4cf; /* Softer light text */
+}
+
+html.dark .user-role {
+  color: #d48a60; /* Muted red for roles */
+}
+
+/* Dark Mode for Register Form Container */
+html.dark .register-container {
+  background: #4b5c4a; /* Dark muted green */
+  color: #f4f1e0;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode for Input Fields in Register Form */
+html.dark .register-form input[type="text"],
+html.dark .register-form input[type="email"],
+html.dark .register-form input[type="password"] {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #f4f1e0;
+  border: 1px solid #9d9a7b;
+}
+
+/* Dark Mode for Login Button */
+html.dark .register-form .login-button {
+  background-color: #736f5b; /* Muted brownish-green */
+  color: #fefae0;
+}
+
+html.dark .register-form .login-button:hover {
+  background-color: #9b977a; /* Softer brownish highlight */
+}
+
+/* Dark Mode for Single Story Component */
+html.dark .story-container {
+  background-color: #5b6b54; /* Muted green-brown */
+  color: #f4f1e0;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .story-single h2 {
+  color: #e0c084; /* Warm beige */
+}
+
+html.dark .story-single h4 {
+  color: #c7b296; /* Warm yellow */
+}
+
+html.dark .story-content {
+  background-color: #4a5a42; /* Dark olive green */
+  color: #f4f1e0;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+/* Dark Mode for General Button Styling */
+html.dark .button {
+  background-color: #736f5b; /* Muted green-brown */
+  color: #fefae0;
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark .button:hover {
+  background-color: #9b977a; /* Softer brownish highlight */
+}
+
+/* Dark Mode for Comment Section Buttons */
+html.dark .comment-item .button {
+  background-color: #8a5e3b; /* Warm muted brown */
+}
+
+html.dark .comment-item .button:hover {
+  background-color: #a97b57; /* Softer brownish highlight */
+}
+
+/* Dark Mode for Textarea in Form */
+html.dark textarea {
+  background-color: #6a7b5a; /* Muted green-brown */
+  color: #fefae0;
+  border: 1px solid #9d9a7b;
+}
+
+html.dark textarea::placeholder {
+  color: #e8e4cf; /* Softer light text */
+}
+
+/* Dark Mode for Submit Button */
+html.dark button[type="submit"] {
+  background-color: #736f5b; /* Muted green-brown */
+  color: #fefae0;
+}
+
+html.dark button[type="submit"]:hover {
+  background-color: #9b977a; /* Softer brownish highlight */
 }

@@ -1,42 +1,58 @@
-import { Link, useNavigate } from "react-router-dom"; 
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import yarniaLogo from "./images/yarniaLogo.png";
 
 const NavBar = ({ user, setUser }) => {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(false);
 
-  const categories = [
-    "Fiction",
-    "Non-fiction",
-    "Sci-Fi",
-    "Fantasy",
-    "Mystery",
-    "Horror",
-  ];
-
-  const [selectedCategory, setSelectedCategory] = useState("");
+  // Check localStorage for the user's theme preference on component mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.body.classList.add("dark");
+    }
+  }, []);
 
   // Handle category change and navigate to the appropriate search page
   const handleCategoryChange = (event) => {
     const selected = event.target.value;
-    setSelectedCategory(selected);
-    if (selected) {
-      navigate(`/search?category=${selected}`); 
-    }
+    navigate(`/search?category=${selected}`);
   };
 
   // Handle logout functionality
   const handleLogout = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null); 
+    setUser(null);
     navigate("/login");
-  }; // Fixed: Added missing closing brace here
+  };
+
+  // Handle dark mode toggle
+  const handleDarkModeToggle = () => {
+    if (darkMode) {
+      setDarkMode(false);
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    console.log(document.documentElement.className); // Check if the class is being added
+  };
 
   return (
     <nav className="navbar">
       <ul>
+        {" "}
+        <li>
+          <button onClick={handleDarkModeToggle} className="dark-mode-toggle">
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
+        </li>
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -50,7 +66,7 @@ const NavBar = ({ user, setUser }) => {
         {user ? (
           <>
             <li>
-              <Link to="/add-story">Add Story</Link> 
+              <Link to="/add-story">Add Story</Link>
             </li>
             <li>
               <Link to="/profile">Profile</Link>
