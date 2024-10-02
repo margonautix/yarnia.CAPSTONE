@@ -251,15 +251,6 @@ const Stories = () => {
               <p>
                 <strong>Summary:</strong> {story.summary}
               </p>
-
-              <div className="stats-group">
-                <p>
-                  <strong>Bookmarks:</strong> {story._count?.bookmarks || 0}
-                </p>
-                <p>
-                  <strong>Comments:</strong> {story._count?.comments || 0}
-                </p>
-              </div>
               <button onClick={() => handleReadMore(story.storyId)}>
                 Read More
               </button>
