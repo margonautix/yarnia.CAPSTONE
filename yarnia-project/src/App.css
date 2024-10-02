@@ -1464,11 +1464,6 @@ html {
 .toggle-comments-btn:hover {
   color: #bc6c25;
 }
-.dark-mode-toggle {
-  background-color: #3a4a37;
-  text-shadow: 1px 1px 10px #000000;
-  margin-left: 20px;
-}
 
 .comments-list {
   list-style: none;
@@ -1494,8 +1489,6 @@ html {
   margin-left: 1rem;
   background-color: #bc6c25;
 }
-
-
 
 form {
   display: flex;
@@ -2586,8 +2579,33 @@ html.dark .dark-mode-toggle {
   text-shadow: 1px 1px 10px #000000;
   margin: 0px;
   margin-left: 20px;
+  transition: background-color 0.3s ease; /* Adding transition */
 }
 
- .dark-mode-toggle:hover {
+html.dark .dark-mode-toggle:hover {
+  background-color: #c9b173;
+}
+
+.dark-mode-toggle {
+  background-color: #3a4a37;
+  text-shadow: 1px 1px 10px #000000;
+  margin-left: 20px;
+  transition: background-color 0.3s ease; /* Adding transition */
+}
+
+.dark-mode-toggle:hover {
   background-color: #7f8d52;
+}
+html.dark .navbar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: color 0.3s, background 0.3s;
+  border-radius: 8px;
+}
+
+html.dark .navbar ul li a:hover {
+  background-color: #faebc4;
+  color: #1f2217;
 }
