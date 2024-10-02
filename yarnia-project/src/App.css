@@ -1465,7 +1465,7 @@ html {
   color: #bc6c25;
 }
 .dark-mode-toggle {
-  background-color: #3b1b0080;
+  background-color: #3a4a37;
   text-shadow: 1px 1px 10px #000000;
   margin-left: 20px;
 }
@@ -1495,9 +1495,7 @@ html {
   background-color: #bc6c25;
 }
 
-.comment-item .button:hover {
-  background-color: #dda15e;
-}
+
 
 form {
   display: flex;
@@ -2584,8 +2582,12 @@ html.dark button[type="submit"]:hover {
 }
 
 html.dark .dark-mode-toggle {
-  background-color: #c4946dc7;
+  background-color: #faebc4;
   text-shadow: 1px 1px 10px #000000;
   margin: 0px;
   margin-left: 20px;
+}
+
+ .dark-mode-toggle:hover {
+  background-color: #7f8d52;
 }
