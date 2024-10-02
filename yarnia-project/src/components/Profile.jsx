@@ -368,306 +368,120 @@ const Profile = ({ user, setUser }) => {
       <br />
       <section id="whole-profile">
         <div className="profile">
-          <div className="stories-container">
-            <div className="profile-stories-wrapper">
-              <div className="profile-container">
-                <h1>
-                  Welcome,{" "}
+          <div className="profile-stories-wrapper">
+            <div className="profile-container">
+              <h1>
+                Welcome,{" "}
+                {isEditing ? (
+                  <div className="group">
+                    <input
+                      id="username"
+                      className="input"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  user.username
+                )}
+                !
+              </h1>
+              <div className="info">
+                <h4 id="label"> Email:</h4>
+                <p>{user.email}</p>
+
+                <h4 id="label">Bio:</h4>
+                <p>
                   {isEditing ? (
                     <div className="group">
-                      <input
-                        id="username"
-                        className="input"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                      <textarea
+                        id="bio"
+                        className="form-textarea"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
                       />
                     </div>
                   ) : (
-                    user.username
+                    user.bio
                   )}
-                  !
-                </h1>
-                <div className="info">
-                  <div className="image-upload-container">
-                    <div className="box-decoration">
-                      {isEditing ? (
-                        <>
-                          <label
-                            htmlFor="image-upload-input"
-                            className="image-upload-label"
-                          >
-                            {image ? image.name : "Choose an image"}
-                          </label>
-                          <div
-                            onClick={handleClick}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {image ? (
-                              <img
-                                src={URL.createObjectURL(image)}
-                                alt="upload image"
-                                className="img-display-after"
-                              />
-                            ) : (
-                              <img
-                                src={user.profilePicture || "./photo.png"}
-                                alt="upload image"
-                                className="img-display-before"
-                              />
-                            )}
-                          </div>
-                          <input
-                            id="image-upload-input"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            ref={hiddenFileInput}
-                            style={{ display: "none" }}
-                          />
-                          <button
-                            className="button"
-                            onClick={() => handleUploadButtonClick(image)}
-                          >
-                            Upload Image
-                          </button>
-                        </>
-                      ) : (
-                        <img
-                          src={user.profilePicture || "./photo.png"}
-                          alt="Profile"
-                          className="img-display"
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <br />
-                  <br />
-                  <h4 id="label"> Email:</h4>
-                  <p>{user.email}</p>
-
-                  <br />
-                  <br />
-                  <h4 id="label">Bio:</h4>
-                  <p>
-                    {isEditing ? (
-                      <div className="group">
-                        <textarea
-                          id="bio"
-                          className="form-textarea"
-                          value={bio}
-                          onChange={(e) => setBio(e.target.value)}
-                        />
-                      </div>
-                    ) : (
-                      user.bio
-                    )}
-                  </p>
-                </div>
-                {isEditing ? (
-                  <div className="button-group">
-                    <button className="button" onClick={handleSave}>
-                      Save
-                    </button>
-                    <button
-                      className="button"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button className="button" onClick={() => setIsEditing(true)}>
-                    Edit Profile
+                </p>
+              </div>
+              {isEditing ? (
+                <div className="button-group">
+                  <button className="button" onClick={handleSave}>
+                    Save
                   </button>
-                )}
-                {saveError && <p className="error-message">{saveError}</p>}
-              </div>
+                  <button
+                    className="button"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button className="button" onClick={() => setIsEditing(true)}>
+                  Edit Profile
+                </button>
+              )}
+              {saveError && <p className="error-message">{saveError}</p>}
+            </div>
 
-              {/* Comment History Section */}
-              <div className="profile-container">
-                <h3 id="history">Comment History:</h3>
-                {comments.length > 0 ? (
-                  <>
-                    <ul className="comment-list">
-                      {currentComments.map((comment) => (
-                        <li className="comments-item" key={comment.commentId}>
-                          <strong>Story: {comment.story.title}</strong>
-                          <p>{comment.content}</p>
-                          <br />
-                          <div className="button-group">
-                            <button
-                              onClick={() => handleReadMore(comment.storyId)}
-                              className="button"
-                            >
-                              View Story
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleCommentDelete(comment.commentId)
-                              }
-                              className="button"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                    {/* Pagination Controls */}
-                    <div className="pagination-controls">
-                      <button
-                        onClick={() =>
-                          setCurrentCommentsPage((prev) =>
-                            Math.max(prev - 1, 1)
-                          )
-                        }
-                        disabled={currentCommentsPage === 1}
-                      >
-                        Previous
-                      </button>
-                      <span>
-                        Page {currentCommentsPage} of{" "}
-                        {Math.ceil(comments.length / commentsPerPage)}
-                      </span>
-                      <button
-                        onClick={() =>
-                          setCurrentCommentsPage((prev) =>
-                            Math.min(
-                              prev + 1,
-                              Math.ceil(comments.length / commentsPerPage)
-                            )
-                          )
-                        }
-                        disabled={
-                          currentCommentsPage ===
-                          Math.ceil(comments.length / commentsPerPage)
-                        }
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <p>No comments found</p>
-                )}
-              </div>
-
-              {/* Bookmarks Section */}
-              <div className="profile-container">
-                <h2>Your Bookmarks</h2>
-                {bookmarks.length > 0 ? (
-                  <>
-                    <ul className="bookmark-list">
-                      {currentBookmarks.map((bookmark) => (
-                        <li key={bookmark.bookmarkId} className="bookmark-item">
-                          <h3>{bookmark.story.title}</h3>
-                          <p>
-                            {bookmark.story.summary || "No summary available"}
-                          </p>
+            {/* Comment History Section */}
+            <div className="profile-container">
+              <h3 id="history">Comment History:</h3>
+              {comments.length > 0 ? (
+                <>
+                  <ul className="comment-list">
+                    {currentComments.map((comment) => (
+                      <li className="comments-item" key={comment.commentId}>
+                        <strong>Story: {comment.story.title}</strong>
+                        <p>{comment.content}</p>
+                        <br />
+                        <div className="button-group">
                           <button
-                            onClick={() => handleReadMore(bookmark.storyId)}
+                            onClick={() => handleReadMore(comment.storyId)}
                             className="button"
                           >
-                            Read more
+                            View Story
                           </button>
-                        </li>
-                      ))}
-                    </ul>
-                    {/* Pagination Controls */}
-                    <div className="pagination-controls">
-                      <button
-                        onClick={() =>
-                          setCurrentPage((prev) => Math.max(prev - 1, 1))
-                        }
-                        disabled={currentPage === 1}
-                      >
-                        Previous
-                      </button>
-                      <span>
-                        Page {currentPage} of{" "}
-                        {Math.ceil(bookmarks.length / bookmarksPerPage)}
-                      </span>
-                      <button
-                        onClick={() =>
-                          setCurrentPage((prev) =>
-                            Math.min(
-                              prev + 1,
-                              Math.ceil(bookmarks.length / bookmarksPerPage)
-                            )
-                          )
-                        }
-                        disabled={
-                          currentPage ===
-                          Math.ceil(bookmarks.length / bookmarksPerPage)
-                        }
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <p>No bookmarks found.</p>
-                )}
-              </div>
-            </div>
-            <div className="bottom-container">
-              <h2>Your Stories</h2>
-              {error && <p className="error-message">{error}</p>}
-
-              {stories.length > 0 ? (
-                <>
-                  <ul className="story-list">
-                    {currentStories.map((story) => (
-                      <div className="story-item" key={story.storyId}>
-                        <li>
-                          <div id="story-card">
-                            <h3>{story.title}</h3>
-                            <p>{story.summary || "No summary available"}</p>
-                          </div>
-                          <div className="button-group">
-                            <button
-                              onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
-                              className="button"
-                            >
-                              Read more
-                            </button>
-                            <button
-                              onClick={() => handleStoryDelete(story.storyId)}
-                              className="button"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </li>
-                      </div>
+                          <button
+                            onClick={() =>
+                              handleCommentDelete(comment.commentId)
+                            }
+                            className="button"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </li>
                     ))}
                   </ul>
-                  {/* Pagination Controls for Stories */}
+                  {/* Pagination Controls */}
                   <div className="pagination-controls">
                     <button
                       onClick={() =>
-                        setCurrentStoriesPage((prev) => Math.max(prev - 1, 1))
+                        setCurrentCommentsPage((prev) => Math.max(prev - 1, 1))
                       }
-                      disabled={currentStoriesPage === 1}
+                      disabled={currentCommentsPage === 1}
                     >
                       Previous
                     </button>
                     <span>
-                      Page {currentStoriesPage} of{" "}
-                      {Math.ceil(stories.length / storiesPerPage)}
+                      Page {currentCommentsPage} of{" "}
+                      {Math.ceil(comments.length / commentsPerPage)}
                     </span>
                     <button
                       onClick={() =>
-                        setCurrentStoriesPage((prev) =>
+                        setCurrentCommentsPage((prev) =>
                           Math.min(
                             prev + 1,
-                            Math.ceil(stories.length / storiesPerPage)
+                            Math.ceil(comments.length / commentsPerPage)
                           )
                         )
                       }
                       disabled={
-                        currentStoriesPage ===
-                        Math.ceil(stories.length / storiesPerPage)
+                        currentCommentsPage ===
+                        Math.ceil(comments.length / commentsPerPage)
                       }
                     >
                       Next
@@ -675,9 +489,135 @@ const Profile = ({ user, setUser }) => {
                   </div>
                 </>
               ) : (
-                <p>Nothing to find here...</p>
+                <p>No comments found</p>
               )}
             </div>
+
+            {/* Bookmarks Section */}
+            <div className="profile-container">
+              <h2>Your Bookmarks</h2>
+              {bookmarks.length > 0 ? (
+                <>
+                  <ul className="bookmark-list">
+                    {currentBookmarks.map((bookmark) => (
+                      <li key={bookmark.bookmarkId} className="bookmark-item">
+                        <h3>{bookmark.story.title}</h3>
+                        <p>
+                          {bookmark.story.summary || "No summary available"}
+                        </p>
+                        <button
+                          onClick={() => handleReadMore(bookmark.storyId)}
+                          className="button"
+                        >
+                          Read more
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  {/* Pagination Controls */}
+                  <div className="pagination-controls">
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    <span>
+                      Page {currentPage} of{" "}
+                      {Math.ceil(bookmarks.length / bookmarksPerPage)}
+                    </span>
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) =>
+                          Math.min(
+                            prev + 1,
+                            Math.ceil(bookmarks.length / bookmarksPerPage)
+                          )
+                        )
+                      }
+                      disabled={
+                        currentPage ===
+                        Math.ceil(bookmarks.length / bookmarksPerPage)
+                      }
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p>No bookmarks found.</p>
+              )}
+            </div>
+          </div>
+          <div className="bottom-container">
+            <h2>Your Stories</h2>
+            {error && <p className="error-message">{error}</p>}
+
+            {stories.length > 0 ? (
+              <>
+                <ul className="story-list">
+                  {currentStories.map((story) => (
+                    <div className="story-item" key={story.storyId}>
+                      <li>
+                        <div id="story-card">
+                          <h3>{story.title}</h3>
+                          <p>{story.summary || "No summary available"}</p>
+                        </div>
+                        <div className="button-group">
+                          <button
+                            onClick={() => handleReadMore(story.storyId)} // Navigate to the single story
+                            className="button"
+                          >
+                            Read more
+                          </button>
+                          <button
+                            onClick={() => handleStoryDelete(story.storyId)}
+                            className="button"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+                {/* Pagination Controls for Stories */}
+                <div className="pagination-controls">
+                  <button
+                    onClick={() =>
+                      setCurrentStoriesPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentStoriesPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <span>
+                    Page {currentStoriesPage} of{" "}
+                    {Math.ceil(stories.length / storiesPerPage)}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentStoriesPage((prev) =>
+                        Math.min(
+                          prev + 1,
+                          Math.ceil(stories.length / storiesPerPage)
+                        )
+                      )
+                    }
+                    disabled={
+                      currentStoriesPage ===
+                      Math.ceil(stories.length / storiesPerPage)
+                    }
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p>Nothing to find here...</p>
+            )}
           </div>
         </div>
       </section>

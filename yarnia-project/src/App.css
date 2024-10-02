@@ -471,9 +471,8 @@ body {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
-  width: fit-content;
-  max-width: 500px;
-  max-height: 1300px;
+  width: 900px;
+  max-width: fit-content;
 }
 .bottom-container {
   display: flex;
@@ -522,6 +521,7 @@ body {
   display: flex;
   flex-wrap: no-wrap;
   gap: 20px;
+  justify-content: center;
 }
 
 .pagination-controls {
