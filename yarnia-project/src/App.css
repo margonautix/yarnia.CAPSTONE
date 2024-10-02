@@ -1465,8 +1465,9 @@ html {
   color: #bc6c25;
 }
 .dark-mode-toggle {
-  background-color: #ff000000;
+  background-color: #3b1b0080;
   text-shadow: 1px 1px 10px #000000;
+  margin-left: 20px;
 }
 
 .comments-list {
@@ -2580,4 +2581,11 @@ html.dark button[type="submit"] {
 
 html.dark button[type="submit"]:hover {
   background-color: #9b977a; /* Softer brownish highlight */
+}
+
+html.dark .dark-mode-toggle {
+  background-color: #c4946dc7;
+  text-shadow: 1px 1px 10px #000000;
+  margin: 0px;
+  margin-left: 20px;
 }
