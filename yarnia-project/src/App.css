@@ -112,6 +112,7 @@
   height: 350px;
   width: 500px;
   padding: 0px;
+  box-shadow: 1px 1px 5px #ba733442;
 }
 
 .login h2 {
@@ -420,6 +421,18 @@ body {
   font-size: 2em;
   margin-bottom: 15px;
   color: #606c38;
+}
+
+.user-profile-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 1px 1px 5px #ba733442;
+  background-color: #faedcd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  width: fit-content;
 }
 
 /* Profile Container Styles */

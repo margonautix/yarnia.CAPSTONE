@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { fetchComments, postComment, deleteComment } from "../API"; 
+import { fetchComments, postComment, deleteComment } from "../API";
 
 const Comments = ({ storyId, refreshComments }) => {
-  const [comments, setComments] = useState([]); 
-  const [newComment, setNewComment] = useState(""); 
-  const [error, setError] = useState(null); 
-  const [loading, setLoading] = useState(false); 
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Get the current logged-in user's ID from localStorage (or from context)
   const userId = JSON.parse(localStorage.getItem("user"))?.id;
@@ -13,15 +13,15 @@ const Comments = ({ storyId, refreshComments }) => {
   // Fetch comments when the component mounts or when `storyId` changes
   useEffect(() => {
     const fetchStoryComments = async () => {
-      setLoading(true); 
+      setLoading(true);
       try {
-        const commentsResponse = await fetchComments(storyId); 
-        setComments(commentsResponse); 
+        const commentsResponse = await fetchComments(storyId);
+        setComments(commentsResponse);
       } catch (error) {
         console.error("Failed to fetch comments:", error);
         setError("Failed to load comments.");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -34,9 +34,9 @@ const Comments = ({ storyId, refreshComments }) => {
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     try {
-      await postComment(storyId, newComment); 
-      setNewComment(""); 
-      refreshComments(); 
+      await postComment(storyId, newComment);
+      setNewComment("");
+      refreshComments();
     } catch (error) {
       console.error("Failed to post comment:", error);
       setError("Failed to post comment.");
@@ -45,9 +45,13 @@ const Comments = ({ storyId, refreshComments }) => {
 
   // Handle deleting a comment
   const handleDeleteComment = async (commentId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this comment?"
+    );
+    if (!confirmDelete) return; // If the user cancels, exit the function
     try {
-      await deleteComment(storyId, commentId); 
-      refreshComments(); 
+      await deleteComment(storyId, commentId);
+      refreshComments();
     } catch (error) {
       console.error("Failed to delete comment:", error);
       setError("Failed to delete comment.");
