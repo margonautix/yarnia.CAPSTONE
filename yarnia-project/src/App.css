@@ -1534,3 +1534,151 @@ button[type="submit"]:hover {
   margin-top: 48px;
   margin-left: 584px;
 }
+
+/* darkmode */
+/* Dark Mode Styles for Navbar */
+html.dark .navbar {
+  background: linear-gradient(to bottom, #031400, #25220067);
+  box-shadow: 0 1px 10px #00000067;
+}
+
+html.dark .navbar ul li a {
+  color: #fefae0; /* Light text color for navbar links */
+  background-color: transparent;
+}
+
+html.dark .navbar ul li a:hover {
+  background-color: #3e3e3e;
+  color: #fefae0;
+}
+
+/* Navbar Image */
+html.dark .navbar img {
+  filter: brightness(0.8);
+  border-radius: 8px;
+}
+
+/* Dark Mode for Login Container */
+html.dark .login {
+  color: #fefae0;
+  background-color: rgba(
+    40,
+    54,
+    24,
+    0.85
+  ); /* Darker background color for login */
+  text-shadow: #000000 1px 1px 10px;
+  box-shadow: 1px 1px 5px #00000088;
+}
+
+html.dark .login input {
+  background-color: #2f2f2f;
+  color: #fefae0;
+  border: 1px solid #7f8d52;
+}
+
+html.dark .login input::placeholder {
+  color: #9aa282;
+}
+
+html.dark .login button {
+  background-color: #4b5b30;
+  color: #fefae0;
+  border: 1px solid #7f8d52;
+}
+
+html.dark .login button:hover {
+  background-color: #6a793c;
+}
+
+/* Dark Mode for Navbar Responsive Styles */
+@media (max-width: 768px) {
+  html.dark .navbar {
+    background: linear-gradient(to bottom, #2e2e2e, #4a4a4a);
+  }
+
+  html.dark .navbar ul li a:hover {
+    background-color: #4a4a4a;
+  }
+}
+
+/* Additional General Dark Mode Styles */
+
+/* Background and Text for the Entire Page */
+html.dark,
+body.dark {
+  background-color: #1c1c1c; /* Dark background for the whole page */
+  color: #fefae0; /* Light text color */
+}
+
+/* Dark Mode for Buttons */
+html.dark button {
+  background-color: #4b5b30; /* Darker button background */
+  color: #fefae0; /* Light text for buttons */
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+html.dark button:hover {
+  background-color: #6a793c; /* Lighter shade for hover */
+}
+
+/* Dark Mode for Input Fields */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #2f2f2f; /* Darker background for input fields */
+  color: #fefae0; /* Light text color */
+  border: 1px solid #7f8d52; /* Border color for inputs */
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #9aa282; /* Lighter color for placeholders */
+}
+
+/* Dark Mode for Navbar List Items */
+html.dark .navbar ul {
+  gap: 20px;
+}
+
+html.dark .navbar ul li {
+  border-radius: 8px;
+}
+
+html.dark .navbar ul li a {
+  padding: 10px 15px;
+  transition: color 0.3s, background 0.3s;
+}
+
+/* Dark Mode for Navbar Last Child Item */
+html.dark .navbar ul li:last-child {
+  margin-left: auto;
+}
+
+/* Dark Mode for Admin-specific List Item */
+html.dark .admin-li {
+  margin-left: auto;
+}
+
+/* Navbar Links in Dark Mode */
+html.dark .navbar ul li a {
+  text-decoration: none;
+  color: #fefae0; /* Light color for text */
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+/* Mobile Responsive for Dark Mode */
+@media (max-width: 768px) {
+  html.dark .navbar {
+    flex-direction: column;
+    align-items: center;
+    position: static;
+  }
+
+  html.dark .navbar ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
