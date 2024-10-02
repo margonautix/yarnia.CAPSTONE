@@ -41,7 +41,6 @@ const NavBar = ({ user, setUser }) => {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     }
-    console.log(document.documentElement.className); // Check if the class is being added
   };
 
   return (
