@@ -224,9 +224,11 @@ const Stories = () => {
                 <span className="bookmark-count">
                   {story._count?.bookmarks || 0}
                 </span>
-                <span className="comment-count">
-                  {story._count?.comments || 0}
-                </span>
+                <Link to={`/stories/${story.storyId}/comments`}>
+                  <span className="comment-count">
+                    {story._count?.comments || 0}
+                  </span>
+                </Link>
               </div>
               <h2>{story.title}</h2>
               <p>
