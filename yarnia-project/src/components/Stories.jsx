@@ -220,6 +220,16 @@ const Stories = () => {
         {currentStories.length > 0 ? (
           currentStories.map((story) => (
             <div key={story.storyId} className="story-card">
+              <div className="story-card-counts">
+                <span className="bookmark-count">
+                  {story._count?.bookmarks || 0}
+                </span>
+                <Link to={`/stories/${story.storyId}/comments`}>
+                  <span className="comment-count">
+                    {story._count?.comments || 0}
+                  </span>
+                </Link>
+              </div>
               <h2>{story.title}</h2>
               <p>
                 <strong>Author:</strong>{" "}
@@ -241,6 +251,7 @@ const Stories = () => {
               <p>
                 <strong>Summary:</strong> {story.summary}
               </p>
+
               <div className="stats-group">
                 <p>
                   <strong>Bookmarks:</strong> {story._count?.bookmarks || 0}
@@ -256,43 +267,6 @@ const Stories = () => {
           ))
         ) : (
           <p>No stories match your search.</p>
-        )}
-
-        {showModal && selectedStory && (
-          <div className="modal-backdrop">
-            <div className="modal-content">
-              <button id="X" onClick={closeModal}>
-                X
-              </button>
-              <h2>{selectedStory.title}</h2>
-              <p>
-                <strong>Author:</strong>{" "}
-                {selectedStory.author?.username || "Unknown Author"}
-              </p>
-              <p>
-                <strong>Published On:</strong>{" "}
-                {new Date(selectedStory.createdAt).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Genre:</strong> {selectedStory.genre}
-              </p>
-              <p>
-                <strong>Excerpt:</strong>
-              </p>
-              <div
-                className="story-content"
-                dangerouslySetInnerHTML={{
-                  __html: selectedStory.content.slice(0, 500),
-                }}
-              ></div>
-
-              <button
-                onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
-              >
-                View Story
-              </button>
-            </div>
-          </div>
         )}
 
         <div className="pagination">

@@ -58,7 +58,6 @@ const seed = async () => {
           summary: faker.lorem.sentence(10),
           genre: randomGenre, // Assign a random genre to each story
           authorId: user.id, // The story's author
-          // authorName: user.username,
           createdAt: faker.date.past(),
         },
       });
@@ -77,27 +76,32 @@ const seed = async () => {
         });
       }
 
-      // Create random bookmarks for each story from the story's author
-      for (let k = 0; k < getRandomNumber(0, 5); k++) {
+      // Create random bookmarks for each story
+      for (let k = 0; k < getRandomNumber(0, 1000); k++) {
+        const randomUser = users[getRandomNumber(0, users.length - 1)];
+
         // Check if bookmark already exists
         const existingBookmark = await prisma.bookmark.findUnique({
           where: {
             userId_storyId: {
-              userId: user.id,
+              userId: randomUser.id,
               storyId: story.storyId,
             },
           },
         });
 
-        // If it doesn't exist, create the bookmark
         if (!existingBookmark) {
           await prisma.bookmark.create({
             data: {
-              userId: user.id, // The author of the story bookmarks the story
+              userId: randomUser.id,
               storyId: story.storyId,
               createdAt: faker.date.past(),
             },
           });
+        } else {
+          console.log(
+            `Bookmark already exists for user ${randomUser.id} and story ${story.storyId}`
+          );
         }
       }
     }
@@ -105,7 +109,10 @@ const seed = async () => {
 };
 
 seed()
-  .then(async () => await prisma.$disconnect())
+  .then(async () => {
+    console.log("Seeding completed");
+    await prisma.$disconnect();
+  })
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();

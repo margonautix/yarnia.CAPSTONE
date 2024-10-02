@@ -764,3 +764,24 @@ app.post("/api/upload/profile_pic", (req, res) => {
     res.json({ img_url: `http://localhost:3000/${filePath}` });
   });
 });
+
+// GET all comments on individual story
+app.get("/api/stories/:storyId/comments", async (req, res, next) => {
+  const { storyId } = req.params;
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        storyId: parseInt(storyId),
+      },
+      include: {
+        user: {
+          select: { username: true },
+        },
+      },
+    });
+    res.json(comments);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Failed to fetch comments." });
+  }
+});

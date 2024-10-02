@@ -13,11 +13,11 @@ import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
+import StoryComments from "./components/StoryComments"; // Importing the new StoryComments component
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
 // import "./NEWapp.css";
 import jwt_decode from "jwt-decode";
-import Comments from "./components/Comments";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -67,10 +67,10 @@ function App() {
         />
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/stories/:storyId" element={<SingleStory user={user} />} />
+        <Route path="/stories/:storyId/comments" element={<StoryComments />} />
         <Route path="/logout" element={<Logout setUser={setUser} />} />
         <Route path="/add-story" element={<AddStory />} />
         <Route path="/stories" element={<StoryDetails />} />
-        <Route path="/comment" element={<Comments />} />
         <Route path="/comments" element={<AdminCommentsFeed />} />
         <Route path="/users" element={<AdminUsers />} />
         <Route path="/users/:authorId" element={<UserProfile />} />

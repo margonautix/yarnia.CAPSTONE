@@ -47,6 +47,22 @@ export async function deleteUsers(userId) {
   }
 }
 
+export const fetchStoryComments = async (storyId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/stories/${storyId}/comments`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch comments");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching story comments:", error);
+    throw error;
+  }
+};
+
 // Fetch all stories from the API
 export async function fetchAllStories() {
   try {
@@ -54,7 +70,7 @@ export async function fetchAllStories() {
     if (!response.ok) {
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
     console.error("Error fetching all stories:", error);
     throw error;
@@ -109,7 +125,7 @@ export const fetchComments = async (storyId) => {
         `Failed to fetch comments for story ${storyId}: ${response.statusText}`
       );
     }
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
     console.error("Error fetching comments:", error);
     throw error;
@@ -131,7 +147,7 @@ export async function postComment(storyId, content) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ content }), 
+      body: JSON.stringify({ content }),
     });
 
     if (!response.ok) {
@@ -139,7 +155,7 @@ export async function postComment(storyId, content) {
       throw new Error(errorData.message || "Failed to post comment.");
     }
 
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
     console.error("Error posting comment:", error);
     throw error;
@@ -194,7 +210,7 @@ export async function fetchAllComments() {
     if (!response.ok) {
       throw new Error(`Failed to fetch comments: ${response.statusText}`);
     }
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
     console.error("Error fetching all comments:", error);
     throw error;
@@ -215,11 +231,11 @@ export async function createNewUser(username, email, password) {
       return json;
     } else {
       console.error("Registration failed:", json.message);
-      return { error: json.message }; 
+      return { error: json.message };
     }
   } catch (err) {
     console.error("Oops, something went wrong during registration!", err);
-    throw err; 
+    throw err;
   }
 }
 
@@ -241,10 +257,10 @@ export async function loginUser(email, password) {
     localStorage.setItem("token", json.token); // Save the token
     localStorage.setItem("user", JSON.stringify(json.user)); // Save the user info
 
-    return json; 
+    return json;
   } catch (err) {
     console.error("Login failed:", err);
-    throw err; 
+    throw err;
   }
 }
 
@@ -270,7 +286,7 @@ export const updateStoryContent = async (
     return await response.json();
   } catch (error) {
     console.error("Error updating story content:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -278,7 +294,7 @@ export const fetchBookmarkedStories = async (userId, token) => {
   try {
     const response = await fetch(`${API_URL}/users/${userId}/bookmarks`, {
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -290,7 +306,7 @@ export const fetchBookmarkedStories = async (userId, token) => {
     return data; // Return the bookmarked stories with author information
   } catch (error) {
     console.error("Error fetching user bookmarks:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -330,10 +346,10 @@ export const removeBookmark = async (storyId, userId, token, bookmarkId) => {
     }
 
     const json = await response.json();
-    return json; 
+    return json;
   } catch (error) {
     console.error("Failed to remove the bookmark:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -356,7 +372,7 @@ export const checkBookmarkStatus = async (userId, storyId) => {
     return data;
   } catch (error) {
     console.error("Error checking bookmark status:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -437,7 +453,7 @@ export async function fetchUserStoriesById(userId) {
       );
     }
 
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
     console.error("Error fetching user stories:", error);
     throw error;
