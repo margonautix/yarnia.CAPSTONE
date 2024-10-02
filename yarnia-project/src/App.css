@@ -1613,9 +1613,9 @@ html.dark .login button {
   border: 1px solid #7f8d52;
 }
 
-html.dark .login button:hover {
+/* html.dark .login button:hover {
   background-color: #6a793c;
-}
+} */
 
 /* Dark Mode for Navbar Responsive Styles */
 @media (max-width: 768px) {
@@ -2586,7 +2586,8 @@ html.dark button[type="submit"]:hover {
 }
 
 html.dark .dark-mode-toggle {
-  background-color: #faebc4;
+  background-color: transparent;
+  background-image: url(./components/images/light-mode.png);
   text-shadow: 1px 1px 10px #000000;
   margin: 0px;
   margin-left: 20px;
@@ -2598,7 +2599,12 @@ html.dark .dark-mode-toggle:hover {
 }
 
 .dark-mode-toggle {
-  background-color: #3a4a37;
+  background-color: transparent;
+  background-image: url(./components/images/dark-mode.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 15px;
   text-shadow: 1px 1px 10px #000000;
   margin-left: 20px;
   transition: background-color 0.3s ease; /* Adding transition */

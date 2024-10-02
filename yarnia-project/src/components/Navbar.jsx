@@ -49,9 +49,10 @@ const NavBar = ({ user, setUser }) => {
       <ul>
         {" "}
         <li>
-          <button onClick={handleDarkModeToggle} className="dark-mode-toggle">
-            {darkMode ? "🌞" : "🌜"}
-          </button>
+          <button
+            onClick={handleDarkModeToggle}
+            className="dark-mode-toggle"
+          ></button>
         </li>
         <li>
           <Link to="/">Home</Link>
