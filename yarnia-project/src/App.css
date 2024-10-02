@@ -2029,6 +2029,14 @@ html.dark .profile-container {
   width: 900px;
   max-width: fit-content;
 }
+html.dark .profile-container h2 {
+  color: #ffe7c8;
+}
+html.dark #welcome {
+  color: #ffe7c8;
+  font-size: 40px;
+  text-shadow: 2px 2px 2px #000000;
+}
 
 /* Dark Mode for Bottom Container */
 html.dark .bottom-container {
@@ -2086,6 +2094,9 @@ html.dark .pagination-controls button:hover {
 /* Dark Mode for Information and Upload Section */
 html.dark .info {
   color: #f4f1e0; /* Light beige text */
+}
+html.dark .info p {
+  color: #fff7d3;
 }
 
 html.dark .image-upload-container {
@@ -2184,7 +2195,7 @@ html.dark .error-message {
 html.dark #history {
   font-size: 1.5em;
   margin-bottom: 10px;
-  color: #c7b296; /* Softer warm yellow */
+  color: #ffe7c8; /* Softer warm yellow */
 }
 
 /* Dark Mode for Bookmarks List Wrapper */

@@ -370,7 +370,7 @@ const Profile = ({ user, setUser }) => {
         <div className="profile">
           <div className="profile-stories-wrapper">
             <div className="profile-container">
-              <h1>
+              <h1 id="welcome">
                 Welcome,{" "}
                 {isEditing ? (
                   <div className="group">
