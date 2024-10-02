@@ -8,8 +8,8 @@ export default function UserProfile() {
   const [userStories, setUserStories] = useState([]);
   const [userError, setUserError] = useState(null);
   const [storiesError, setStoriesError] = useState(null);
-  const [loading, setLoading] = useState(true); 
-  const navigate = useNavigate(); 
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch user data
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function UserProfile() {
       try {
         const userData = await fetchUserProfileById(authorId);
         if (userData) {
-          setUser(userData); 
+          setUser(userData);
         } else {
           setUserError("User not found.");
         }
@@ -25,7 +25,7 @@ export default function UserProfile() {
         console.error("Failed to fetch user data:", error);
         setUserError("Failed to fetch user data.");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -38,9 +38,9 @@ export default function UserProfile() {
       try {
         const storiesData = await fetchUserStoriesById(authorId);
         if (storiesData && storiesData.length > 0) {
-          setUserStories(storiesData); 
+          setUserStories(storiesData);
         } else {
-          setUserStories([]); 
+          setUserStories([]);
         }
       } catch (error) {
         console.error("No stories found:", error);
@@ -54,7 +54,7 @@ export default function UserProfile() {
   }, [authorId]);
 
   if (loading) {
-    return <div>Loading user data...</div>; 
+    return <div>Loading user data...</div>;
   }
 
   if (userError) return <p>{userError}</p>;
@@ -63,7 +63,7 @@ export default function UserProfile() {
     <>
       <section id="whole-profile">
         <div className="profile">
-          <div className="profile-container">
+          <div className="user-profile-container">
             {user ? (
               <>
                 <div className="profile-header">
@@ -75,7 +75,7 @@ export default function UserProfile() {
                 <div className="profile-stories-wrapper">
                   <h2>{user.username}'s Stories</h2>
                   {storiesError ? (
-                    <p>{storiesError}</p> 
+                    <p>{storiesError}</p>
                   ) : userStories.length > 0 ? (
                     <ul className="story-list">
                       {userStories.map((story) => (
@@ -98,7 +98,7 @@ export default function UserProfile() {
                       ))}
                     </ul>
                   ) : (
-                    <p>No stories available.</p> 
+                    <p>No stories available.</p>
                   )}
                 </div>
               </>

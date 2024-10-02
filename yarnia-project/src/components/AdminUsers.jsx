@@ -14,7 +14,7 @@ export default function AdminUsersFeed() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const allUsers = await fetchAllUsers(); 
+        const allUsers = await fetchAllUsers();
         setUsers(allUsers);
         setFilteredUsers(allUsers);
       } catch (err) {
@@ -22,15 +22,18 @@ export default function AdminUsersFeed() {
       }
     };
 
-
     fetchUsers();
   }, []);
 
   // Handle delete action for users
   const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user's account, along with all their stories and comments? This action cannot be undone."
+    );
+    if (!confirmDelete) return; // If the user cancels, exit the function
     try {
-      await deleteUsers(userId); 
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); 
+      await deleteUsers(userId);
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
       setFilteredUsers((prevUsers) =>
         prevUsers.filter((user) => user.id !== userId)
       );
@@ -45,7 +48,7 @@ export default function AdminUsersFeed() {
     const term = e.target.value;
     setSearchTerm(term);
     if (term.trim() === "") {
-      setFilteredUsers(users); 
+      setFilteredUsers(users);
     } else {
       const lowerCaseTerm = term.toLowerCase();
       const filtered = users.filter(
@@ -56,7 +59,7 @@ export default function AdminUsersFeed() {
       );
       setFilteredUsers(filtered);
     }
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   // Pagination logic
