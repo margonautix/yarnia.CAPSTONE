@@ -180,8 +180,8 @@ body {
   padding-bottom: -30px;
 }
 .sidebar {
-  height: 20%;
-  width: 90%;
+  height: fit-content;
+  width: 100%;
   background: #ccd5ae;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -445,6 +445,15 @@ body {
   align-items: center;
 }
 
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  max-height: 2000px;
+  width: 1600px;
+}
+
 /* Profile Header */
 .profile h1 {
   font-size: 2em;
@@ -462,6 +471,7 @@ body {
   margin-bottom: 20px;
   border-radius: 10px;
   width: fit-content;
+  margin-bottom: 20px;
 }
 
 /* Profile Container Styles */
@@ -475,6 +485,7 @@ body {
   border-radius: 10px;
   width: 900px;
   max-width: fit-content;
+  margin-bottom: 20px;
 }
 .bottom-container {
   display: flex;
@@ -521,9 +532,11 @@ body {
 
 .profile-stories-wrapper {
   display: flex;
-  flex-wrap: no-wrap;
+  flex-wrap: nowrap;
   gap: 20px;
   justify-content: center;
+  align-content: center;
+  max-width: 100%;
 }
 
 .pagination-controls {
@@ -1411,7 +1424,7 @@ html {
   margin: 1.5rem 0;
   line-height: 1.6;
   font-family: "Times New Roman", serif;
-  background-color: #50492b;
+  background-color: #a0a8546c;
   padding: 1rem;
   border-radius: 10px;
 }
@@ -1450,6 +1463,11 @@ html {
 
 .toggle-comments-btn:hover {
   color: #bc6c25;
+}
+.dark-mode-toggle {
+  background-color: #3b1b0080;
+  text-shadow: 1px 1px 10px #000000;
+  margin-left: 20px;
 }
 
 .comments-list {
@@ -1801,6 +1819,11 @@ html.dark .story-card {
   background: #25301a; /* Dark green-brown for card background */
   color: #fefae0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Softer shadow */
+  text-align: left;
+}
+
+html.dark .story-card p {
+  text-align: left;
 }
 
 html.dark .story-card h2 {
@@ -2133,7 +2156,7 @@ html.dark .comment-list {
 html.dark .bookmark-item,
 html.dark .story-item,
 html.dark .comments-item {
-  background-color: #5b6b54; /* Muted green-brown */
+  background-color: #273123; /* Muted green-brown */
   color: #f4f1e0;
   padding: 15px;
   margin-bottom: 10px;
@@ -2284,7 +2307,7 @@ html.dark .error-message {
 html.dark .form-group input[type="text"],
 html.dark .form-group select,
 html.dark .form-group textarea {
-  background-color: #6a7b5a; /* Muted green-brown */
+  background-color: #17200d; /* Muted green-brown */
   color: #f4f1e0;
   border: 1px solid #9d9a7b;
   padding: 10px;
@@ -2496,22 +2519,23 @@ html.dark .register-form .login-button:hover {
 
 /* Dark Mode for Single Story Component */
 html.dark .story-container {
-  background-color: #5b6b54; /* Muted green-brown */
+  background-color: #5b6b54;
   color: #f4f1e0;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 html.dark .story-single h2 {
-  color: #e0c084; /* Warm beige */
+  color: #e0c084;
+  text-shadow: 1px 1px 2px black;
 }
 
 html.dark .story-single h4 {
-  color: #c7b296; /* Warm yellow */
+  color: #c7b296;
 }
 
 html.dark .story-content {
-  background-color: #4a5a42; /* Dark olive green */
+  background-color: #2a3524;
   color: #f4f1e0;
   padding: 1rem;
   border-radius: 10px;
@@ -2557,4 +2581,11 @@ html.dark button[type="submit"] {
 
 html.dark button[type="submit"]:hover {
   background-color: #9b977a; /* Softer brownish highlight */
+}
+
+html.dark .dark-mode-toggle {
+  background-color: #c4946dc7;
+  text-shadow: 1px 1px 10px #000000;
+  margin: 0px;
+  margin-left: 20px;
 }
