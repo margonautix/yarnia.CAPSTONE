@@ -30,7 +30,6 @@ function App() {
         const decodedUser = jwt_decode(token);
 
         if (decodedUser.exp * 1000 < Date.now()) {
-          console.log("Token expired");
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setUser(null);
