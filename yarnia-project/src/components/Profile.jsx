@@ -193,6 +193,7 @@ const Profile = ({ user, setUser }) => {
     );
 
     if (!confirmDelete) {
+      return;
     }
 
     try {
