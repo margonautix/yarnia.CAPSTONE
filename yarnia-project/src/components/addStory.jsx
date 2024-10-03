@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchWithAuth } from "../API"; 
-import ReactQuill from "react-quill"; 
-import "react-quill/dist/quill.snow.css"; 
+import { fetchWithAuth } from "../API";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddStory = () => {
-  const [title, setTitle] = useState(""); 
-  const [summary, setSummary] = useState(""); 
-  const [content, setContent] = useState(""); 
-  const [genre, setGenre] = useState(""); 
-  const [error, setError] = useState(null); 
-  const [showPopup, setShowPopup] = useState(false); 
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [content, setContent] = useState("");
+  const [genre, setGenre] = useState("");
+  const [error, setError] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   // Predefined genres for the dropdown
@@ -29,7 +29,6 @@ const AddStory = () => {
     e.preventDefault(); // Prevent form refresh
 
     try {
-
       // Send POST request directly within handleSubmit
       const response = await fetch("http://localhost:3000/api/stories", {
         method: "POST",
@@ -47,12 +46,9 @@ const AddStory = () => {
 
       if (!response.ok) {
         throw new Error("Failed to add story");
-
       }
 
       const result = await response.json();
-
-      console.log("Story added successfully:", result);
 
       // Story added successfully, navigate to home page
       navigate(`/stories/${result.storyId}`);
@@ -74,7 +70,7 @@ const AddStory = () => {
               type="text"
               id="title"
               value={title}
-              onChange={(e) => setTitle(e.target.value)} 
+              onChange={(e) => setTitle(e.target.value)}
               required
             />
           </div>
@@ -107,20 +103,20 @@ const AddStory = () => {
             <label htmlFor="content">Content</label>
             <ReactQuill
               value={content}
-              onChange={setContent} 
+              onChange={setContent}
               modules={{
                 toolbar: [
-                  [{ header: "1" }, { header: "2" }, { font: [] }], 
+                  [{ header: "1" }, { header: "2" }, { font: [] }],
                   [{ size: [] }], // Font sizes
-                  ["bold", "italic", "underline", "strike", "blockquote"], 
+                  ["bold", "italic", "underline", "strike", "blockquote"],
                   [
                     { list: "ordered" },
                     { list: "bullet" },
                     { indent: "-1" },
                     { indent: "+1" },
-                  ], 
-                  [{ align: "justify" }], 
-                  ["clean"], 
+                  ],
+                  [{ align: "justify" }],
+                  ["clean"],
                 ],
               }}
               formats={[
@@ -135,11 +131,11 @@ const AddStory = () => {
                 "list",
                 "bullet",
                 "indent",
-                "align", 
+                "align",
               ]}
               placeholder="Write your story here..."
               required
-              style={{ height: "500px" }} 
+              style={{ height: "500px" }}
             />
           </div>
           <br />
