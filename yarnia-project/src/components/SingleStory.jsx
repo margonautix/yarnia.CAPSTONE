@@ -4,13 +4,13 @@ import {
   fetchSingleStory,
   updateStoryContent,
   bookmarkStory,
-  deleteStory, // Ensure this import is correct
+  deleteStory,
   fetchComments,
   postComment,
   checkBookmarkStatus,
-  deleteComment, // Import your new API function
-} from "../API"; // Adjust the API import path as necessary
-import jwt_decode from "jwt-decode"; // To decode JWT
+  deleteComment,
+} from "../API";
+import jwt_decode from "jwt-decode";
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
 import ReactQuill from "react-quill"; // Import ReactQuill
 import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
@@ -41,7 +41,7 @@ export default function SingleStory({ user }) {
         setSummary(storyResponse.summary); // Set the summary for editing
 
         // Fetch the comments related to the story
-        const commentsResponse = await fetchComments(storyId); // Ensure this API call works
+        const commentsResponse = await fetchComments(storyId);
         if (commentsResponse) {
           setComments(commentsResponse); // Set the comments state
         }
@@ -140,7 +140,7 @@ export default function SingleStory({ user }) {
         prevComments.filter((comment) => comment.commentId !== commentId)
       );
 
-      alert("Comment deleted successfully!"); // Optional: You can remove this alert if you'd prefer no prompt
+      alert("Comment deleted successfully!");
     } catch (error) {
       console.error("Failed to delete the comment:", error);
       setError("Failed to delete the comment.");
@@ -155,7 +155,7 @@ export default function SingleStory({ user }) {
     }
     const token = localStorage.getItem("token"); // Get the token
     try {
-      await bookmarkStory(storyId, currentUser.id, token); // Pass the token correctly
+      await bookmarkStory(storyId, currentUser.id, token); // Pass the token
       setBookmarked(true); // Update bookmark status
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
@@ -164,196 +164,196 @@ export default function SingleStory({ user }) {
 
   // Toggle the comments dropdown
   const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen); // Toggle the comments section
-  };
+    setIsCommentsOpen(!isCommentsOpen);
 
-  // Handle new comment submission
-  const handleSubmitComment = async (e) => {
-    e.preventDefault();
-    if (!newComment) return;
+    // Handle new comment submission
+    const handleSubmitComment = async (e) => {
+      e.preventDefault();
+      if (!newComment) return;
 
-    try {
-      await postComment(storyId, newComment); // Post the new comment to the API
-      setNewComment(""); // Clear the comment input
-      fetchStoryAndComments(storyId); // Refresh the comments
-    } catch (error) {
-      console.error("Failed to post comment:", error);
-      setError("Failed to post comment.");
-    }
-  };
+      try {
+        await postComment(storyId, newComment); // Post the new comment to the API
+        setNewComment(""); // Clear the comment input
+        fetchStoryAndComments(storyId); // Refresh the comments
+      } catch (error) {
+        console.error("Failed to post comment:", error);
+        setError("Failed to post comment.");
+      }
+    };
 
-  const renderComments = () => {
-    if (comments.length > 0) {
-      return (
-        <ul className="comments-list">
-          {comments.map((comment) => (
-            <li key={comment.commentId} className="comment-item">
-              <strong>
-                {comment.user?.username ? (
-                  currentUser?.id === comment.userId ? (
-                    // Link to the current user's profile
-                    <Link to="/profile">{comment.user.username}</Link>
+    const renderComments = () => {
+      if (comments.length > 0) {
+        return (
+          <ul className="comments-list">
+            {comments.map((comment) => (
+              <li key={comment.commentId} className="comment-item">
+                <strong>
+                  {comment.user?.username ? (
+                    currentUser?.id === comment.userId ? (
+                      // Link to the current user's profile
+                      <Link to="/profile">{comment.user.username}</Link>
+                    ) : (
+                      // Link to other users' profiles
+                      <Link to={`/users/${comment.userId}`}>
+                        {comment.user.username}
+                      </Link>
+                    )
                   ) : (
-                    // Link to other users' profiles
-                    <Link to={`/users/${comment.userId}`}>
-                      {comment.user.username}
-                    </Link>
-                  )
-                ) : (
-                  "Unknown User"
+                    "Unknown User"
+                  )}
+                </strong>
+                : {comment.content || "No content available"}
+                {/* Show delete button for user, admin, or story author */}
+                {(currentUser?.id === comment.userId ||
+                  currentUser?.isAdmin ||
+                  currentUser?.id === story?.authorId) && (
+                  <button
+                    onClick={() => handleDeleteComment(comment.commentId)}
+                    className="button"
+                  >
+                    Delete
+                  </button>
                 )}
-              </strong>
-              : {comment.content || "No content available"}
-              {/* Show delete button for user, admin, or story author */}
-              {(currentUser?.id === comment.userId ||
-                currentUser?.isAdmin ||
-                currentUser?.id === story?.authorId) && (
-                <button
-                  onClick={() => handleDeleteComment(comment.commentId)}
-                  className="button"
-                >
+              </li>
+            ))}
+          </ul>
+        );
+      } else {
+        return <p>No comments yet.</p>;
+      }
+    };
+
+    return (
+      <div className="story-container">
+        <main>
+          <ul className="story-single">
+            {/* Display or edit story title */}
+            <div className="form-group">
+              {isEditing ? (
+                <input
+                  type="text"
+                  id="title"
+                  value={title} // Controlled input for title
+                  onChange={(e) => setTitle(e.target.value)} // Update title state
+                  placeholder="Enter story title"
+                />
+              ) : (
+                <h2>{story?.title || "No Title"}</h2> // Display the title when not editing
+              )}
+            </div>
+
+            {/* Display or edit story summary */}
+            <div className="form-group">
+              {isEditing ? (
+                <textarea
+                  value={summary} // Controlled textarea for summary
+                  id="summary"
+                  onChange={(e) => setSummary(e.target.value)} // Update summary state
+                  placeholder="Enter story summary"
+                />
+              ) : (
+                <h4>Description: {story?.summary || "No Description"}</h4> // Display the summary when not editing
+              )}
+            </div>
+
+            {/* Existing content editing section */}
+            <div>
+              {isEditing ? (
+                <ReactQuill
+                  value={content} // Controlled editor for content
+                  onChange={setContent} // Update content state
+                  modules={{
+                    toolbar: [
+                      [{ header: "1" }, { header: "2" }, { font: [] }],
+                      [{ size: [] }],
+                      ["bold", "italic", "underline", "strike", "blockquote"],
+                      [
+                        { list: "ordered" },
+                        { list: "bullet" },
+                        { indent: "-1" },
+                        { indent: "+1" },
+                      ],
+                      [{ align: "justify" }],
+                      ["clean"],
+                    ],
+                  }}
+                  formats={[
+                    "header",
+                    "font",
+                    "size",
+                    "bold",
+                    "italic",
+                    "underline",
+                    "strike",
+                    "blockquote",
+                    "list",
+                    "bullet",
+                    "indent",
+                    "align",
+                  ]}
+                />
+              ) : (
+                <div
+                  className="story-content"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(story?.content || "No Content"),
+                  }}
+                />
+              )}
+            </div>
+            {/* Edit and Save/Delete Buttons */}
+            {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
+              <div className="button-group">
+                {isEditing ? (
+                  <button onClick={handleSaveContent} className="button">
+                    Save
+                  </button>
+                ) : (
+                  <button onClick={() => setIsEditing(true)} className="button">
+                    Edit
+                  </button>
+                )}
+                <button onClick={handleDeleteStory} className="button">
                   Delete
                 </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      );
-    } else {
-      return <p>No comments yet.</p>;
-    }
-  };
-
-  return (
-    <div className="story-container">
-      <main>
-        <ul className="story-single">
-          {/* Display or edit story title */}
-          <div className="form-group">
-            {isEditing ? (
-              <input
-                type="text"
-                id="title"
-                value={title} // Controlled input for title
-                onChange={(e) => setTitle(e.target.value)} // Update title state
-                placeholder="Enter story title"
-              />
-            ) : (
-              <h2>{story?.title || "No Title"}</h2> // Display the title when not editing
+              </div>
             )}
-          </div>
-
-          {/* Display or edit story summary */}
-          <div className="form-group">
-            {isEditing ? (
-              <textarea
-                value={summary} // Controlled textarea for summary
-                id="summary"
-                onChange={(e) => setSummary(e.target.value)} // Update summary state
-                placeholder="Enter story summary"
-              />
-            ) : (
-              <h4>Description: {story?.summary || "No Description"}</h4> // Display the summary when not editing
-            )}
-          </div>
-
-          {/* Existing content editing section */}
-          <div>
-            {isEditing ? (
-              <ReactQuill
-                value={content} // Controlled editor for content
-                onChange={setContent} // Update content state
-                modules={{
-                  toolbar: [
-                    [{ header: "1" }, { header: "2" }, { font: [] }],
-                    [{ size: [] }],
-                    ["bold", "italic", "underline", "strike", "blockquote"],
-                    [
-                      { list: "ordered" },
-                      { list: "bullet" },
-                      { indent: "-1" },
-                      { indent: "+1" },
-                    ],
-                    [{ align: "justify" }],
-                    ["clean"],
-                  ],
-                }}
-                formats={[
-                  "header",
-                  "font",
-                  "size",
-                  "bold",
-                  "italic",
-                  "underline",
-                  "strike",
-                  "blockquote",
-                  "list",
-                  "bullet",
-                  "indent",
-                  "align",
-                ]}
-              />
-            ) : (
-              <div
-                className="story-content"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(story?.content || "No Content"),
-                }}
-              />
-            )}
-          </div>
-          {/* Edit and Save/Delete Buttons */}
-          {(currentUser?.id === story?.authorId || currentUser?.isAdmin) && (
             <div className="button-group">
-              {isEditing ? (
-                <button onClick={handleSaveContent} className="button">
-                  Save
-                </button>
-              ) : (
-                <button onClick={() => setIsEditing(true)} className="button">
-                  Edit
-                </button>
-              )}
-              <button onClick={handleDeleteStory} className="button">
-                Delete
+              <button
+                className="button"
+                onClick={handleBookmark}
+                disabled={bookmarked}
+              >
+                {bookmarked ? "Bookmarked" : "Bookmark"}
               </button>
             </div>
-          )}
-          <div className="button-group">
-            <button
-              className="button"
-              onClick={handleBookmark}
-              disabled={bookmarked}
-            >
-              {bookmarked ? "Bookmarked" : "Bookmark"}
-            </button>
-          </div>
-          {/* Comments toggle and display */}
-          <h2 onClick={toggleComments} className="toggle-comments-btn">
-            {isCommentsOpen
-              ? "Hide Comments"
-              : `Show Comments (${comments.length})`}
-          </h2>
+            {/* Comments toggle and display */}
+            <h2 onClick={toggleComments} className="toggle-comments-btn">
+              {isCommentsOpen
+                ? "Hide Comments"
+                : `Show Comments (${comments.length})`}
+            </h2>
 
-          {isCommentsOpen && renderComments()}
+            {isCommentsOpen && renderComments()}
 
-          {/* New Comment Form */}
-          {isCommentsOpen && currentUser && (
-            <form onSubmit={handleSubmitComment}>
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-                required
-              />
-              <button type="submit" className="button">
-                Submit Comment
-              </button>
-            </form>
-          )}
-          {error && <p className="error">{error}</p>}
-        </ul>
-      </main>
-    </div>
-  );
+            {/* New Comment Form */}
+            {isCommentsOpen && currentUser && (
+              <form onSubmit={handleSubmitComment}>
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Write a comment..."
+                  required
+                />
+                <button type="submit" className="button">
+                  Submit Comment
+                </button>
+              </form>
+            )}
+            {error && <p className="error">{error}</p>}
+          </ul>
+        </main>
+      </div>
+    );
+  };
 }

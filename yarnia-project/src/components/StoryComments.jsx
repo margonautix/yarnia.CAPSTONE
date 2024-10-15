@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchStoryComments } from "../API"; // Assuming you have this function defined in your API module.
+import { fetchStoryComments } from "../API";
 
 const StoryComments = () => {
-  const { storyId } = useParams(); // Get storyId from URL params
+  const { storyId } = useParams();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ const StoryComments = () => {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const response = await fetchStoryComments(storyId); // Fetch comments from the API
+        const response = await fetchStoryComments(storyId);
         setComments(response);
       } catch (err) {
         setError("Failed to load comments. Please try again later.");

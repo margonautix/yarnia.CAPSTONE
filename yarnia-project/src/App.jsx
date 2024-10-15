@@ -13,10 +13,9 @@ import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
-import StoryComments from "./components/StoryComments"; // Importing the new StoryComments component
+import StoryComments from "./components/StoryComments";
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
-// import "./NEWapp.css";
 import jwt_decode from "jwt-decode";
 
 function App() {

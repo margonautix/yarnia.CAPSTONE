@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchAllComments, deleteComment } from "../API"; // Adjust the path to your API file
+import { fetchAllComments, deleteComment } from "../API";
 
 export default function AdminCommentsFeed() {
   const [comments, setComments] = useState([]);
@@ -56,7 +56,7 @@ export default function AdminCommentsFeed() {
         )
       );
     }
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   // Pagination logic
@@ -103,8 +103,8 @@ export default function AdminCommentsFeed() {
               pageNumber === currentPage ||
               (pageNumber >= currentPage - 2 &&
                 pageNumber <= currentPage + 2) ||
-              pageNumber === 1 || 
-              pageNumber === totalPages 
+              pageNumber === 1 ||
+              pageNumber === totalPages
             ) {
               return (
                 <button

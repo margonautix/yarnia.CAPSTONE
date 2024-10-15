@@ -7,7 +7,7 @@ const Comments = ({ storyId, refreshComments }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Get the current logged-in user's ID from localStorage (or from context)
+  // Get the current logged-in user's ID from localStorage
   const userId = JSON.parse(localStorage.getItem("user"))?.id;
 
   // Fetch comments when the component mounts or when `storyId` changes
