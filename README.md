@@ -1,6 +1,6 @@
 # Yarnia
 
-Yarnia is a web platform designed for fans to explore, share, and celebrate fan-created works, including fan fiction, stories, and self pieces of written expression. This site aims to foster a community where users can discover new stories, connect with fellow fans, and showcase their creativity in a welcoming environment.
+Yarnia is a web platform designed for fans to explore, share, and celebrate fan-created works, including fan fiction, stories, and self-written expressions. This site aims to foster a community where users can discover new stories, connect with fellow fans, and showcase their creativity in a welcoming environment.
 
 ## Features
 
@@ -34,7 +34,7 @@ Yarnia is a web platform designed for fans to explore, share, and celebrate fan-
 
 ### Installation
 1. Clone the repository: 
- git@github.com:margonautix/yarnia.CAPSTONE.git
+ git clone git@github.com:margonautix/yarnia.CAPSTONE.git
  cd yarnia.CAPSTONE 
 
 2. Install npm through node.js
