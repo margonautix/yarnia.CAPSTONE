@@ -35,6 +35,7 @@ Yarnia is a web platform designed for fans to explore, share, and celebrate fan-
 ### Installation
 1. Clone the repository: 
  git clone git@github.com:margonautix/yarnia.CAPSTONE.git
+ 
  cd yarnia.CAPSTONE 
 
 2. Install npm through node.js
