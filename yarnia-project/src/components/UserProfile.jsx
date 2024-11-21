@@ -9,6 +9,7 @@ export default function UserProfile() {
   const [userError, setUserError] = useState(null);
   const [storiesError, setStoriesError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false); // Follow state
   const navigate = useNavigate();
 
   // Fetch user data
@@ -53,6 +54,13 @@ export default function UserProfile() {
     }
   }, [authorId]);
 
+  // Handle follow button click
+  const handleFollowClick = () => {
+    setIsFollowing(!isFollowing);
+    // Optionally: Call API to update follow status on the backend
+    // await toggleFollowUser(authorId, !isFollowing);
+  };
+
   if (loading) {
     return <div>Loading user data...</div>;
   }
@@ -68,9 +76,16 @@ export default function UserProfile() {
               <>
                 <div className="profile-header">
                   <h1>{user.username}</h1>
-                  <p>Bio: {user.bio}</p>
+                  <p>
+                    Bio: {user.bio}
+                    <button
+                      onClick={handleFollowClick}
+                      className="follow-button"
+                    >
+                      {isFollowing ? "Unfollow" : "Follow"}
+                    </button>
+                  </p>
                 </div>
-
                 {/* Stories Section */}
                 <div className="profile-stories-wrapper">
                   <h2>{user.username}'s Stories</h2>
@@ -81,7 +96,7 @@ export default function UserProfile() {
                       {userStories.map((story) => (
                         <div className="story-item" key={story.id}>
                           <li>
-                            <div class="story-card">
+                            <div className="story-card">
                               <h3>{story.title}</h3>
                               <p>{story.summary || "No summary available"}</p>
                               <button
