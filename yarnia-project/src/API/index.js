@@ -459,3 +459,43 @@ export async function fetchUserStoriesById(userId) {
     throw error;
   }
 }
+
+// POST request to follow a user
+export const followUserById = async (authorId) => {
+  const response = await fetch(`/follow/${authorId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to follow the user");
+  }
+  return response.json();
+};
+
+// DELETE request to unfollow a user
+export const unfollowUserById = async (authorId) => {
+  const response = await fetch(`/follow/${authorId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to unfollow the user");
+  }
+  return response.json();
+};
+
+const fetchFollowers = async (userId) => {
+  try {
+      const response = await fetch(`/api/followers?userId=${userId}`);
+      const data = await response.json();
+      setFollowers(data);
+  } catch (error) {
+      console.error("Error fetching followers:", error);
+  } finally {
+      setLoading(false);
+  }
+};

@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchUserProfileById, fetchUserStoriesById } from "../API";
+import {
+  fetchUserProfileById,
+  fetchUserStoriesById,
+  followUserById,
+  unfollowUserById, // Add these functions in your API module
+} from "../API";
 
 export default function UserProfile() {
   const { authorId } = useParams();
@@ -19,6 +24,7 @@ export default function UserProfile() {
         const userData = await fetchUserProfileById(authorId);
         if (userData) {
           setUser(userData);
+          setIsFollowing(userData.isFollowing); // Assume API sends follow status
         } else {
           setUserError("User not found.");
         }
@@ -54,11 +60,19 @@ export default function UserProfile() {
     }
   }, [authorId]);
 
-  // Handle follow button click
-  const handleFollowClick = () => {
-    setIsFollowing(!isFollowing);
-    // Optionally: Call API to update follow status on the backend
-    // await toggleFollowUser(authorId, !isFollowing);
+  // Handle follow/unfollow click
+  const handleFollowClick = async () => {
+    try {
+      if (isFollowing) {
+        await unfollowUserById(authorId);
+        setIsFollowing(false);
+      } else {
+        await followUserById(authorId);
+        setIsFollowing(true);
+      }
+    } catch (error) {
+      console.error("Error updating follow status:", error);
+    }
   };
 
   if (loading) {

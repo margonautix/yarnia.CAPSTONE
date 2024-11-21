@@ -13,6 +13,7 @@ import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
+import FollowersSection from "./components/FollowersSection";
 import StoryComments from "./components/StoryComments"; // Importing the new StoryComments component
 import "react-quill/dist/quill.snow.css";
 import "./App.css";
@@ -74,6 +75,7 @@ function App() {
         <Route path="/comments" element={<AdminCommentsFeed />} />
         <Route path="/users" element={<AdminUsers />} />
         <Route path="/users/:authorId" element={<UserProfile />} />
+        <Route path="/followers" element={<FollowersSection />} />
       </Routes>
     </div>
   );
