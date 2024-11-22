@@ -460,42 +460,23 @@ export async function fetchUserStoriesById(userId) {
   }
 }
 
-// POST request to follow a user
-export const followUserById = async (authorId) => {
-  const response = await fetch(`/follow/${authorId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to follow the user");
-  }
-  return response.json();
-};
+// src/API/index.js
 
-// DELETE request to unfollow a user
-export const unfollowUserById = async (authorId) => {
-  const response = await fetch(`/follow/${authorId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to unfollow the user");
-  }
-  return response.json();
-};
-
-const fetchFollowers = async (userId) => {
+export const fetchFollowers = async (userId) => {
   try {
-      const response = await fetch(`/api/followers?userId=${userId}`);
-      const data = await response.json();
-      setFollowers(data);
+    // Replace this URL with your actual API endpoint
+    const response = await fetch(`/api/followers/${userId}`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch followers');
+    }
+
+    // Assuming the response is a JSON array of followers
+    const data = await response.json();
+    
+    return data; // Returning the followers data
   } catch (error) {
-      console.error("Error fetching followers:", error);
-  } finally {
-      setLoading(false);
+    console.error('Error fetching followers:', error);
+    throw error; // Optionally, re-throw the error to be handled by the caller
   }
 };
