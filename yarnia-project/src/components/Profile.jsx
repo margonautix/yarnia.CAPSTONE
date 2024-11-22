@@ -113,6 +113,9 @@ const Profile = ({ user, setUser }) => {
   const handleClicker = () => {
     navigate('/followers');  // Navigate to the Followers page
 };
+const handleClickers = () => {
+  navigate('/following');  // Navigate to the Followers page
+};
 
   // Fetch stories written by the user
   const fetchUserStories = async (userId) => {
@@ -430,6 +433,7 @@ const Profile = ({ user, setUser }) => {
               )}
               {saveError && <p className="error-message">{saveError}</p>}
               <button onClick={handleClicker}>See Followers</button>
+              <button onClick={handleClickers}>See Following</button>
             </div>
 
             {/* Comment History Section */}

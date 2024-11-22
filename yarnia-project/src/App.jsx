@@ -19,6 +19,7 @@ import "react-quill/dist/quill.snow.css";
 import "./App.css";
 // import "./NEWapp.css";
 import jwt_decode from "jwt-decode";
+import FollowingSection from "./components/FollowingSection";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,6 +77,7 @@ function App() {
         <Route path="/users" element={<AdminUsers />} />
         <Route path="/users/:authorId" element={<UserProfile />} />
         <Route path="/followers" element={<FollowersSection />} />
+        <Route path="/following" element={<FollowingSection />} />
       </Routes>
     </div>
   );
