@@ -24,6 +24,7 @@ Yarnia is a web platform designed for fans to explore, share, and celebrate fan-
 - **Daulton Albanese**
 - **Margo Giddens**
 - **Madi Bromfield**
+- **Phillip Campbell**
 
 ## Getting Started
 
