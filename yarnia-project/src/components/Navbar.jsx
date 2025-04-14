@@ -1,111 +1,130 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import yarniaLogo from "./images/yarniaLogo.png";
+import { useEffect, useState } from "react";
 
-const NavBar = ({ user, setUser }) => {
+const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Check localStorage for the user's theme preference on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setDarkMode(true);
-      document.body.classList.add("dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      setDarkMode(false);
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
-  // Handle category change and navigate to the appropriate search page
-  const handleCategoryChange = (event) => {
-    const selected = event.target.value;
-    navigate(`/search?category=${selected}`);
-  };
-
-  // Handle logout functionality
-  const handleLogout = (event) => {
-    event.preventDefault();
+  const handleLogout = (e) => {
+    e.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     navigate("/login");
   };
 
-  // Handle dark mode toggle
   const handleDarkModeToggle = () => {
+    const root = document.documentElement;
     if (darkMode) {
-      setDarkMode(false);
-      document.documentElement.classList.remove("dark");
+      root.classList.remove("dark");
       localStorage.setItem("theme", "light");
+      setDarkMode(false);
     } else {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
       localStorage.setItem("theme", "dark");
+      setDarkMode(true);
     }
   };
 
   return (
-    <nav className="navbar">
-      <ul>
-        {" "}
-        <li>
+    <nav
+      className={`transition-colors duration-300 px-6 py-4 shadow-md border-b 
+        ${darkMode ? "bg-worn_oak text-birch_parchment border-dark_olive" : "bg-library_leather text-ink_brown border-worn_page"}`}
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Left side */}
+        <div className="flex items-center space-x-4">
           <button
             onClick={handleDarkModeToggle}
-            className="dark-mode-toggle"
-          ></button>
-        </li>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        {/* Conditionally render the Bookmarks link based on user login status */}
-        {user && (
-          <li>
-            <Link to="/bookmarks">Bookmarks</Link>
-          </li>
-        )}
-        {/* Conditionally render links based on user login status */}
-        {user ? (
-          <>
-            <li>
-              <Link to="/add-story">Add Story</Link>
-            </li>
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
-            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-1" />
-            {/* Admin-only link to comments feed */}
-            {user.isAdmin && (
-              <>
-                <li className="admin-li">
-                  <Link to="/comments">All Comments</Link>
-                </li>
-                {/* Admin-only link to All Users */}
-                <li>
-                  <Link to="/users">All Users</Link>
-                </li>
-              </>
-            )}
-            <li>
-              <Link
-                to="/logout"
-                onClick={handleLogout}
-                style={{ marginLeft: "auto" }}
-              >
-                Logout
-              </Link>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-2" />
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
-          </>
-        )}
-      </ul>
+            className="text-xl hover:text-bright_moss transition"
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+          <Link to="/" className="text-lg font-semibold hover:text-bright_moss">
+            Home
+          </Link>
+          {user && (
+            <Link to="/bookmarks" className="hidden sm:inline-block text-base hover:text-bright_moss">
+              Bookmarks
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile menu toggle */}
+        <button
+          className="sm:hidden text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
+
+        {/* Right side menu */}
+        <ul className={`flex-col sm:flex-row sm:flex items-center space-y-2 sm:space-y-0 sm:space-x-5 text-sm ${menuOpen ? "flex absolute top-16 right-6 bg-library_leather dark:bg-worn_oak p-4 rounded shadow-md z-50" : "hidden sm:flex"}`}>
+          {user ? (
+            <>
+              <li>
+                <Link to="/add-story" className="hover:text-bright_moss">
+                  Add Story
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile" className="hover:text-bright_moss">
+                  Profile
+                </Link>
+              </li>
+              {user.isAdmin && (
+                <>
+                  <li>
+                    <Link to="/comments" className="hover:text-bright_moss">
+                      All Comments
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/users" className="hover:text-bright_moss">
+                      All Users
+                    </Link>
+                  </li>
+                </>
+              )}
+              <li>
+                <Link
+                  to="/logout"
+                  onClick={handleLogout}
+                  className="hover:underline text-dusty_fern"
+                >
+                  Logout
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" className="hover:text-bright_moss">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" className="hover:text-bright_moss">
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
     </nav>
   );
 };

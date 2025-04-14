@@ -15,14 +15,15 @@ import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
 import StoryComments from "./components/StoryComments";
 import "react-quill/dist/quill.snow.css";
-import "./App.css";
 import jwt_decode from "jwt-decode";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const savedTheme = localStorage.getItem("theme");
 
     if (token) {
       try {
@@ -32,17 +33,23 @@ function App() {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setUser(null);
-          return;
+        } else {
+          const userInfo = JSON.parse(localStorage.getItem("user"));
+          setUser(userInfo);
         }
-
-        const userInfo = JSON.parse(localStorage.getItem("user"));
-        setUser(userInfo);
       } catch (error) {
         console.error("Invalid token:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
       }
+    }
+
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
@@ -53,28 +60,34 @@ function App() {
   };
 
   return (
-    <div>
-      <NavBar user={user} setUser={setUser} handleLogout={handleLogout} />
-      <Routes>
-        <Route path="/" element={<Stories />} />
-        <Route path="/bookmarks" element={<Bookmarks user={user} />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route
-          path="/profile"
-          element={<Profile user={user} setUser={setUser} />}
-        />
-        <Route path="/register" element={<Register setUser={setUser} />} />
-        <Route path="/stories/:storyId" element={<SingleStory user={user} />} />
-        <Route path="/stories/:storyId/comments" element={<StoryComments />} />
-        <Route path="/logout" element={<Logout setUser={setUser} />} />
-        <Route path="/add-story" element={<AddStory />} />
-        <Route path="/stories" element={<StoryDetails />} />
-        <Route path="/comments" element={<AdminCommentsFeed />} />
-        <Route path="/users" element={<AdminUsers />} />
-        <Route path="/users/:authorId" element={<UserProfile />} />
-      </Routes>
+    <div className="min-h-screen flex flex-col bg-birch_parchment text-ink_brown dark:bg-night_bark dark:text-birch_parchment transition-colors duration-300">
+      <NavBar
+        user={user}
+        setUser={setUser}
+        handleLogout={handleLogout}
+        setDarkMode={setDarkMode}
+        darkMode={darkMode}
+      />
+
+      <main className="flex-grow max-w-6xl mx-auto px-4 py-6 bg-linen_moss dark:bg-deep_grove rounded-lg shadow-md transition-colors duration-300">
+        <Routes>
+          <Route path="/" element={<Stories />} />
+          <Route path="/bookmarks" element={<Bookmarks user={user} darkMode={darkMode} />} />
+          <Route path="/login" element={<Login setUser={setUser} darkMode={darkMode} />} />
+          <Route path="/profile" element={<Profile user={user} setUser={setUser} darkMode={darkMode} />} />
+          <Route path="/register" element={<Register setUser={setUser} darkMode={darkMode} />} />
+          <Route path="/stories/:storyId" element={<SingleStory user={user} darkMode={darkMode} />} />
+          <Route path="/stories/:storyId/comments" element={<StoryComments darkMode={darkMode} />} />
+          <Route path="/logout" element={<Logout setUser={setUser} darkMode={darkMode} />} />
+          <Route path="/add-story" element={<AddStory darkMode={darkMode} />} />
+          <Route path="/stories" element={<StoryDetails darkMode={darkMode} />} />
+          <Route path="/comments" element={<AdminCommentsFeed darkMode={darkMode} />} />
+          <Route path="/users" element={<AdminUsers darkMode={darkMode} />} />
+          <Route path="/users/:authorId" element={<UserProfile darkMode={darkMode} />} />
+        </Routes>
+      </main>
     </div>
-  );
+  );  
 }
 
 export default App;
