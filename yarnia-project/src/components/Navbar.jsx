@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import yarniaLogo from "./images/yarniaLogo.png";
 
 const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
@@ -9,13 +9,10 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setDarkMode(true);
-      document.documentElement.classList.add("dark-mode");
-      document.body.style.backgroundColor = "#1b4412";
-      document.body.style.color = "#f1e5c7";
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark-mode");
-      document.body.style.backgroundColor = "#f1e5c7";
-      document.body.style.color = "#1b4412";
+      setDarkMode(false);
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
@@ -30,37 +27,35 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
   const handleDarkModeToggle = () => {
     const root = document.documentElement;
     if (darkMode) {
-      root.classList.remove("dark-mode");
+      root.classList.remove("dark");
       localStorage.setItem("theme", "light");
-      document.body.style.backgroundColor = "#f1e5c7";
-      document.body.style.color = "#1b4412";
+      setDarkMode(false);
     } else {
-      root.classList.add("dark-mode");
+      root.classList.add("dark");
       localStorage.setItem("theme", "dark");
-      document.body.style.backgroundColor = "#1b4412";
-      document.body.style.color = "#f1e5c7";
+      setDarkMode(true);
     }
-    setDarkMode(!darkMode);
   };
 
   return (
     <nav
-      className={`${darkMode ? "bg-[#3c892a] text-[#f1e5c7]" : "bg-[#c7a859] text-white"} px-6 py-4 shadow-md transition-colors duration-300 border-b border-[#71d15b]`}
+      className={`transition-colors duration-300 px-6 py-4 shadow-md border-b 
+        ${darkMode ? "bg-dark_moss_green text-pearl border-forest_green" : "bg-satin_sheen_gold text-pakistan_green border-sage"}`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-6">
           <button
             onClick={handleDarkModeToggle}
-            className="text-xl hover:text-[#1b4412] transition"
+            className="text-xl hover:text-kelly_green transition"
             aria-label="Toggle dark mode"
           >
             {darkMode ? "☀️" : "🌙"}
           </button>
-          <Link to="/" className="text-lg font-semibold hover:text-[#1b4412]">
+          <Link to="/" className="text-lg font-semibold hover:text-kelly_green">
             Home
           </Link>
           {user && (
-            <Link to="/bookmarks" className="text-base hover:text-[#1b4412]">
+            <Link to="/bookmarks" className="text-base hover:text-kelly_green">
               Bookmarks
             </Link>
           )}
@@ -70,24 +65,24 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
           {user ? (
             <>
               <li>
-                <Link to="/add-story" className="hover:text-[#1b4412]">
+                <Link to="/add-story" className="hover:text-kelly_green">
                   Add Story
                 </Link>
               </li>
               <li>
-                <Link to="/profile" className="hover:text-[#1b4412]">
+                <Link to="/profile" className="hover:text-kelly_green">
                   Profile
                 </Link>
               </li>
               {user.isAdmin && (
                 <>
                   <li>
-                    <Link to="/comments" className="hover:text-[#1b4412]">
+                    <Link to="/comments" className="hover:text-kelly_green">
                       All Comments
                     </Link>
                   </li>
                   <li>
-                    <Link to="/users" className="hover:text-[#1b4412]">
+                    <Link to="/users" className="hover:text-kelly_green">
                       All Users
                     </Link>
                   </li>
@@ -97,7 +92,7 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
                 <Link
                   to="/logout"
                   onClick={handleLogout}
-                  className="hover:underline text-[#1b4412]"
+                  className="hover:underline text-kelly_green"
                 >
                   Logout
                 </Link>
@@ -106,12 +101,12 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
           ) : (
             <>
               <li>
-                <Link to="/login" className="hover:text-[#1b4412]">
+                <Link to="/login" className="hover:text-kelly_green">
                   Login
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-[#1b4412]">
+                <Link to="/register" className="hover:text-kelly_green">
                   Register
                 </Link>
               </li>
