@@ -219,8 +219,20 @@ const Stories = () => {
                 <div>
                   <h2 className="text-2xl font-bold mb-4 text-ink_brown dark:text-warm_brass tracking-wide border-b-2 border-worn_oak dark:border-antique_gold pb-1 w-fit">{story.title}</h2>
                   <p className="text-sm text-muted_indigo dark:text-dry_grass">
-                    by {story.author?.username || "Unknown Author"} · {new Date(story.createdAt).toLocaleDateString()}
-                  </p>
+  by{" "}
+  {story.author?.username ? (
+    <Link
+      to={`/users/${story.authorId}`}
+      className="underline hover:text-fresh_sage"
+    >
+      {story.author.username}
+    </Link>
+  ) : (
+    "Unknown Author"
+  )}{" "}
+  · {new Date(story.createdAt).toLocaleDateString()}
+</p>
+
                   <p className="mt-2 text-sm text-ink_brown dark:text-birch_parchment"><strong>Genre:</strong> {story.genre}</p>
                   <p className="mt-1 text-sm text-ink_brown dark:text-birch_parchment"><strong>Summary:</strong> {story.summary}</p>
                 </div>
