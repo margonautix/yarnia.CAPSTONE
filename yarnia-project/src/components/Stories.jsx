@@ -233,6 +233,7 @@ const Stories = () => {
                     {story.title}
                   </h2>
                   <p className="text-sm text-muted_indigo dark:text-dry_grass">
+
                     by {story.author?.username || "Unknown Author"} ·{" "}
                     {new Date(story.createdAt).toLocaleDateString()}
                   </p>
@@ -242,6 +243,7 @@ const Stories = () => {
                   <p className="mt-1 text-sm">
                     <strong>Summary:</strong> {story.summary}
                   </p>
+
                 </div>
                 <div className="flex flex-col items-center space-y-1">
                   <span className="text-xs text-dry_grass text-center">

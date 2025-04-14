@@ -21,8 +21,9 @@ module.exports = {
         // ✒️ Minimal accents
         antique_gold: '#aa9263', // links, icons, focus rings
         muted_indigo: '#64656f', // alt text, tiny headers, active states
+
       },
-    },
+    },    
   },
   plugins: [],
 };

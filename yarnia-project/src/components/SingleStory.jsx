@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchSingleStory,
   updateStoryContent,
@@ -11,40 +11,37 @@ import {
   deleteComment,
 } from "../API";
 import jwt_decode from "jwt-decode";
-import DOMPurify from "dompurify"; // Import DOMPurify for sanitizing HTML
-import ReactQuill from "react-quill"; // Import ReactQuill
-import "react-quill/dist/quill.snow.css"; // Import the CSS for the editor
+import DOMPurify from "dompurify";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function SingleStory({ user }) {
-  const { storyId } = useParams(); // Get storyId from the URL
-  const navigate = useNavigate(); // For navigating after delete or save
-  const [currentUser, setCurrentUser] = useState(null); // State for current user info
-  const [isEditing, setIsEditing] = useState(false); // Track editing state
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false); // State for comments dropdown
-  const [story, setStory] = useState(null); // Store story details
-  const [content, setContent] = useState(""); // Store content while editing
-  const [error, setError] = useState(null); // To track errors
-  const [comments, setComments] = useState([]); // Holds comments for the story
-  const [newComment, setNewComment] = useState(""); // Store new comment input
-  const [bookmarked, setBookmarked] = useState(false); // Track bookmark status
-  const [title, setTitle] = useState(""); // Store title while editing
-  const [summary, setSummary] = useState(""); // Store summary while editing
+  const { storyId } = useParams();
+  const navigate = useNavigate();
 
-  // Fetch the story and comments from the server
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [story, setStory] = useState(null);
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [bookmarked, setBookmarked] = useState(false);
+
   const fetchStoryAndComments = async (storyId) => {
     try {
-      const storyResponse = await fetchSingleStory(storyId); // Fetch the story
+      const storyResponse = await fetchSingleStory(storyId);
       if (storyResponse) {
-        setStory(storyResponse); // Set the story state
-        setContent(storyResponse.content); // Set the content for editing
-        setTitle(storyResponse.title); // Set the title for editing
-        setSummary(storyResponse.summary); // Set the summary for editing
+        setStory(storyResponse);
+        setContent(storyResponse.content);
+        setTitle(storyResponse.title);
+        setSummary(storyResponse.summary);
 
-        // Fetch the comments related to the story
         const commentsResponse = await fetchComments(storyId);
-        if (commentsResponse) {
-          setComments(commentsResponse); // Set the comments state
-        }
+        if (commentsResponse) setComments(commentsResponse);
       } else {
         setError("Story not found.");
       }
@@ -54,54 +51,45 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Fetch bookmark status for the user and story
   const fetchBookmarkStatus = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token || !currentUser) return; // If no token or user is not logged in, skip
+      if (!token || !currentUser) return;
 
-      const { id } = jwt_decode(token); // Decode token to get user ID
-      const response = await checkBookmarkStatus(id, storyId); // Check if the user has bookmarked this story
-      if (response.bookmarked) {
-        setBookmarked(true); // Update bookmark status
-      }
+      const { id } = jwt_decode(token);
+      const response = await checkBookmarkStatus(id, storyId);
+      if (response.bookmarked) setBookmarked(true);
     } catch (error) {
       console.error("Failed to check bookmark status:", error);
     }
   };
 
-  // Fetch story, user data, and bookmark status when the component mounts or when storyId changes
   useEffect(() => {
     if (storyId) {
       fetchStoryAndComments(storyId);
-    } else {
-      setError("No story ID provided.");
     }
 
-    // Decode JWT and set the current user
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwt_decode(token); // Decode the token to get user info
+      const decoded = jwt_decode(token);
       setCurrentUser(decoded);
     }
   }, [storyId]);
 
   useEffect(() => {
-    fetchBookmarkStatus(); // Check bookmark status
+    fetchBookmarkStatus();
   }, [currentUser]);
 
-  // Function to handle content update
   const handleSaveContent = async () => {
     try {
-      // Send updated title, summary, and content to the API
       const response = await updateStoryContent(storyId, {
         title,
         summary,
         content,
       });
       if (response) {
-        setIsEditing(false); // Exit editing mode after saving
-        fetchStoryAndComments(storyId); // Refresh the story data
+        setIsEditing(false);
+        fetchStoryAndComments(storyId);
       }
     } catch (error) {
       console.error("Failed to update the story:", error);
@@ -109,16 +97,13 @@ export default function SingleStory({ user }) {
     }
   };
 
-  // Function to handle story deletion
   const handleDeleteStory = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this story?"
-    );
+    const confirmDelete = window.confirm("Are you sure you want to delete this story?");
     if (confirmDelete) {
       try {
-        await deleteStory(storyId); // Call the deleteStory function
+        await deleteStory(storyId);
         alert("Story deleted successfully!");
-        navigate("/"); // Navigate back to the home page after deletion
+        navigate("/");
       } catch (error) {
         console.error("Failed to delete the story:", error);
         alert("Failed to delete the story.");
@@ -127,102 +112,80 @@ export default function SingleStory({ user }) {
   };
 
   const handleDeleteComment = async (commentId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this comment?"
-    );
-    if (!confirmDelete) return; // If the user cancels, exit the function
+    const confirmDelete = window.confirm("Delete this comment?");
+    if (!confirmDelete) return;
 
     try {
-      await deleteComment(storyId, commentId); // Call the API to delete the comment
-
-      // Update the comments state by removing the deleted comment
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentId)
-      );
-
-      alert("Comment deleted successfully!");
+      await deleteComment(storyId, commentId);
+      setComments((prev) => prev.filter((c) => c.commentId !== commentId));
     } catch (error) {
-      console.error("Failed to delete the comment:", error);
-      setError("Failed to delete the comment.");
+      console.error("Failed to delete comment:", error);
+      setError("Failed to delete comment.");
     }
   };
 
-  // Handle bookmarking the story
   const handleBookmark = async () => {
     if (!currentUser) {
       setError("You must be logged in to bookmark stories.");
       return;
     }
-    const token = localStorage.getItem("token"); // Get the token
+
     try {
-      await bookmarkStory(storyId, currentUser.id, token); // Pass the token
-      setBookmarked(true); // Update bookmark status
+      const token = localStorage.getItem("token");
+      await bookmarkStory(storyId, currentUser.id, token);
+      setBookmarked(true);
     } catch (error) {
       setError("Error occurred while bookmarking the story.");
     }
   };
 
-  // Toggle the comments dropdown
-  const toggleComments = () => {
-    setIsCommentsOpen(!isCommentsOpen);
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!newComment) return;
 
-    // Handle new comment submission
-    const handleSubmitComment = async (e) => {
-      e.preventDefault();
-      if (!newComment) return;
+    try {
+      await postComment(storyId, newComment);
+      setNewComment("");
+      fetchStoryAndComments(storyId);
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+      setError("Failed to post comment.");
+    }
+  };
 
-      try {
-        await postComment(storyId, newComment); // Post the new comment to the API
-        setNewComment(""); // Clear the comment input
-        fetchStoryAndComments(storyId); // Refresh the comments
-      } catch (error) {
-        console.error("Failed to post comment:", error);
-        setError("Failed to post comment.");
-      }
-    };
+  const handleNavigateToUser = (userId) => {
+    navigate(`/users/${userId}`);
+  };
 
-    const renderComments = () => {
-      if (comments.length > 0) {
-        return (
-          <ul className="comments-list">
-            {comments.map((comment) => (
-              <li key={comment.commentId} className="comment-item">
-                <strong>
-                  {comment.user?.username ? (
-                    currentUser?.id === comment.userId ? (
-                      // Link to the current user's profile
-                      <Link to="/profile">{comment.user.username}</Link>
-                    ) : (
-                      // Link to other users' profiles
-                      <Link to={`/users/${comment.userId}`}>
-                        {comment.user.username}
-                      </Link>
-                    )
-                  ) : (
-                    "Unknown User"
-                  )}
-                </strong>
-                : {comment.content || "No content available"}
-                {/* Show delete button for user, admin, or story author */}
-                {(currentUser?.id === comment.userId ||
-                  currentUser?.isAdmin ||
-                  currentUser?.id === story?.authorId) && (
-                  <button
-                    onClick={() => handleDeleteComment(comment.commentId)}
-                    className="button"
-                  >
-                    Delete
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        );
-      } else {
-        return <p>No comments yet.</p>;
-      }
-    };
-
+  const renderComments = () => (
+    <ul className="mt-4 space-y-2">
+      {comments.map((comment) => (
+        <li key={comment.commentId} className="p-2 bg-worn_page dark:bg-dark_olive rounded shadow">
+          <strong>
+            {comment.user?.username ? (
+              <button
+                onClick={() => handleNavigateToUser(comment.userId)}
+                className="underline hover:text-fresh_sage"
+              >
+                {comment.user.username}
+              </button>
+            ) : (
+              "Unknown User"
+            )}
+          </strong>
+          : {comment.content || "No content available"}
+          {(currentUser?.id === comment.userId || currentUser?.isAdmin || currentUser?.id === story?.authorId) && (
+            <button
+              onClick={() => handleDeleteComment(comment.commentId)}
+              className="ml-4 text-xs text-red-600 hover:underline"
+            >
+              Delete
+            </button>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
     return (
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Mobile Sidebar Toggle */}
@@ -415,4 +378,5 @@ export default function SingleStory({ user }) {
     );
     
   };
+
 }
