@@ -81,7 +81,7 @@ export default function UserProfile() {
                       {userStories.map((story) => (
                         <div className="story-item" key={story.id}>
                           <li>
-                            <div class="story-card">
+                            <div className="bg-birch_parchment">
                               <h3>{story.title}</h3>
                               <p>{story.summary || "No summary available"}</p>
                               <button
