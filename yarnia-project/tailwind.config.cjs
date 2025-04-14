@@ -1,38 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',
+  darkMode: 'class', // Optional: keep if you're adding dark mode support later
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  safelist: [
-    'bg-library_leather', 'text-worn_oak', 'bg-night_bark', 'text-birch_parchment',
-    'bg-deep_grove', 'text-dry_grass', 'text-ink_brown', 'bg-dusty_fern', 'bg-mist_fern',
-    'hover:bg-fresh_sage', 'hover:bg-bright_moss', 'border-worn_page', 'border-dark_olive',
-    'text-muted_indigo', 'text-dusty_rose', 'text-desaturated_plum',   'placeholder:text-dusty_rose',
-    'dark:placeholder:text-dusty_rose',
-  ],
   theme: {
     extend: {
       colors: {
-        birch_parchment: '#f6f4ef',
-        night_bark: '#1b1f1a',
-        linen_moss: '#e4ded0',
-        deep_grove: '#2b332a',
-        ink_brown: '#2c2c2c',
-        aged_parchment: '#716c5f',
-        dry_grass: '#bfb9a4',
-        antique_gold: '#c4a76f',
-        warm_brass: '#e6cfa1',
-        dusty_fern: '#6c9a7b',
-        mist_fern: '#90cba5',
-        fresh_sage: '#8aae82',
-        bright_moss: '#a6ddbc',
-        worn_page: '#cfcac0',
-        dark_olive: '#3b453d',
-        library_leather: '#d2bfa5',
-        worn_oak: '#1a1d18',
-        // NEW accent tones
-        dusty_rose: '#a9847a',
-        muted_indigo: '#6b7089',
-        desaturated_plum: '#775f6b',
+        // 🕊️ Light foundations
+        pearl: '#f5f3ef',        // main background
+        worn_page: '#eae4d9',    // light layer, cards or sections
+
+        // 🌲 Earthy contrast
+        ink_brown: '#3b352f',    // main text / primary dark
+        deep_grove: '#2f3428',   // nav bar, footer, bold background blocks
+        dark_olive: '#494b3c',   // lines, borders
+
+        // 🌿 Natural greens
+        dusty_fern: '#5e7a5a',   // hover states, tags
+        fresh_sage: '#a3b79b',   // secondary actions, soft buttons
+
+        // ✒️ Minimal accents
+        antique_gold: '#aa9263', // links, icons, focus rings
+        muted_indigo: '#64656f', // alt text, tiny headers, active states
       },
     },
   },
