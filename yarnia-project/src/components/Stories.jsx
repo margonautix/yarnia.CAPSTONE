@@ -99,62 +99,65 @@ const Stories = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      {/* Mobile Sidebar Toggle + Sidebar Content */}
+      {/* Mobile Sidebar Toggle */}
       <div className="lg:hidden sticky top-2 z-40 px-4">
-        <div className="flex justify-end">
-          <button
-            onClick={() => setShowSidebar(!showSidebar)}
+        <div className="relative w-full">
+          <div className="lg:hidden flex justify-end sticky top-2 z-40;">
+            <button
+              onClick={() => setShowSidebar(!showSidebar)}
+              className="text-xl p-2 rounded-full bg- text-white hover: transition"
+              aria-label="Toggle genre filter"
+            >
+              📓
+            </button>
+          </div>
   
-            aria-label="Toggle genre filter"
-          >
-            📓
-          </button>
-        </div>
-  
-        {showSidebar && (
-          <div className="mt-2 w-full bg-worn_page text-ink_brown dark:bg-deep_grove dark:text-pearl p-4 rounded max-h-[70vh] overflow-y-auto">
-            <h2 className="font-semibold text-lg mb-2 text-antique_gold dark:text-fresh_sage">Genres</h2>
-            <ul className="space-y-1">
-              <li
-                onClick={() => handleCategorySelect("")}
-                className={`cursor-pointer hover:text-fresh_sage ${
-                  selectedCategory === "" ? "font-bold text-dusty_rose" : ""
-                }`}
-              >
-                All
-              </li>
-              {genres.map((genre, index) => (
+          {showSidebar && (
+            <div className="absolute left-0 mt-2 w-full 
+            bg-worn_page text-ink_brown 
+            dark:bg-dark_olive dark:text-birch_parchment
+            md:bg-library_leather md:text-ink_brown 
+            md:dark:bg-worn_oak md:dark:text-birch_parchment
+            p-4 rounded shadow z-50 max-h-[70vh] overflow-y-auto">
+          
+              <h2 className="font-semibold text-lg mb-2 text-worn_page">Genres</h2>
+              <ul className="space-y-1">
                 <li
-                  key={index}
-                  onClick={() => handleCategorySelect(genre)}
+                  onClick={() => handleCategorySelect("")}
                   className={`cursor-pointer hover:text-fresh_sage ${
-                    selectedCategory === genre ? "font-bold text-dusty_rose" : ""
+                    selectedCategory === "" ? "font-bold text-dusty_rose" : ""
                   }`}
                 >
-                  {genre}
+                  All
                 </li>
-              ))}
-            </ul>
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="mt-4 w-full px-3 py-2 rounded 
-              bg-linen_moss dark:bg-night_bark 
-              text-ink_brown dark:text-birch_parchment 
-              placeholder:text-aged_parchment dark:placeholder:text-warm_brass 
-              border border-worn_page dark:border-antique_gold 
-              focus:outline-none focus:ring-2 focus:ring-bright_moss"
-              
-            />
-          </div>
-        )}
+                {genres.map((genre, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleCategorySelect(genre)}
+                    className={`cursor-pointer hover:text-fresh_sage ${
+                      selectedCategory === genre ? "font-bold text-dusty_rose" : ""
+                    }`}
+                  >
+                    {genre}
+                  </li>
+                ))}
+              </ul>
+              <input
+  type="text"
+  placeholder="Search by title or author"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="mt-4 w-full px-3 py-2 rounded bg-worn_page dark:bg-deep_grove text-ink_brown dark:text-white placeholder:text-ink_brown dark:placeholder:text-gray-300"
+/>
+
+            </div>
+          )}
+        </div>
       </div>
   
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block sticky top-6 self-start w-64 bg-worn_page dark:bg-deep_grove text-ink_brown dark:text-pearl p-4 rounded max-h-[90vh] overflow-y-auto">
-        <h2 className="font-semibold text-lg mb-2 text-antique_gold dark:text-fresh_sage">Genres</h2>
+      <aside className="hidden lg:block sticky top-6 self-start w-64 bg-library_leather dark:bg-worn_oak text-ink_brown dark:text-birch_parchment p-4 rounded shadow max-h-[90vh] overflow-y-auto">
+        <h2 className="font-semibold text-lg mb-2 text-worn_page">Genres</h2>
         <ul className="space-y-1">
           <li
             onClick={() => handleCategorySelect("")}
@@ -177,33 +180,21 @@ const Stories = () => {
           ))}
         </ul>
         <input
-          type="text"
-          placeholder="Search by title or author"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mt-4 w-full px-3 py-2 rounded 
-          bg-linen_moss dark:bg-night_bark 
-          text-ink_brown dark:text-birch_parchment 
-          placeholder:text-aged_parchment dark:placeholder:text-warm_brass 
-          border border-worn_page dark:border-antique_gold 
-          focus:outline-none focus:ring-2 focus:ring-bright_moss"          
-                  />
+  type="text"
+  placeholder="Search by title or author"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="mt-4 w-full px-3 py-2 rounded bg-worn_page dark:bg-dark_olive text-ink_brown dark:text-white placeholder:text-ink_brown dark:placeholder:text-gray-300"
+/>
       </aside>
   
       {/* Story Feed */}
       <section className="flex-1 space-y-6">
         {showModal && selectedStory && (
-          <div className="fixed inset-0 bg-ink_brown bg-opacity-60 flex justify-center items-center z-50">
-            <div className="bg-worn_page dark:bg-dark_olive text-ink_brown dark:text-pearl p-6 rounded-lg max-w-2xl w-full">
-              <button
-                onClick={closeModal}
-                className="text-right block ml-auto mb-4 text-xl hover:text-antique_gold"
-              >
-                ✕
-              </button>
-              <h2 className="text-2xl font-bold mb-4 border-b border-dark_olive dark:border-antique_gold pb-1 w-fit text-ink_brown dark:text-fresh_sage">
-                {selectedStory.title}
-              </h2>
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+            <div className="bg-linen_moss dark:bg-dark_olive text-ink_brown dark:text-birch_parchment p-6 rounded-lg shadow-xl max-w-2xl w-full">
+              <button onClick={closeModal} className="text-right block ml-auto mb-4 text-xl hover:text-antique_gold">✕</button>
+              <h2 className="text-2xl font-bold mb-4 text-ink_brown dark:text-warm_brass tracking-wide border-b-2 border-worn_oak dark:border-antique_gold pb-1 w-fit">{selectedStory.title}</h2>
               <p className="text-sm mb-1">Author: {selectedStory.author?.username || "Unknown Author"}</p>
               <p className="text-sm mb-1">Published: {new Date(selectedStory.createdAt).toLocaleDateString()}</p>
               <p className="text-sm mb-3">Genre: {selectedStory.genre}</p>
@@ -212,7 +203,7 @@ const Stories = () => {
                 dangerouslySetInnerHTML={{ __html: selectedStory.content.slice(0, 500) }}
               />
               <button
-                className="mt-4 bg-dusty_fern hover:bg-fresh_sage text-white px-4 py-2 rounded"
+                className="mt-4 bg-dusty_fern hover:bg-fresh_sage text-white px-4 py-2 rounded shadow"
                 onClick={() => navigate(`/stories/${selectedStory.storyId}`)}
               >
                 View Story
@@ -223,36 +214,31 @@ const Stories = () => {
   
         {currentStories.length > 0 ? (
           currentStories.map((story) => (
-            <div
-              key={story.storyId}
-              className="bg-pearl dark:bg-library_leather p-6 rounded"
-            >
+            <div key={story.storyId} className="bg-linen_moss dark:bg-worn_oak p-6 rounded shadow-md">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2 text-ink_brown dark:text-fresh_sage border-b border-worn_oak dark:border-antique_gold pb-1 w-fit">
-                    {story.title}
-                  </h2>
+                  <h2 className="text-2xl font-bold mb-4 text-ink_brown dark:text-warm_brass tracking-wide border-b-2 border-worn_oak dark:border-antique_gold pb-1 w-fit">{story.title}</h2>
                   <p className="text-sm text-muted_indigo dark:text-dry_grass">
+  by{" "}
+  {story.author?.username ? (
+    <Link
+      to={`/users/${story.authorId}`}
+      className="underline hover:text-fresh_sage"
+    >
+      {story.author.username}
+    </Link>
+  ) : (
+    "Unknown Author"
+  )}{" "}
+  · {new Date(story.createdAt).toLocaleDateString()}
+</p>
 
-                    by {story.author?.username || "Unknown Author"} ·{" "}
-                    {new Date(story.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="mt-2 text-sm">
-                    <strong>Genre:</strong> {story.genre}
-                  </p>
-                  <p className="mt-1 text-sm">
-                    <strong>Summary:</strong> {story.summary}
-                  </p>
-
+                  <p className="mt-2 text-sm text-ink_brown dark:text-birch_parchment"><strong>Genre:</strong> {story.genre}</p>
+                  <p className="mt-1 text-sm text-ink_brown dark:text-birch_parchment"><strong>Summary:</strong> {story.summary}</p>
                 </div>
                 <div className="flex flex-col items-center space-y-1">
-                  <span className="text-xs text-dry_grass text-center">
-                    🔖 {story._count?.bookmarks || 0}
-                  </span>
-                  <Link
-                    to={`/stories/${story.storyId}/comments`}
-                    className="text-xs text-dry_grass text-center hover:text-fresh_sage"
-                  >
+                  <span className="text-xs text-dry_grass text-center">🔖 {story._count?.bookmarks || 0}</span>
+                  <Link to={`/stories/${story.storyId}/comments`} className="text-xs text-dry_grass text-center hover:text-fresh_sage">
                     💬 {story._count?.comments || 0}
                   </Link>
                 </div>
@@ -313,8 +299,6 @@ const Stories = () => {
       </section>
     </div>
   );
-  
-  
 };
 
 export default Stories;
