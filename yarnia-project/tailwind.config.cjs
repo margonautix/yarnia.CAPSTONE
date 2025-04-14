@@ -5,7 +5,9 @@ module.exports = {
   safelist: [
     'bg-library_leather', 'text-worn_oak', 'bg-night_bark', 'text-birch_parchment',
     'bg-deep_grove', 'text-dry_grass', 'text-ink_brown', 'bg-dusty_fern', 'bg-mist_fern',
-    'hover:bg-fresh_sage', 'hover:bg-bright_moss', 'border-worn_page', 'border-dark_olive'
+    'hover:bg-fresh_sage', 'hover:bg-bright_moss', 'border-worn_page', 'border-dark_olive',
+    'text-muted_indigo', 'text-dusty_rose', 'text-desaturated_plum',   'placeholder:text-dusty_rose',
+    'dark:placeholder:text-dusty_rose',
   ],
   theme: {
     extend: {
@@ -26,7 +28,11 @@ module.exports = {
         worn_page: '#cfcac0',
         dark_olive: '#3b453d',
         library_leather: '#d2bfa5',
-        worn_oak: '#1a1d18'
+        worn_oak: '#1a1d18',
+        // NEW accent tones
+        dusty_rose: '#a9847a',
+        muted_indigo: '#6b7089',
+        desaturated_plum: '#775f6b',
       },
     },
   },
