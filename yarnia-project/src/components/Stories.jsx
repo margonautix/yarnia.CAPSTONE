@@ -131,7 +131,7 @@ const Stories = () => {
           </div>
           <br />
           <br />
-          <img src={catGif} alt="Harlee" className="gif" />
+          {/* <img src={catGif} alt="Harlee" className="gif" /> */}
         </aside>
       </div>
 

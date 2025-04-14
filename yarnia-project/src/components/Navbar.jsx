@@ -2,26 +2,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import yarniaLogo from "./images/yarniaLogo.png";
 
-const NavBar = ({ user, setUser }) => {
+const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
 
-  // Check localStorage for the user's theme preference on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setDarkMode(true);
-      document.body.classList.add("dark");
+      document.documentElement.classList.add("dark-mode");
+      document.body.style.backgroundColor = "#1b4412";
+      document.body.style.color = "#f1e5c7";
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+      document.body.style.backgroundColor = "#f1e5c7";
+      document.body.style.color = "#1b4412";
     }
   }, []);
 
-  // Handle category change and navigate to the appropriate search page
-  const handleCategoryChange = (event) => {
-    const selected = event.target.value;
-    navigate(`/search?category=${selected}`);
-  };
-
-  // Handle logout functionality
   const handleLogout = (event) => {
     event.preventDefault();
     localStorage.removeItem("token");
@@ -30,82 +27,98 @@ const NavBar = ({ user, setUser }) => {
     navigate("/login");
   };
 
-  // Handle dark mode toggle
   const handleDarkModeToggle = () => {
+    const root = document.documentElement;
     if (darkMode) {
-      setDarkMode(false);
-      document.documentElement.classList.remove("dark");
+      root.classList.remove("dark-mode");
       localStorage.setItem("theme", "light");
+      document.body.style.backgroundColor = "#f1e5c7";
+      document.body.style.color = "#1b4412";
     } else {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark-mode");
       localStorage.setItem("theme", "dark");
+      document.body.style.backgroundColor = "#1b4412";
+      document.body.style.color = "#f1e5c7";
     }
+    setDarkMode(!darkMode);
   };
 
   return (
-    <nav className="navbar">
-      <ul>
-        {" "}
-        <li>
+    <nav
+      className={`${darkMode ? "bg-[#3c892a] text-[#f1e5c7]" : "bg-[#c7a859] text-white"} px-6 py-4 shadow-md transition-colors duration-300 border-b border-[#71d15b]`}
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="flex items-center space-x-6">
           <button
             onClick={handleDarkModeToggle}
-            className="dark-mode-toggle"
-          ></button>
-        </li>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        {/* Conditionally render the Bookmarks link based on user login status */}
-        {user && (
-          <li>
-            <Link to="/bookmarks">Bookmarks</Link>
-          </li>
-        )}
-        {/* Conditionally render links based on user login status */}
-        {user ? (
-          <>
-            <li>
-              <Link to="/add-story">Add Story</Link>
-            </li>
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
-            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-1" />
-            {/* Admin-only link to comments feed */}
-            {user.isAdmin && (
-              <>
-                <li className="admin-li">
-                  <Link to="/comments">All Comments</Link>
-                </li>
-                {/* Admin-only link to All Users */}
-                <li>
-                  <Link to="/users">All Users</Link>
-                </li>
-              </>
-            )}
-            <li>
-              <Link
-                to="/logout"
-                onClick={handleLogout}
-                style={{ marginLeft: "auto" }}
-              >
-                Logout
-              </Link>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <img src={yarniaLogo} alt="Yarnia" className="yarnia-logo-2" />
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
-          </>
-        )}
-      </ul>
+            className="text-xl hover:text-[#1b4412] transition"
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+          <Link to="/" className="text-lg font-semibold hover:text-[#1b4412]">
+            Home
+          </Link>
+          {user && (
+            <Link to="/bookmarks" className="text-base hover:text-[#1b4412]">
+              Bookmarks
+            </Link>
+          )}
+        </div>
+
+        <ul className="flex items-center space-x-5 text-sm">
+          {user ? (
+            <>
+              <li>
+                <Link to="/add-story" className="hover:text-[#1b4412]">
+                  Add Story
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile" className="hover:text-[#1b4412]">
+                  Profile
+                </Link>
+              </li>
+              {user.isAdmin && (
+                <>
+                  <li>
+                    <Link to="/comments" className="hover:text-[#1b4412]">
+                      All Comments
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/users" className="hover:text-[#1b4412]">
+                      All Users
+                    </Link>
+                  </li>
+                </>
+              )}
+              <li>
+                <Link
+                  to="/logout"
+                  onClick={handleLogout}
+                  className="hover:underline text-[#1b4412]"
+                >
+                  Logout
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" className="hover:text-[#1b4412]">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" className="hover:text-[#1b4412]">
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
     </nav>
   );
 };
