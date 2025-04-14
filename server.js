@@ -325,7 +325,6 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
 });
 
 // Route to get all bookmarks for a specific user
-// Route to get all bookmarks for a specific user
 app.get("/api/users/:userId/bookmarks", async (req, res, next) => {
   const { userId } = req.params;
 
