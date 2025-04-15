@@ -13,7 +13,6 @@ import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
-import StoryComments from "./components/StoryComments";
 import "react-quill/dist/quill.snow.css";
 import jwt_decode from "jwt-decode";
 
@@ -68,8 +67,6 @@ function App() {
         setDarkMode={setDarkMode}
         darkMode={darkMode}
       />
-
-      <main className="flex-grow max-w-6xl mx-auto px-4 py-6 bg-linen_moss dark:bg-deep_grove rounded-lg shadow-md transition-colors duration-300">
         <Routes>
           <Route path="/" element={<Stories />} />
           <Route path="/bookmarks" element={<Bookmarks user={user} darkMode={darkMode} />} />
@@ -77,7 +74,6 @@ function App() {
           <Route path="/profile" element={<Profile user={user} setUser={setUser} darkMode={darkMode} />} />
           <Route path="/register" element={<Register setUser={setUser} darkMode={darkMode} />} />
           <Route path="/stories/:storyId" element={<SingleStory user={user} darkMode={darkMode} />} />
-          <Route path="/stories/:storyId/comments" element={<StoryComments darkMode={darkMode} />} />
           <Route path="/logout" element={<Logout setUser={setUser} darkMode={darkMode} />} />
           <Route path="/add-story" element={<AddStory darkMode={darkMode} />} />
           <Route path="/stories" element={<StoryDetails darkMode={darkMode} />} />
@@ -85,7 +81,7 @@ function App() {
           <Route path="/users" element={<AdminUsers darkMode={darkMode} />} />
           <Route path="/users/:authorId" element={<UserProfile darkMode={darkMode} />} />
         </Routes>
-      </main>
+      
     </div>
   );  
 }
