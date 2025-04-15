@@ -13,6 +13,7 @@ import AdminCommentsFeed from "./components/AdminCommentsFeed";
 import StoryDetails from "./components/StoryDetails";
 import UserProfile from "./components/UserProfile";
 import AdminUsers from "./components/AdminUsers";
+import StoryComments from "./components/StoryComments";
 import "react-quill/dist/quill.snow.css";
 import jwt_decode from "jwt-decode";
 
@@ -74,6 +75,7 @@ function App() {
           <Route path="/profile" element={<Profile user={user} setUser={setUser} darkMode={darkMode} />} />
           <Route path="/register" element={<Register setUser={setUser} darkMode={darkMode} />} />
           <Route path="/stories/:storyId" element={<SingleStory user={user} darkMode={darkMode} />} />
+          <Route path="/stories/:storyId/comments" element={<StoryComments darkMode={darkMode} />} />
           <Route path="/logout" element={<Logout setUser={setUser} darkMode={darkMode} />} />
           <Route path="/add-story" element={<AddStory darkMode={darkMode} />} />
           <Route path="/stories" element={<StoryDetails darkMode={darkMode} />} />
