@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchAllUsers, deleteUsers } from "../API";
 import { Link } from "react-router-dom";
+import DefaultAvatar from "./images/anonav.jpg";
+
 
 export default function AdminUsersFeed() {
   const [users, setUsers] = useState([]);
@@ -10,7 +12,6 @@ export default function AdminUsersFeed() {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 20;
 
-  // Fetch all users when the component mounts
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -21,151 +22,155 @@ export default function AdminUsersFeed() {
         setError("Failed to fetch users.");
       }
     };
-
     fetchUsers();
   }, []);
 
-  // Handle delete action for users
   const handleDeleteUser = async (userId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this user's account, along with all their stories and comments? This action cannot be undone."
     );
-    if (!confirmDelete) return; // If the user cancels, exit the function
+    if (!confirmDelete) return;
+
     try {
       await deleteUsers(userId);
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-      setFilteredUsers((prevUsers) =>
-        prevUsers.filter((user) => user.id !== userId)
-      );
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      setFilteredUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (error) {
       console.error("Failed to delete the user:", error);
       setError("Failed to delete the user.");
     }
   };
 
-  // Handle search input change
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
     if (term.trim() === "") {
       setFilteredUsers(users);
     } else {
-      const lowerCaseTerm = term.toLowerCase();
-      const filtered = users.filter(
-        (user) =>
-          (user.username &&
-            user.username.toLowerCase().includes(lowerCaseTerm)) ||
-          (user.email && user.email.toLowerCase().includes(lowerCaseTerm))
+      const filtered = users.filter((user) =>
+        (user.username && user.username.toLowerCase().includes(term.toLowerCase())) ||
+        (user.email && user.email.toLowerCase().includes(term.toLowerCase()))
       );
       setFilteredUsers(filtered);
     }
     setCurrentPage(1);
   };
 
-  // Pagination logic
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   return (
-    <div className="admin-users-container">
-      <h2>All Users</h2>
-      {error && <p className="error">{error}</p>}
+<div className="min-h-screen overflow-x-hidden bg-surface dark:bg-surface-dark text-primary dark:text-primary-dark px-4 py-10">
+<div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">Admin: All Users</h2>
 
-      <input
-        type="text"
-        placeholder="Search by username or email"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="search-bar"
-      />
-      <br />
-      <br />
+        {error && <p className="text-red-600 mb-4">{error}</p>}
 
-      {totalPages > 1 && (
-        <div className="pagination">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search by username or email"
+          className="w-full max-w-md px-4 py-2 rounded-md border border-border dark:border-border-dark bg-input dark:bg-input-dark text-input-text dark:text-input-text-dark mb-6"
+        />
+
+        {totalPages > 1 && (
+          <div className="flex flex-wrap gap-2 mb-5">
+            <button
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              disabled={currentPage === 1}
+     className="mr-5"
+            >
+              《
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+              if (
+                pageNumber === currentPage ||
+                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+              ) {
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className={`px-3 py-1 rounded-full transition-all ${
+                      currentPage === pageNumber
+                        ? "bg-layer dark:bg-layer-dark text-secondary dark:text-secondary-dark"
+                        : "bg-mantis text-black font-semibold dark:text-white"
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              }
+              return null;
+            })}
+
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={currentPage === totalPages}
+              className="ml-5"
+            >
+              》
+            </button>
+          </div>
+        )}
+
+<ul className="space-y-4">
+  {currentUsers.length > 0 ? (
+    currentUsers.map((user) => (
+      <li
+        key={user.id}
+        className="flex flex-col sm:flex-row sm:items-center justify-between bg-card dark:bg-card-dark p-4 rounded-md shadow border border-border dark:border-border-dark overflow-hidden"
+      >
+        <div className="flex items-center gap-4 overflow-hidden">
+        <img
+  src={
+    user.avatar
+      ? user.avatar.startsWith("http")
+        ? user.avatar
+        : `http://localhost:3000${user.avatar.startsWith("/") ? "" : "/"}${user.avatar}`
+      : DefaultAvatar
+  }
+  alt={`${user.username}'s avatar`}
+  className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+/>
+
+
+          <div className="flex flex-col min-w-0">
+            <Link
+              to={`/users/${user.id}`}
+              className="text-sm font-semibold text-link dark:text-link-dark hover:underline truncate"
+            >
+              {user.username || "Unknown User"}
+            </Link>
+            <span className="text-sm text-secondary dark:text-secondary-dark truncate">
+              {user.email || "No email available"}
+            </span>
+            <span className="text-xs text-accent">
+              {user.isAdmin ? "Admin" : "User"}
+            </span>
+          </div>
+        </div>
+        <div className="mt-4 sm:mt-0 sm:ml-4 flex-shrink-0">
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="pagination-button"
+            onClick={() => handleDeleteUser(user.id)}
+            className="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded w-full sm:w-auto"
           >
-            Previous
-          </button>
-
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-
-            if (
-              pageNumber === currentPage ||
-              (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
-            ) {
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`pagination-button ${
-                    currentPage === pageNumber ? "active-page" : ""
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            }
-
-            return null;
-          })}
-
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            Next
+            Delete
           </button>
         </div>
-      )}
+      </li>
+    ))
+  ) : (
+    <p className="text-secondary dark:text-secondary-dark">No users available.</p>
+  )}
+</ul>
 
-      <ul className="users-list">
-        {currentUsers.length > 0 ? (
-          currentUsers.map((user) => (
-            <li key={user.id} className="user-item">
-              <div className="user-content">
-                <div className="user-avatar">
-                  {user.username ? user.username.charAt(0).toUpperCase() : "U"}
-                </div>
-
-                <div className="user-details">
-                  <span className="user-name">
-                    <Link to={`/users/${user.id}`}>
-                      {user.username || "Unknown User"}
-                    </Link>
-                  </span>
-                  <span className="user-email">
-                    {user.email || "No email available"}
-                  </span>
-                  <span className="user-role">
-                    {user.isAdmin ? "Admin" : "User"}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => handleDeleteUser(user.id)}
-                className="delete-button"
-              >
-                Delete
-              </button>
-            </li>
-          ))
-        ) : (
-          <p>No users available.</p>
-        )}
-      </ul>
+      </div>
     </div>
   );
 }
