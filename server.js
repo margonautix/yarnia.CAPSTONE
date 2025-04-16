@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const prisma = require("./prisma");
+const multer = require("multer");
 const cors = require("cors");
+const path = require("path");
 
 const PORT = 3000;
 
@@ -11,8 +13,10 @@ const bcrypt = require("bcryptjs");
 
 const JWT = process.env.JWT || "shhh";
 
+
 app.use(express.json());
 app.use(require("morgan")("dev"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -26,6 +30,7 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
+
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, isAdmin: user.isAdmin },
@@ -33,6 +38,15 @@ const generateToken = (user) => {
     { expiresIn: "6h" }
   );
 };
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `user-${req.params.id}${ext}`);
+  },
+});
+const upload = multer({ storage });
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -785,3 +799,20 @@ app.get("/api/stories/:storyId/comments", async (req, res, next) => {
     res.status(500).json({ message: "Failed to fetch comments." });
   }
 });
+
+app.post("/api/users/:id/avatar", upload.single("avatar"), async (req, res) => {
+  const userId = parseInt(req.params.id);
+  const avatarPath = `/uploads/${req.file.filename}`;
+
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { avatar: avatarPath },
+    });
+    res.json({ success: true, avatar: user.avatar });
+  } catch (error) {
+    console.error("Avatar upload error:", error);
+    res.status(500).json({ error: "Failed to upload avatar" });
+  }
+});
+
