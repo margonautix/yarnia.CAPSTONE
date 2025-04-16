@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchAllComments, deleteComment } from "../API";
+import { Link } from "react-router-dom";
+import DefaultAvatar from "./images/anonav.jpg";
 
 export default function AdminCommentsFeed() {
   const [comments, setComments] = useState([]);
@@ -9,7 +11,6 @@ export default function AdminCommentsFeed() {
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 100;
 
-  // Fetch all comments when the component mounts
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -20,150 +21,166 @@ export default function AdminCommentsFeed() {
         setError("Failed to fetch comments.");
       }
     };
-
     fetchComments();
   }, []);
 
-  // Handle delete action for comments
   const handleDeleteComment = async (commentId) => {
     try {
-      await deleteComment(null, commentId); // `null` for storyId, only passing commentId
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentId)
-      );
-      setFilteredComments((prevComments) =>
-        prevComments.filter((comment) => comment.commentId !== commentId)
-      );
+      await deleteComment(null, commentId);
+      setComments((prev) => prev.filter((c) => c.commentId !== commentId));
+      setFilteredComments((prev) => prev.filter((c) => c.commentId !== commentId));
     } catch (error) {
-      console.error("Failed to delete the comment:", error);
       setError("Failed to delete the comment.");
     }
   };
 
-  // Handle search bar input changes
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-
-    if (query === "") {
-      setFilteredComments(comments);
-    } else {
-      setFilteredComments(
-        comments.filter(
-          (comment) =>
-            comment.user?.username?.toLowerCase().includes(query) ||
-            comment.content?.toLowerCase().includes(query)
-        )
-      );
-    }
+    setFilteredComments(
+      query === ""
+        ? comments
+        : comments.filter(
+            (comment) =>
+              comment.user?.username?.toLowerCase().includes(query) ||
+              comment.content?.toLowerCase().includes(query)
+          )
+    );
     setCurrentPage(1);
   };
 
-  // Pagination logic
   const indexOfLastComment = currentPage * commentsPerPage;
   const indexOfFirstComment = indexOfLastComment - commentsPerPage;
-  const currentComments = filteredComments.slice(
-    indexOfFirstComment,
-    indexOfLastComment
-  );
+  const currentComments = filteredComments.slice(indexOfFirstComment, indexOfLastComment);
   const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
 
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const getPaginationRange = () => {
+    const range = [];
+    const lastPage = totalPages;
+
+    const prev = currentPage - 1;
+    const next = currentPage + 1;
+
+    range.push(1);
+
+    if (prev > 2) {
+      range.push("...");
+    }
+
+    for (let i = Math.max(2, prev); i <= Math.min(next, lastPage - 1); i++) {
+      range.push(i);
+    }
+
+    if (next < lastPage - 1) {
+      range.push("...");
+    }
+
+    if (lastPage > 1) {
+      range.push(lastPage);
+    }
+
+    return range;
   };
 
   return (
-    <div className="admin-comments-container">
-      <h2>All Comments</h2>
-      {error && <p className="error">{error}</p>}
-      {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search comments..."
-        value={searchQuery}
-        onChange={handleSearch}
-        className="search-bar"
-      />
-      <br />
-      <br />
-      {totalPages > 1 && (
-        <div className="pagination">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="pagination-button"
-          >
-            Previous
-          </button>
+    <div className="min-h-screen overflow-x-hidden bg-surface dark:bg-surface-dark text-primary dark:text-primary-dark px-4 py-10">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-6">Admin: All Comments</h2>
 
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            if (
-              pageNumber === currentPage ||
-              (pageNumber >= currentPage - 2 &&
-                pageNumber <= currentPage + 2) ||
-              pageNumber === 1 ||
-              pageNumber === totalPages
-            ) {
-              return (
+        {error && <p className="text-red-600 mb-4">{error}</p>}
+
+        <input
+          type="text"
+          placeholder="Search comments..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="w-full max-w-md px-4 py-2 rounded-md border border-border dark:border-border-dark bg-input dark:bg-input-dark text-input-text dark:text-input-text-dark mb-6"
+        />
+
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-1 flex-nowrap overflow-x-auto mb-6 text-sm font-medium">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="mr-4"
+
+            >
+              《
+            </button>
+
+            {getPaginationRange().map((page, index) =>
+              page === "..." ? (
+                <span key={index} className="px-3 text-secondary dark:text-secondary-dark">
+                  ...
+                </span>
+              ) : (
                 <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`pagination-button ${
-                    currentPage === pageNumber ? "active-page" : ""
+                  key={index}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 rounded-full transition-all ${
+                    currentPage === page
+                      ? "bg-layer dark:bg-layer-dark text-secondary dark:text-secondary-dark"
+                      : "bg-mantis text-black font-semibold dark:text-white"
                   }`}
                 >
-                  {pageNumber}
+                  {page}
                 </button>
-              );
-            }
+              )
+            )}
 
-            return null;
-          })}
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="ml-4"
 
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="pagination-button"
-          >
-            Next
-          </button>
-        </div>
-      )}
-      <ul className="comments-list">
-        {currentComments.length > 0 ? (
-          currentComments.map((comment) => (
-            <li key={comment.commentId} className="comment-item">
-              <div className="comment-content">
-                <div className="comment-avatar">
-                  {comment.user?.username
-                    ? comment.user.username.charAt(0).toUpperCase()
-                    : "U"}
-                </div>
-
-                <div className="comment-details">
-                  <span className="comment-username">
-                    {comment.user?.username || "Unknown User"}
-                  </span>
-                  <p className="comment-text">
-                    {comment.content || "No content available"}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => handleDeleteComment(comment.commentId)}
-                className="delete-button"
-              >
-                Delete
-              </button>
-            </li>
-          ))
-        ) : (
-          <p>No comments available.</p>
+            >
+              》
+            </button>
+          </div>
         )}
-      </ul>
+
+        <ul className="space-y-4">
+          {currentComments.length > 0 ? (
+            currentComments.map((comment) => (
+              <li
+                key={comment.commentId}
+                className="bg-card dark:bg-card-dark p-4 rounded-md shadow border border-border dark:border-border-dark"
+              >
+                <div className="flex items-start gap-4">
+                  <img
+                    src={
+                      comment.user?.avatar
+                        ? comment.user.avatar.startsWith("http")
+                          ? comment.user.avatar
+                          : `http://localhost:3000${comment.user.avatar.startsWith("/") ? "" : "/"}${comment.user.avatar}`
+                        : DefaultAvatar
+                    }
+                    alt={`${comment.user?.username}'s avatar`}
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                  />
+                  <div className="flex-1">
+                    <Link
+                      to={`/users/${comment.user?.userId || comment.user?.id}`}
+                      className="text-sm font-semibold text-link dark:text-link-dark hover:underline"
+                    >
+                      {comment.user?.username || "Unknown User"}
+                    </Link>
+                    <p className="mt-1 text-sm">{comment.content || "No content available."}</p>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteComment(comment.commentId)}
+                    className="ml-4 px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p className="text-secondary dark:text-secondary-dark">No comments available.</p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

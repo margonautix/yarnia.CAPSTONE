@@ -338,7 +338,7 @@ app.get("/api/comments", authenticateAdmin, async (req, res, next) => {
     const comments = await prisma.comment.findMany({
       include: {
         user: {
-          select: { username: true },
+          select: { id: true, username: true, avatar: true },
         },
       },
     });
@@ -557,6 +557,7 @@ app.get("/api/users", authenticateAdmin, async (req, res, next) => {
         username: true,
         email: true,
         bio: true,
+        avatar: true,
         isAdmin: true,
         joinedOn: true,
       },
