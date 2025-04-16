@@ -33,7 +33,7 @@ const Profile = ({ user, setUser }) => {
   
     try {
       const res = await fetch(`http://localhost:3000/api/users/${user.id}/avatar`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -193,35 +193,38 @@ const Profile = ({ user, setUser }) => {
         <aside className="bg-card dark:bg-card-dark p-4 rounded-lg shadow border border-border dark:border-border-dark">
           <h2 className="text-xl font-bold mb-4">Profile</h2>
           <img
-            src={user.avatar ? user.avatar : Avatar}
-            alt="Profile"
-            className="w-24 h-24 rounded-full object-cover mb-4"
-          />
-          <form
-            onSubmit={handleAvatarUpload}
-            encType="multipart/form-data"
-            className="space-y-2"
-          >
-            <label
-              htmlFor="avatar-upload"
-              className="block text-sm font-medium text-secondary dark:text-secondary-dark"
-            >
-              Change Profile Picture
-            </label>
-            <input
-              id="avatar-upload"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setSelectedFile(e.target.files[0])}
-              className="w-full rounded border border-border dark:border-border-dark bg-input dark:bg-input-dark text-sm text-input-text dark:text-input-text-dark file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-satin_sheen_gold file:text-white hover:file:bg-kelly_green"
-            />
-            <button
-              type="submit"
-              className="bg-mantis hover:bg-olivine text-white px-4 py-2 rounded-md shadow transition-colors"
-            >
-              Upload Avatar
-            </button>
-          </form>
+  src={user.avatar ? `http://localhost:3000${user.avatar}` : Avatar}
+  alt="Profile"
+  className="w-24 h-24 rounded-full object-cover mb-4"
+/>
+
+{isEditing && (
+  <form
+    onSubmit={handleAvatarUpload}
+    encType="multipart/form-data"
+    className="space-y-2 mb-4"
+  >
+    <label
+      htmlFor="avatar-upload"
+      className="block text-sm font-medium text-secondary dark:text-secondary-dark"
+    >
+      Change Profile Picture
+    </label>
+    <input
+      id="avatar-upload"
+      type="file"
+      accept="image/*"
+      onChange={(e) => setSelectedFile(e.target.files[0])}
+      className="w-full rounded border border-border dark:border-border-dark bg-input dark:bg-input-dark text-sm text-input-text dark:text-input-text-dark file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-satin_sheen_gold file:text-white hover:file:bg-kelly_green"
+    />
+    <button
+      type="submit"
+      className="bg-mantis hover:bg-olivine text-white px-4 py-2 rounded-md shadow transition-colors"
+    >
+      Upload Avatar
+    </button>
+  </form>
+)}
   
           <p className="mt-4 mb-2">
             <span className="font-semibold">Username:</span> {user.username}

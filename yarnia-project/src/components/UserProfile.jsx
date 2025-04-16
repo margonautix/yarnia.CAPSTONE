@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchUserProfileById, fetchUserStoriesById } from "../API";
+import DefaultAvatar from "./images/anonav.jpg";
+
 
 export default function UserProfile() {
   const { authorId } = useParams();
@@ -9,6 +11,7 @@ export default function UserProfile() {
   const [userError, setUserError] = useState(null);
   const [storiesError, setStoriesError] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,10 +49,18 @@ export default function UserProfile() {
       <div className="max-w-6xl mx-auto bg-card dark:bg-card-dark shadow-md rounded-lg p-8 sm:p-10 border border-border dark:border-border-dark">
         {user ? (
           <>
-            <div className="mb-8 border-b pb-6 border-border dark:border-border-dark">
-              <h1 className="text-4xl font-bold mb-3">{user.username}</h1>
-              <p className="text-secondary dark:text-secondary-dark text-lg">Bio: {user.bio}</p>
-            </div>
+<div className="mb-8 border-b pb-6 border-border dark:border-border-dark flex items-center space-x-6">
+<img
+  src={user.avatar ? `http://localhost:3000${user.avatar}` : DefaultAvatar}
+    alt={`${user.username}'s avatar`}
+    className="w-24 h-24 rounded-full object-cover border border-border dark:border-border-dark"
+  />
+  <div>
+    <h1 className="text-4xl font-bold mb-2">{user.username}</h1>
+    <p className="text-secondary dark:text-secondary-dark text-lg">Bio: {user.bio}</p>
+  </div>
+</div>
+
 
             <div>
               <h2 className="text-3xl font-semibold mb-6">{user.username}'s Stories</h2>
