@@ -87,7 +87,6 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
         <div className="hidden sm:flex items-center space-x-4 text-sm">
           {user ? (
             <>
-              <Link to="/add-story" className="hover:text-accent">Add Story</Link>
               <Link to="/profile" className="hover:text-accent">Profile</Link>
               {user.isAdmin && (
                 <>
@@ -117,7 +116,6 @@ const NavBar = ({ user, setUser, darkMode, setDarkMode }) => {
   <div className="absolute top-14 right-6 bg-input dark:bg-input-dark p-4 shadow-lg rounded-lg z-50 w-48 space-y-2 text-sm sm:hidden">
     {user ? (
       <>
-        <Link to="/add-story" className="block hover:text-accent" onClick={() => setMenuOpen(false)}>Add Story</Link>
         <Link to="/profile" className="block hover:text-accent" onClick={() => setMenuOpen(false)}>Profile</Link>
         {user.isAdmin && (
           <>

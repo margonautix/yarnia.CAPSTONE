@@ -53,7 +53,7 @@ export default function UserProfile() {
 <img
   src={user.avatar ? `http://localhost:3000${user.avatar}` : DefaultAvatar}
     alt={`${user.username}'s avatar`}
-    className="w-24 h-24 rounded-full object-cover border border-border dark:border-border-dark"
+    className="w-24 h-24 rounded-full object-cover "
   />
   <div>
     <h1 className="text-4xl font-bold mb-2">{user.username}</h1>

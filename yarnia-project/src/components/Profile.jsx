@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { fetchBookmarkedStories, fetchWithAuth } from "../API";
 import Avatar from "./images/anonav.jpg"; // Placeholder for avatar image
+import AddStory from "./addStory"; // adjust path if different
 
-const TABS = ["Bookmarks", "Comments", "Stories"];
+
+const TABS = ["Bookmarks", "Comments", "Stories", "Add Story"];
 
 const Profile = ({ user, setUser }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -202,7 +205,7 @@ const Profile = ({ user, setUser }) => {
   <form
     onSubmit={handleAvatarUpload}
     encType="multipart/form-data"
-    className="space-y-2 mb-4"
+    className="space-y-4 mb-6"
   >
     <label
       htmlFor="avatar-upload"
@@ -215,16 +218,17 @@ const Profile = ({ user, setUser }) => {
       type="file"
       accept="image/*"
       onChange={(e) => setSelectedFile(e.target.files[0])}
-      className="w-full rounded border border-border dark:border-border-dark bg-input dark:bg-input-dark text-sm text-input-text dark:text-input-text-dark file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-satin_sheen_gold file:text-white hover:file:bg-kelly_green"
+      className="w-full rounded border border-border dark:border-border-dark bg-input dark:bg-input-dark text-sm text-input-text dark:text-input-text-dark file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-button dark:file:bg-button-dark file:text-white hover:file:bg-button-hover dark:hover:file:bg-button-hover-dark"
     />
     <button
       type="submit"
-      className="bg-mantis hover:bg-olivine text-white px-4 py-2 rounded-md shadow transition-colors"
+      className="bg-button dark:bg-button-dark hover:bg-button-hover dark:hover:bg-button-hover-dark text-white px-4 py-2 rounded-md shadow transition-colors"
     >
       Upload Avatar
     </button>
   </form>
 )}
+
   
           <p className="mt-4 mb-2">
             <span className="font-semibold">Username:</span> {user.username}
@@ -343,40 +347,46 @@ const Profile = ({ user, setUser }) => {
               )}
             </section>
           )}
-  
-          {activeTab === "Stories" && (
-            <section className="space-y-4">
-              {stories.length > 0 ? (
-                stories.map((story) => (
-                  <div
-                    key={story.storyId}
-                    className="bg-layer dark:bg-layer-dark p-4 rounded shadow border border-border dark:border-border-dark"
-                  >
-                    <h3 className="text-lg font-bold mb-1">{story.title}</h3>
-                    <p className="text-sm text-secondary dark:text-secondary-dark mb-2">
-                      {story.summary || "No summary available"}
-                    </p>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleReadMore(story.storyId)}
-                        className="bg-button text-white px-3 py-1 rounded"
-                      >
-                        Read more
-                      </button>
-                      <button
-                        onClick={() => handleStoryDelete(story.storyId)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-secondary dark:text-secondary-dark">You haven't written any stories yet.</p>
-              )}
-            </section>
-          )}
+{activeTab === "Stories" && (
+  <section className="space-y-4">
+    {stories.length > 0 ? (
+      stories.map((story) => (
+        <div
+          key={story.storyId}
+          className="bg-layer dark:bg-layer-dark p-4 rounded shadow border border-border dark:border-border-dark"
+        >
+          <h3 className="text-lg font-bold mb-1">{story.title}</h3>
+          <p className="text-sm text-secondary dark:text-secondary-dark mb-2">
+            {story.summary || "No summary available"}
+          </p>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleReadMore(story.storyId)}
+              className="bg-button text-white px-3 py-1 rounded"
+            >
+              Read more
+            </button>
+            <button
+              onClick={() => handleStoryDelete(story.storyId)}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))
+    ) : (
+      <p className="text-secondary dark:text-secondary-dark">You haven't written any stories yet.</p>
+    )}
+  </section>
+)}
+
+{activeTab === "Add Story" && (
+  <section className="space-y-4">
+    <AddStory onStoryAdded={(newStory) => setStories((prev) => [...prev, newStory])} />
+  </section>
+)}
+
         </main>
       </div>
     </div>
